@@ -133,11 +133,6 @@ class PauseSubState extends MusicBeatSubstate
 		}
 		var songPath = 'assets/data/' + songLowercase + '/';
 
-		#if sys
-		if (PlayState.isSM && !PlayState.isStoryMode)
-			songPath = PlayState.pathToSm;
-		#end
-
 		if (controls.UP_P || upPcontroller)
 		{
 			changeSelection(-1);
@@ -149,7 +144,7 @@ class PauseSubState extends MusicBeatSubstate
 		}
 		
 		#if cpp
-			else if (controls.LEFT_P || leftPcontroller)
+			else if (FlxG.keys.pressed.SHIFT && controls.LEFT_P || leftPcontroller)
 			{
 				oldOffset = PlayState.songOffset;
 				PlayState.songOffset -= 1;
@@ -177,7 +172,7 @@ class PauseSubState extends MusicBeatSubstate
 					offsetChanged = true;
 				}
 			} 
-			else if (controls.RIGHT_P || rightPcontroller)
+			else if (FlxG.keys.pressed.SHIFT && controls.RIGHT_P || rightPcontroller)
 			{
 				oldOffset = PlayState.songOffset;
 				PlayState.songOffset += 1;

@@ -48,7 +48,6 @@ typedef ReplayJSON =
 	public var chartPath:String;
 	public var isDownscroll:Bool;
 	public var sf:Int;
-	public var sm:Bool;
 	public var ana:Analysis;
 }
 
@@ -69,7 +68,6 @@ class Replay
 			songNotes: [],
 			replayGameVer: version,
 			chartPath: "",
-			sm: false,
 			timestamp: Date.now(),
 			sf: Conductor.safeFrames,
 			ana: new Analysis(),
@@ -90,17 +88,12 @@ class Replay
 
 	public function SaveReplay(notearray:Array<Dynamic>, judge:Array<String>, ana:Analysis)
 	{
-		#if sys
-		var chartPath = PlayState.isSM ? PlayState.pathToSm + "/converted.json" : "";
-		#else
 		var chartPath = "";
-		#end
 		
 		var json = {
 			"songName": PlayState.SONG.song,
 			"songDiff": PlayState.storyDifficulty,
 			"chartPath": chartPath,
-			"sm": PlayState.isSM,
 			"timestamp": Date.now(),
 			"replayGameVer": version,
 			"sf": Conductor.safeFrames,

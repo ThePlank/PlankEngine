@@ -3,10 +3,6 @@ package;
 
 import Song.Event;
 import openfl.media.Sound;
-#if sys
-import sys.io.File;
-import smTools.SMFile;
-#end
 import openfl.ui.KeyLocation;
 import openfl.events.Event;
 import haxe.EnumTools;
@@ -123,11 +119,6 @@ class PlayState extends MusicBeatState
 	private var vocals:FlxSound;
 
 	public static var isSM:Bool = false;
-	#if sys
-	public static var sm:SMFile;
-	public static var pathToSm:String;
-	#end
-
 	public var originalX:Float;
 
 	var judgementCounter:FlxText;
@@ -332,8 +323,6 @@ class PlayState extends MusicBeatState
 
 		#if cpp
 		executeModchart = FileSystem.exists(Paths.lua(songLowercase + "/modchart"));
-		if (isSM)
-			executeModchart = FileSystem.exists(pathToSm + "/modchart.lua");
 		if (executeModchart)
 			PlayStateChangeables.Optimize = false;
 		#end
@@ -1786,20 +1775,7 @@ class PlayState extends MusicBeatState
 
 		if (!paused)
 		{
-			#if sys
-			if (!isStoryMode && isSM)
-			{
-				trace("Loading " + pathToSm + "/" + sm.header.MUSIC);
-				var bytes = File.getBytes(pathToSm + "/" + sm.header.MUSIC);
-				var sound = new Sound();
-				sound.loadCompressedDataFromByteArray(bytes.getData(), bytes.length);
-				FlxG.sound.playMusic(sound);
-			}
-			else
-				FlxG.sound.playMusic(Paths.inst(PlayState.SONG.song), 1, false);
-			#else
 			FlxG.sound.playMusic(Paths.inst(PlayState.SONG.song), 1, false);
-			#end
 		}
 
 		FlxG.sound.music.onComplete = endSong;
@@ -1867,11 +1843,6 @@ class PlayState extends MusicBeatState
 		}
 
 		var songPath = 'assets/data/' + songLowercase + '/';
-		
-		#if sys
-		if (isSM && !isStoryMode)
-			songPath = pathToSm;
-		#end
 
 		for (file in sys.FileSystem.readDirectory(songPath))
 		{

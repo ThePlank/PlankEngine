@@ -3,10 +3,6 @@ package;
 import haxe.Exception;
 import lime.app.Application;
 
-#if sys
-import smTools.SMFile;
-import sys.FileSystem;
-#end
 import Controls.KeyboardScheme;
 import Controls.Control;
 import flash.text.TextField;
@@ -176,41 +172,8 @@ class LoadReplayState extends MusicBeatState
 					}
 
 					var poop = "";
-					
-					#if sys
-					if (PlayState.rep.replay.sm)
-						if (!FileSystem.exists(StringTools.replace(PlayState.rep.replay.chartPath,"converted.json","")))
-						{
-							Application.current.window.alert("The SM file in this replay does not exist!","SM Replays");
-							return;
-						}
-					#end
 
-					PlayState.isSM = PlayState.rep.replay.sm;
-					#if sys
-					if (PlayState.isSM)
-						PlayState.pathToSm = StringTools.replace(PlayState.rep.replay.chartPath,"converted.json","");
-					#end
-
-					#if sys
-					if (PlayState.isSM)
-					{
-						poop = File.getContent(PlayState.rep.replay.chartPath);
-						try
-							{
-						PlayState.sm = SMFile.loadFile(PlayState.pathToSm + "/" + StringTools.replace(PlayState.rep.replay.songName," ", "_") + ".sm");
-							}
-							catch(e:Exception)
-							{
-								Application.current.window.alert("Make sure that the SM file is called " + PlayState.pathToSm + "/" + StringTools.replace(PlayState.rep.replay.songName," ", "_") + ".sm!\nAs I couldn't read it.","SM Replays");
-								return;
-							}
-					}
-					else
-						poop = Highscore.formatSong(songFormat, PlayState.rep.replay.songDiff);
-					#else
 					poop = Highscore.formatSong(songFormat, PlayState.rep.replay.songDiff);
-					#end
 
 					try
 					{

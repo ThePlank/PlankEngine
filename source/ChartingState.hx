@@ -394,20 +394,14 @@ class ChartingState extends MusicBeatState
 		add(sectionRenderes);
 
 		// fuckin stupid ass bitch ass fucking waveform
-		/*if (PlayState.isSM)
-		{
-			waveform = new Waveform(0,0,PlayState.pathToSm + "/" + PlayState.sm.header.MUSIC,height);
-		}
-		else
-		{
+		/*
 			if (_song.needsVoices)
 				waveform = new Waveform(0,0,Paths.voices(_song.song),height);
 			else
 				waveform = new Waveform(0,0,Paths.inst(_song.song),height);
-		}
 
-		waveform.drawWaveform();
-		add(waveform);
+			waveform.drawWaveform();
+			add(waveform);
 		*/
 		add(dummyArrow);
 		add(strumLine);
@@ -1451,30 +1445,10 @@ class ChartingState extends MusicBeatState
 			FlxG.sound.music.stop();
 			// vocals.stop();
 		}
-		#if sys
-		if (PlayState.isSM)
-		{
-			trace("Loading " + PlayState.pathToSm + "/" + PlayState.sm.header.MUSIC);
-			var bytes = File.getBytes(PlayState.pathToSm + "/" + PlayState.sm.header.MUSIC);
-			var sound = new Sound();
-			sound.loadCompressedDataFromByteArray(bytes.getData(), bytes.length);
-			FlxG.sound.playMusic(sound);
-		}
-		else
-			FlxG.sound.playMusic(Paths.inst(daSong), 0.6);
-		#else
 		FlxG.sound.playMusic(Paths.inst(daSong), 0.6);
-		#end
 
-		// WONT WORK FOR TUTORIAL OR TEST SONG!!! REDO LATER
-		#if sys
-		if (PlayState.isSM)
-			vocals = null;
-		else
-			vocals = new FlxSound().loadEmbedded(Paths.voices(daSong));
-		#else
 		vocals = new FlxSound().loadEmbedded(Paths.voices(daSong));
-		#end
+
 		FlxG.sound.list.add(vocals);
 
 		FlxG.sound.music.pause();

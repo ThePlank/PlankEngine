@@ -210,7 +210,7 @@ class Character extends FlxSprite
 				var tex = Paths.getSparrowAtlas('BOYFRIEND','shared',true);
 				frames = tex;
 
-				//trace(tex.frames.length);
+				trace(tex.frames.length);
 
 				animation.addByPrefix('idle', 'BF idle dance', 24, false);
 				animation.addByPrefix('singUP', 'BF NOTE UP0', 24, false);
@@ -431,7 +431,7 @@ class Character extends FlxSprite
 				dadVar = 6.1;
 			if (holdTimer >= Conductor.stepCrochet * dadVar * 0.001)
 			{
-				//trace('dance');
+				trace('dance');
 				dance();
 				holdTimer = 0;
 			}

@@ -1009,9 +1009,9 @@ class PlayState extends MusicBeatState
 			PlayStateChangeables.botPlay = true;
 		}
 
-		trace('uh ' + PlayStateChangeables.safeFrames);
+		//trace('uh ' + PlayStateChangeables.safeFrames);
 
-		trace("SF CALC: " + Math.floor((PlayStateChangeables.safeFrames / 60) * 1000));
+		//trace("SF CALC: " + Math.floor((PlayStateChangeables.safeFrames / 60) * 1000));
 
 		var doof:DialogueBox = new DialogueBox(false, dialogue);
 		// doof.x += 70;
@@ -1039,9 +1039,9 @@ class PlayState extends MusicBeatState
 		// startCountdown();
 
 		if (SONG.song == null)
-			trace('song is null???');
+			//trace('song is null???');
 		else
-			trace('song looks gucci');
+			//trace('song looks gucci');
 
 		generateSong(SONG.song);
 
@@ -1102,7 +1102,7 @@ class PlayState extends MusicBeatState
 					notes.members.remove(i);
 			}
 
-		trace('generated');
+		//trace('generated');
 
 		// add(strumLine);
 
@@ -1243,7 +1243,7 @@ class PlayState extends MusicBeatState
 		// cameras = [FlxG.cameras.list[1]];
 		startingSong = true;
 
-		trace('starting');
+		//trace('starting');
 
 		if (isStoryMode)
 		{
@@ -1615,12 +1615,12 @@ class PlayState extends MusicBeatState
 		}
 		if (data == -1)
 		{
-			trace("couldn't find a keybind with the code " + key);
+			//trace("couldn't find a keybind with the code " + key);
 			return;
 		}
 		if (keys[data])
 		{
-			trace("ur already holding " + key);
+			//trace("ur already holding " + key);
 			return;
 		}
 
@@ -1759,7 +1759,7 @@ class PlayState extends MusicBeatState
 			vocals = new FlxSound();
 		#end
 
-		trace('loaded vocals');
+		//trace('loaded vocals');
 
 		FlxG.sound.list.add(vocals);
 
@@ -1859,7 +1859,7 @@ class PlayState extends MusicBeatState
 			{
 				if (path.endsWith('.offset'))
 				{
-					trace('Found offset file: ' + path);
+					//trace('Found offset file: ' + path);
 					songOffset = Std.parseFloat(file.substring(0, file.indexOf('.off')));
 					break;
 				}

@@ -115,32 +115,32 @@ class FreeplayState extends MusicBeatState
 			meta.diffs = diffsThatExist;
 
 			if (diffsThatExist.length != 3)
-				trace("I ONLY FOUND " + diffsThatExist);
+				//trace("I ONLY FOUND " + diffsThatExist);
 
 			FreeplayState.songData.set(meta.songName,diffs);
-			trace('loaded diffs for ' + meta.songName);
+			//trace('loaded diffs for ' + meta.songName);
 			songs.push(meta);
 
 		}
 
-		trace("tryin to load sm files");
+		//trace("tryin to load sm files");
 
 		#if sys
 		for(i in FileSystem.readDirectory("assets/sm/"))
 		{
-			trace(i);
+			//trace(i);
 			if (FileSystem.isDirectory("assets/sm/" + i))
 			{
-				trace("Reading SM file dir " + i);
+				//trace("Reading SM file dir " + i);
 				for (file in FileSystem.readDirectory("assets/sm/" + i))
 				{
 					if (file.contains(" "))
 						FileSystem.rename("assets/sm/" + i + "/" + file,"assets/sm/" + i + "/" + file.replace(" ","_"));
 					if (file.endsWith(".sm"))
 					{
-						trace("reading " + file);
+						//trace("reading " + file);
 						var file:SMFile = SMFile.loadFile("assets/sm/" + i + "/" + file.replace(" ","_"));
-						trace("Converting " + file.header.TITLE);
+						//trace("Converting " + file.header.TITLE);
 						var data = file.convertToFNF("assets/sm/" + i + "/converted.json");
 						var meta = new SongMetadata(file.header.TITLE, 0, "sm",file,"assets/sm/" + i);
 						songs.push(meta);
@@ -385,7 +385,7 @@ class FreeplayState extends MusicBeatState
 			PlayState.isStoryMode = false;
 			PlayState.storyDifficulty = curDifficulty;
 			PlayState.storyWeek = songs[curSelected].week;
-			trace('CUR WEEK' + PlayState.storyWeek);
+			//trace('CUR WEEK' + PlayState.storyWeek);
 			#if sys
 			if (songs[curSelected].songCharacter == "sm")
 				{
@@ -481,7 +481,7 @@ class FreeplayState extends MusicBeatState
 		if (songs[curSelected].songCharacter == "sm")
 		{
 			var data = songs[curSelected];
-			trace("Loading " + data.path + "/" + data.sm.header.MUSIC);
+			//trace("Loading " + data.path + "/" + data.sm.header.MUSIC);
 			var bytes = File.getBytes(data.path + "/" + data.sm.header.MUSIC);
 			var sound = new Sound();
 			sound.loadCompressedDataFromByteArray(bytes.getData(), bytes.length);

@@ -103,6 +103,8 @@ class PlayState extends MusicBeatState
 	public static var loadRep:Bool = false;
 	public static var inResults:Bool = false;
 
+	private var grpNoteSplashes:FlxTypedGroup<NoteSplash>;
+
 	public static var noteBools:Array<Bool> = [false, false, false, false];
 
 	var halloweenLevel:Bool = false;
@@ -127,6 +129,8 @@ class PlayState extends MusicBeatState
 	#end
 
 	public var originalX:Float;
+
+	var judgementCounter:FlxText;
 
 	public static var dad:Character;
 	public static var gf:Character;
@@ -400,6 +404,11 @@ class PlayState extends MusicBeatState
 		FlxG.cameras.add(camHUD);
 		FlxG.cameras.add(camSustains);
 		FlxG.cameras.add(camNotes);
+
+		grpNoteSplashes = new FlxTypedGroup<NoteSplash>();
+		var funnyFirstNoteSplash = new NoteSplash(100, 100, 0);
+		grpNoteSplashes.add(funnyFirstNoteSplash);
+		funnyFirstNoteSplash.alpha = 0.1;
 
 		camHUD.zoom = PlayStateChangeables.zoom;
 
@@ -1029,6 +1038,7 @@ class PlayState extends MusicBeatState
 
 		strumLineNotes = new FlxTypedGroup<FlxSprite>();
 		add(strumLineNotes);
+		add(grpNoteSplashes);
 
 		playerStrums = new FlxTypedGroup<FlxSprite>();
 		cpuStrums = new FlxTypedGroup<FlxSprite>();
@@ -1171,7 +1181,7 @@ class PlayState extends MusicBeatState
 			SONG.song
 			+ " - "
 			+ CoolUtil.difficultyFromInt(storyDifficulty)
-			+ (Main.watermarks ? " | KE " + MainMenuState.kadeEngineVer : ""), 16);
+			+ (Main.watermarks ? " | PE " + MainMenuState.kadeEngineVer : ""), 16);
 		kadeEngineWatermark.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		kadeEngineWatermark.scrollFactor.set();
 		add(kadeEngineWatermark);
@@ -1219,7 +1229,18 @@ class PlayState extends MusicBeatState
 		iconP2.y = healthBar.y - (iconP2.height / 2);
 		add(iconP2);
 
+		judgementCounter = new FlxText(20, 0, 0, "", 20);
+		judgementCounter.setFormat(Paths.font("comic.ttf"), 20, FlxColor.WHITE, FlxTextAlign.LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		judgementCounter.borderSize = 2;
+		judgementCounter.borderQuality = 2;
+		judgementCounter.scrollFactor.set();
+		judgementCounter.screenCenter(Y);
+		judgementCounter.text = "Sicks:" + sicks + "\nGoods:" + goods + "\nBads: " + bads + "\nShits: " + shits + "\nMisses: " + misses;
+		add(judgementCounter);
+
 		strumLineNotes.cameras = [camHUD];
+		judgementCounter.cameras = [camHUD];
+		grpNoteSplashes.cameras = [camHUD];
 		notes.cameras = [camHUD];
 		healthBar.cameras = [camHUD];
 		healthBarBG.cameras = [camHUD];
@@ -2396,6 +2417,8 @@ class PlayState extends MusicBeatState
 
 		scoreTxt.x = (originalX - (lengthInPx / 2)) + 335;
 
+		judgementCounter.text = "Sicks:" + sicks + "\nGoods:" + goods + "\nBads: " + bads + "\nShits: " + shits + "\nMisses: " + misses;
+
 		if (controls.PAUSE && startedCountdown && canPause && !cannotDie)
 		{
 			persistentUpdate = false;
@@ -3522,11 +3545,13 @@ class PlayState extends MusicBeatState
 			totalNotesHit += wife;
 
 		var daRating = daNote.rating;
+		var doSplash:Bool = true;
 
 		switch (daRating)
 		{
 			case 'shit':
 				score = -300;
+				doSplash = false;
 				combo = 0;
 				misses++;
 				health -= 0.1;
@@ -3537,6 +3562,7 @@ class PlayState extends MusicBeatState
 			case 'bad':
 				daRating = 'bad';
 				score = 0;
+				doSplash = false;
 				health -= 0.06;
 				ss = false;
 				bads++;
@@ -3544,6 +3570,7 @@ class PlayState extends MusicBeatState
 					totalNotesHit += 0.50;
 			case 'good':
 				daRating = 'good';
+				doSplash = false;
 				score = 200;
 				ss = false;
 				goods++;
@@ -3552,11 +3579,20 @@ class PlayState extends MusicBeatState
 			case 'sick':
 				if (health < 2)
 					health += 0.04;
+				doSplash = true;
 				if (FlxG.save.data.accuracyMod == 0)
 					totalNotesHit += 1;
 				sicks++;
 		}
 
+/*
+		if (doSplash && note != null)
+			{
+				var splash:NoteSplash = grpNoteSplashes.recycle(NoteSplash);
+				splash.setupNoteSplash(Std.int(note.x), Std.int(note.y), note.noteData);
+				grpNoteSplashes.add(splash);
+			}
+*/
 
 		// trace('Wife accuracy loss: ' + wife + ' | Rating: ' + daRating + ' | Score: ' + score + ' | Weight: ' + (1 - wife));
 

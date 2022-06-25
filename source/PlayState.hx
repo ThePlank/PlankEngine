@@ -3585,10 +3585,10 @@ class PlayState extends MusicBeatState
 				sicks++;
 		}
 
-		if (doSplash && note != null)
+		if (doSplash && daNote != null)
 			{
 				var splash:NoteSplash = grpNoteSplashes.recycle(NoteSplash);
-				splash.setupNoteSplash(Std.int(note.x), Std.int(note.y), note.noteData);
+				splash.setupNoteSplash(Std.int(daNote.x), Std.int(daNote.y), daNote.noteData);
 				grpNoteSplashes.add(splash);
 			}
 

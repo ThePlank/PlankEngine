@@ -118,7 +118,7 @@ class Song
 		var ba = song.bpm;
 
 		var index = 0;
-		trace("conversion stuff " + song.song + " " + song.notes.length);
+		// trace("conversion stuff " + song.song + " " + song.notes.length);
 		var convertedStuff:Array<Song.Event> = [];
 
 

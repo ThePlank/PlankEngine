@@ -1038,9 +1038,9 @@ class PlayState extends MusicBeatState
 
 		// startCountdown();
 
-		if (SONG.song == null)
+		//if (SONG.song == null)
 			//trace('song is null???');
-		else
+		//else
 			//trace('song looks gucci');
 
 		generateSong(SONG.song);

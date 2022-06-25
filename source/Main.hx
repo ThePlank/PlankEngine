@@ -52,7 +52,6 @@ class Main extends Sprite
 		}
 	}
 
-	public static var webmHandler:WebmHandler;
 
 	private function init(?E:Event):Void
 	{

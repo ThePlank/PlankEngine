@@ -34,12 +34,12 @@ class PauseSubState extends MusicBeatSubstate
 	{
 		super();
 
-		if (PlayState.instance.useVideo)
-		{
-			menuItems.remove("Resume");
-			if (GlobalVideo.get().playing)
-				GlobalVideo.get().pause();
-		}
+		// if (PlayState.instance.useVideo)
+		// {
+		// 	menuItems.remove("Resume");
+		// 	if (GlobalVideo.get().playing)
+		// 		GlobalVideo.get().pause();
+		// }
 
 		pauseMusic = new FlxSound().loadEmbedded(Paths.music('breakfast'), true, true);
 		pauseMusic.volume = 0;
@@ -216,22 +216,22 @@ class PauseSubState extends MusicBeatSubstate
 					close();
 				case "Restart Song":
 					PlayState.startTime = 0;
-					if (PlayState.instance.useVideo)
-					{
-						GlobalVideo.get().stop();
-						PlayState.instance.remove(PlayState.instance.videoSprite);
-						PlayState.instance.removedVideo = true;
-					}
+					// if (PlayState.instance.useVideo)
+					// {
+					// 	GlobalVideo.get().stop();
+					// 	PlayState.instance.remove(PlayState.instance.videoSprite);
+					// 	PlayState.instance.removedVideo = true;
+					// }
 					PlayState.instance.clean();
 					FlxG.resetState();
 				case "Exit to menu":
 					PlayState.startTime = 0;
-					if (PlayState.instance.useVideo)
-					{
-						GlobalVideo.get().stop();
-						PlayState.instance.remove(PlayState.instance.videoSprite);
-						PlayState.instance.removedVideo = true;
-					}
+					// if (PlayState.instance.useVideo)
+					// {
+					// 	GlobalVideo.get().stop();
+					// 	PlayState.instance.remove(PlayState.instance.videoSprite);
+					// 	PlayState.instance.removedVideo = true;
+					// }
 					if(PlayState.loadRep)
 					{
 						FlxG.save.data.botplay = false;
@@ -246,8 +246,8 @@ class PauseSubState extends MusicBeatSubstate
 						PlayState.luaModchart = null;
 					}
 					#end
-					if (FlxG.save.data.fpsCap > 290)
-						(cast (Lib.current.getChildAt(0), Main)).setFPSCap(290);
+					if (FlxG.save.data.fpsCap > 120)
+						(cast (Lib.current.getChildAt(0), Main)).setFPSCap(120);
 					
 					PlayState.instance.clean();
 

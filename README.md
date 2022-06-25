@@ -1,84 +1,125 @@
 
-![Kade Engine logo](assets/preload/images/KadeEngineLogo.png)
+<div align="center">
+  
+  ![GitHub forks](https://img.shields.io/github/forks/ThePlank/PlankEngine?label=table%20forks&logo=github&style=for-the-badge)
+  ![GitHub](https://img.shields.io/github/license/ThePlank/PlankEngine?style=for-the-badge)
+  ![GitHub issues](https://img.shields.io/github/issues/ThePlank/PlankEngine?logo=github&style=for-the-badge)
+  [![shield](https://img.shields.io/badge/sex-is%20cool-white?style=for-the-badge)](https://shields.io)
+  [![shield](https://img.shields.io/badge/do%20not-sue%20me-red?style=for-the-badge)](https://shields.io)
+  [![shield](https://img.shields.io/badge/hscript-sucks%20ass-yellowgreen?style=for-the-badge)](https://shields.io)
+  ![GitHub repo file count](https://img.shields.io/github/directory-file-count/ThePlank/PlankEngine?label=the%20ammount%20of%20spaghetti&style=for-the-badge)
+  ![Discord](https://img.shields.io/discord/867820493965230136?label=the%20ammount%20of%20retarded%20pepole%20chatting&logo=discord&style=for-the-badge)
+  [![forthebadge](https://forthebadge.com/images/badges/0-percent-optimized.svg)](https://forthebadge.com)
+  [![forthebadge](https://forthebadge.com/images/badges/does-not-contain-treenuts.svg)](https://forthebadge.com)
+  [![forthebadge](https://forthebadge.com/images/badges/compatibility-club-penguin.svg)](https://forthebadge.com)
+  [![forthebadge](https://forthebadge.com/images/badges/built-with-swag.svg)](https://forthebadge.com)
+  [![forthebadge](https://forthebadge.com/images/badges/mom-made-pizza-rolls.svg)](https://forthebadge.com)
+  [![forthebadge](https://forthebadge.com/images/badges/designed-in-ms-paint.svg)](https://forthebadge.com)
+  [![forthebadge](https://forthebadge.com/images/badges/you-didnt-ask-for-this.svg)](https://forthebadge.com)
+  [![forthebadge](https://forthebadge.com/images/badges/it-works-why.svg)](https://forthebadge.com)
+  [![forthebadge](https://forthebadge.com/images/badges/contains-tasty-spaghetti-code.svg)](https://forthebadge.com)
+  [![forthebadge](data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNjUuNDUiIGhlaWdodD0iMzUiIHZpZXdCb3g9IjAgMCAxNjUuNDUgMzUiPjxyZWN0IGNsYXNzPSJzdmdfX3JlY3QiIHg9IjAiIHk9IjAiIHdpZHRoPSI3Ny44OSIgaGVpZ2h0PSIzNSIgZmlsbD0iIzMxQzRGMyIvPjxyZWN0IGNsYXNzPSJzdmdfX3JlY3QiIHg9Ijc1Ljg5IiB5PSIwIiB3aWR0aD0iODkuNTYiIGhlaWdodD0iMzUiIGZpbGw9IiMzODlBRDUiLz48cGF0aCBjbGFzcz0ic3ZnX190ZXh0IiBkPSJNMTUuNzggMjJMMTQuMzEgMjJMMTQuMzEgMTMuNDdMMTUuNzggMTMuNDdMMTUuNzggMjJaTTI4LjA1IDIyTDI2LjU3IDIyTDI2LjU3IDEzLjQ3TDI4LjA1IDEzLjQ3TDI4LjA1IDE3LjAyTDMxLjg3IDE3LjAyTDMxLjg3IDEzLjQ3TDMzLjM0IDEzLjQ3TDMzLjM0IDIyTDMxLjg3IDIyTDMxLjg3IDE4LjIxTDI4LjA1IDE4LjIxTDI4LjA1IDIyWk0zOC44NiAyMkwzNy4zMiAyMkw0MC41NCAxMy40N0w0MS44NyAxMy40N0w0NS4xMCAyMkw0My41NiAyMkw0Mi44NiAyMC4wMUwzOS41NSAyMC4wMUwzOC44NiAyMlpNNDEuMjEgMTUuMjhMMzkuOTcgMTguODJMNDIuNDQgMTguODJMNDEuMjEgMTUuMjhaTTUwLjc0IDE0LjY2TDQ4LjEwIDE0LjY2TDQ4LjEwIDEzLjQ3TDU0Ljg3IDEzLjQ3TDU0Ljg3IDE0LjY2TDUyLjIxIDE0LjY2TDUyLjIxIDIyTDUwLjc0IDIyTDUwLjc0IDE0LjY2Wk02NC4yMCAyMkw1OC42MyAyMkw1OC42MyAxMy40N0w2NC4xNiAxMy40N0w2NC4xNiAxNC42Nkw2MC4xMSAxNC42Nkw2MC4xMSAxNy4wMkw2My42MSAxNy4wMkw2My42MSAxOC4xOUw2MC4xMSAxOC4xOUw2MC4xMSAyMC44Mkw2NC4yMCAyMC44Mkw2NC4yMCAyMloiIGZpbGw9IiNGRkZGRkYiLz48cGF0aCBjbGFzcz0ic3ZnX190ZXh0IiBkPSJNOTEuNTAgMjJMODkuMDcgMjJMOTIuNzggMTMuNjBMOTUuMTIgMTMuNjBMOTguODQgMjJMOTYuMzcgMjJMOTUuNzEgMjAuMzdMOTIuMTYgMjAuMzdMOTEuNTAgMjJaTTkzLjkzIDE1LjkzTDkyLjg1IDE4LjYxTDk1LjAxIDE4LjYxTDkzLjkzIDE1LjkzWk0xMDUuMTkgMjJMMTAyLjk5IDIyTDEwMi45OSAxMy42MEwxMDQuOTUgMTMuNjBMMTA3LjkwIDE4LjQ1TDExMC43OCAxMy42MEwxMTIuNzQgMTMuNjBMMTEyLjc2IDIyTDExMC41OCAyMkwxMTAuNTYgMTcuNTVMMTA4LjM5IDIxLjE3TDEwNy4zNCAyMS4xN0wxMDUuMTkgMTcuNjdMMTA1LjE5IDIyWk0xMTcuNDkgMTcuODBMMTE3LjQ5IDE3LjgwUTExNy40OSAxNi41NSAxMTguMTAgMTUuNTVRMTE4LjcwIDE0LjU2IDExOS43NiAxNC4wMFExMjAuODMgMTMuNDMgMTIyLjE2IDEzLjQzTDEyMi4xNiAxMy40M1ExMjMuNDkgMTMuNDMgMTI0LjU1IDE0LjAwUTEyNS42MSAxNC41NiAxMjYuMjIgMTUuNTVRMTI2LjgzIDE2LjU1IDEyNi44MyAxNy44MEwxMjYuODMgMTcuODBRMTI2LjgzIDE5LjA1IDEyNi4yMiAyMC4wNFExMjUuNjEgMjEuMDQgMTI0LjU1IDIxLjYwUTEyMy40OSAyMi4xNyAxMjIuMTYgMjIuMTdMMTIyLjE2IDIyLjE3UTEyMC44MyAyMi4xNyAxMTkuNzYgMjEuNjBRMTE4LjcwIDIxLjA0IDExOC4xMCAyMC4wNFExMTcuNDkgMTkuMDUgMTE3LjQ5IDE3LjgwWk0xMTkuODkgMTcuODBMMTE5Ljg5IDE3LjgwUTExOS44OSAxOC41MSAxMjAuMTkgMTkuMDVRMTIwLjQ5IDE5LjYwIDEyMS4wMSAxOS45MFExMjEuNTMgMjAuMjAgMTIyLjE2IDIwLjIwTDEyMi4xNiAyMC4yMFExMjIuODAgMjAuMjAgMTIzLjMxIDE5LjkwUTEyMy44MyAxOS42MCAxMjQuMTMgMTkuMDVRMTI0LjQzIDE4LjUxIDEyNC40MyAxNy44MEwxMjQuNDMgMTcuODBRMTI0LjQzIDE3LjA5IDEyNC4xMyAxNi41NFExMjMuODMgMTYgMTIzLjMxIDE1LjcwUTEyMi44MCAxNS40MCAxMjIuMTYgMTUuNDBMMTIyLjE2IDE1LjQwUTEyMS41MiAxNS40MCAxMjEuMDEgMTUuNzBRMTIwLjQ5IDE2IDEyMC4xOSAxNi41NFExMTkuODkgMTcuMDkgMTE5Ljg5IDE3LjgwWk0xMzMuODkgMjJMMTMxLjU2IDIyTDEzMS41NiAxMy42MEwxMzMuNTEgMTMuNjBMMTM3LjIyIDE4LjA3TDEzNy4yMiAxMy42MEwxMzkuNTUgMTMuNjBMMTM5LjU1IDIyTDEzNy42MCAyMkwxMzMuODkgMTcuNTJMMTMzLjg5IDIyWk0xNDQuMjggMTcuODBMMTQ0LjI4IDE3LjgwUTE0NC4yOCAxNi41NCAxNDQuODggMTUuNTRRMTQ1LjQ4IDE0LjU1IDE0Ni41NSAxMy45OVExNDcuNjIgMTMuNDMgMTQ4Ljk2IDEzLjQzTDE0OC45NiAxMy40M1ExNTAuMTQgMTMuNDMgMTUxLjA3IDEzLjgzUTE1Mi4wMSAxNC4yMiAxNTIuNjMgMTQuOTdMMTUyLjYzIDE0Ljk3TDE1MS4xMiAxNi4zM1ExNTAuMjggMTUuNDAgMTQ5LjEwIDE1LjQwTDE0OS4xMCAxNS40MFExNDkuMDkgMTUuNDAgMTQ5LjA4IDE1LjQwTDE0OS4wOCAxNS40MFExNDguMDAgMTUuNDAgMTQ3LjM0IDE2LjA2UTE0Ni42OCAxNi43MSAxNDYuNjggMTcuODBMMTQ2LjY4IDE3LjgwUTE0Ni42OCAxOC41MCAxNDYuOTggMTkuMDRRMTQ3LjI4IDE5LjU5IDE0Ny44MiAxOS44OVExNDguMzYgMjAuMjAgMTQ5LjA2IDIwLjIwTDE0OS4wNiAyMC4yMFExNDkuNzQgMjAuMjAgMTUwLjM0IDE5LjkzTDE1MC4zNCAxOS45M0wxNTAuMzQgMTcuNjJMMTUyLjQ0IDE3LjYyTDE1Mi40NCAyMS4xMFExNTEuNzIgMjEuNjEgMTUwLjc4IDIxLjg5UTE0OS44NSAyMi4xNyAxNDguOTEgMjIuMTdMMTQ4LjkxIDIyLjE3UTE0Ny41OSAyMi4xNyAxNDYuNTQgMjEuNjFRMTQ1LjQ4IDIxLjA1IDE0NC44OCAyMC4wNVExNDQuMjggMTkuMDYgMTQ0LjI4IDE3LjgwWiIgZmlsbD0iI0ZGRkZGRiIgeD0iODguODkiLz48L3N2Zz4=)](https://forthebadge.com)
 
-[![AppVeyor](https://img.shields.io/appveyor/build/KadeDev/Kade-Engine-Windows?label=windows%20build)](https://ci.appveyor.com/project/KadeDev/kade-engine-windows/branch/master/artifacts) [![AppVeyor](https://img.shields.io/appveyor/build/KadeDev/Kade-Engine-Macos?label=macOS%20build)](https://ci.appveyor.com/project/KadeDev/kade-engine-macos/branch/master/artifacts)  [![AppVeyor](https://img.shields.io/appveyor/build/KadeDev/Kade-Engine-Linux?label=linux%20build)](https://ci.appveyor.com/project/KadeDev/kade-engine-linux/branch/master/artifacts) [![AppVeyor](https://img.shields.io/appveyor/build/daniel11420/KadeEngineWeb?label=html5&20build)](https://ci.appveyor.com/project/daniel11420/KadeEngineWeb) [![Discord](https://img.shields.io/discord/808039740464300104?label=discord)](https://discord.gg/MG6GQFh52U) [![GitHub issues](https://img.shields.io/github/issues/KadeDev/Kade-Engine)](https://github.com/KadeDev/Kade-Engine/issues) [![GitHub pull requests](https://img.shields.io/github/issues-pr/KadeDev/Kade-Engine)](https://github.com/KadeDev/Kade-Engine/pulls) []() []()
 
-![GitHub commits since latest release (by date)](https://img.shields.io/github/commits-since/KadeDev/Kade-Engine/latest) ![GitHub repo size](https://img.shields.io/github/repo-size/KadeDev/Kade-Engine) ![Lines of code](https://img.shields.io/tokei/lines/github/KadeDev/Kade-Engine) ![Supported platforms](https://img.shields.io/badge/supported%20platforms-windows%2C%20macOS%2C%20linux%2C%20html5-blue) ![GitHub all releases](https://img.shields.io/github/downloads/KadeDev/Kade-Engine/total) ![GitHub](https://img.shields.io/github/license/KadeDev/Kade-Engine) ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/KadeDev/Kade-Engine?include_prereleases&label=latest%20version) 
+![Logo](assets/preload/images/plankEngineLogo.png "Title")
+  
+Brings numerous quality of life and features together
+# Friday Night Funkin'
+This is the repository for Friday Night Funkin, a game originally made for Ludum Dare 47 "Stuck In a Loop".
 
-# Friday Night Funkin': Kade Engine
+Play the Ludum Dare prototype here: https://ninja-muffin24.itch.io/friday-night-funkin
 
-### If you want to contribute to Kade Engine, read [this](https://github.com/KadeDev/Kade-Engine/blob/stable/CONTRIBUTING.md) first.
-### If you want to build Kade Engine, read [this](https://github.com/KadeDev/Kade-Engine/blob/stable/docs/building.md).
+Play the Newgrounds one here: https://www.newgrounds.com/portal/view/770371
 
-## Friday Night Funkin'
-**Friday Night Funkin'** is a rhythm game originally made for Ludum Dare 47 "Stuck In a Loop".
+Support the project on the itch.io page: https://ninja-muffin24.itch.io/funkin
 
-Links: **[itch.io page](https://ninja-muffin24.itch.io/funkin) ⋅ [Newgrounds](https://www.newgrounds.com/portal/view/770371) ⋅ [source code on GitHub](https://github.com/ninjamuffin99/Funkin)**
-> Uh oh! Your tryin to kiss ur hot girlfriend, but her MEAN and EVIL dad is trying to KILL you! He's an ex-rockstar, the only way to get to his heart? The power of music... 
+> If you make a mod and distribute a modified / recomipled version, you must open source your mod as well.
+# Plank Engine
+Plank Engine is a modification of Friday Night Funkin' Kade Engine that provides quality of life inprovements.
 
-## Kade Engine
-**Kade Engine** is a mod for Friday Night Funkin', including a full engine rework, replays, and more.
+This game was made with love to Newgrounds and it's community. Extra love to Tom Fulp.
 
-Links: **[GameBanana mod page](https://gamebanana.com/gamefiles/16761) ⋅ [play in browser](https://funkin.puyo.xyz) ⋅ [latest stable release](https://github.com/KadeDev/Kade-Engine/releases/latest) ⋅ [latest development build (windows)](https://ci.appveyor.com/project/KadeDev/kade-engine-windows/branch/master/artifacts) ⋅ [latest development build (macOS)](https://ci.appveyor.com/project/KadeDev/kade-engine-macos/branch/master/artifacts) ⋅ [latest development build (linux)](https://ci.appveyor.com/project/KadeDev/kade-engine-linux/branch/master/artifacts)**
+## Build instructions
 
-**REMEMBER**: This is a **mod**. This is not the vanilla game and should be treated as a **modification**. This is not and probably will never be official, so don't get confused.
+These instructions are for compiling the game's source code!
 
-## Website ([KadeDev.github.io/kade-engine/](https://KadeDev.github.io/Kade-Engine/))
-If you're looking for documentation, changelogs, or guides, you can find those on the Kade Engine website.
+If you want to just download and install and play the game normally, go to github to download the game for PC!
 
-# Previews ([skip](#features))
+https://github.com/ThePlank/PlankEngine/releases
 
-![Title Screen](art/readme/KadeEngineTitleScreen.png)
+If you want to compile the game yourself, continue reading!
 
-![Week Select](art/readme/KadeEngineWeekSelect.png)
+### Installing the Required Programs
 
-![Freeplay](art/readme/KadeEngineFreeplay.png)
+</div>
 
-![Options](art/readme/KadeEngineOptions.png)
+First you need to install Haxe and HaxeFlixel. I'm too lazy to write and keep updated with that setup (which is pretty simple). 
+1. [Install Haxe 4.1.5](https://haxe.org/download/version/4.1.5/) (Download 4.1.5 instead of 4.2.0 because 4.2.0 is broken and is not working with gits properly...)
+2. [Install HaxeFlixel](https://haxeflixel.com/documentation/install-haxeflixel/) after downloading Haxe
 
-![Senpai Gameplay (Hard, Upscroll)](art/readme/KadeEnginePixelGameplay.png)
+Other installations you'd need is the additional libraries, a fully updated list will be in `Project.xml` in the project root. Currently, these are all of the things you need to install:
 
-![Roses Dialogue](art/readme/KadeEngineDialogue.png)
 
-![Pause Screen](art/readme/KadeEnginePauseScreen.png)
+```
+flixel
+flixel-addons
+flixel-ui
+lime
+openfl
+hscript
+```
 
-![Results Screen](art/readme/KadeEngineResultsScreen.png)
+<div align="center">
 
-![Replay Loader](art/readme/KadeEngineReplayLoader.png)
+So for each of those type `haxelib install [library]` so shit like `haxelib install hscript`
 
-# Features
+You'll also need to install a couple things that involve Gits. To do this, you need to do a few things first.
+1. Download [git-scm](https://git-scm.com/downloads). Works for Windows, Mac, and Linux, just select your build.
+2. Follow instructions to install the application properly.
+3. Run `haxelib git polymod https://github.com/larsiusprime/polymod.git` to install Polymod.
+4. Run `haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc` to install Discord RPC.
+5. Run `haxelib git flixel-addons https://github.com/HaxeFlixel/flixel-addons` in the terminal/command-prompt.
 
- - **New Input System**
-	 - An improved input system, similar to Quaver or Etterna, with less delays, less dropped inputs and other improvements.
- - **More information during gameplay**
-	 - While you're playing, we show you information about how you're doing, such as your accuracy, combo break count, notes per second, and your grade/rating.
- - **Customizable keybinds**
-	 - Instead of being forced to use WASD and the arrow keys, you can set any keybinds you want!
- - **Replays** (in beta)
-	 - Have you ever gotten a crazy score but didn't record? The replay system solves that: it automatically saves a "replay" of your gameplay every time you complete a song, which you can play back inside of the game. 
-	 - Replays just store information about what you're doing, they don't actually record the screen -- so they take up way less space on your disk than videos.
- - **Audio offset**
-	 - If your speakers or headphones are delayed, you can set an offset in the options menu to line the game up with the delay and play with synced audio like intended!
- - **And much, much more!**
-	 - There's so much more in store than just what's listed here! If you can imagine a quality of life feature, it's probably
-	 either already included in Kade Engine or is being worked on!
+You should have everything ready for compiling the game! Follow the guide below to continue!
+
+
+and you should be good to go there.
+
+### Compiling game
+
+Once you have all those installed, it's pretty easy to compile the game. You just need to run 'lime test html5 -debug' in the root of the project to build and run the HTML5 version. (command prompt navigation guide can be found here: [https://ninjamuffin99.newgrounds.com/news/post/1090480](https://ninjamuffin99.newgrounds.com/news/post/1090480))
+
+To run it from your desktop (Windows, Mac, Linux) it can be a bit more involved. For Linux, you only need to open a terminal in the project directory and run 'lime test linux -debug' and then run the executable file in export/release/linux/bin. For Windows, you need to install Visual Studio Community 2019. While installing VSC, don't click on any of the options to install workloads. Instead, go to the individual components tab and choose the following:
+
+* MSVC v142 - VS 2019 C++ x64/x86 build tools
+* Windows 10 SDK (Any version)
+
+
+This will install about 3GB of libraries, but once that is done you can open up a command line in the project's directory and run `lime test windows`. Once that command finishes (it takes forever even on a higher end PC), you can run FNF from the .exe file under export\release\windows\bin
+As for Mac, `lime test mac` should work, if not the internet surely has a guide on how to compile Haxe stuff for Mac.
 
 # Credits
-### Friday Night Funkin'
- - [ninjamuffin99](https://twitter.com/ninja_muffin99) - Programming
- - [PhantomArcade3K](https://twitter.com/phantomarcade3k) and [Evilsk8r](https://twitter.com/evilsk8r) - Art
- - [Kawai Sprite](https://twitter.com/kawaisprite) - Music
 
-This game was made with love to Newgrounds and its community. Extra love to Tom Fulp.
-### Kade Engine
-- [KadeDeveloper](https://twitter.com/KadeDeveloper) - Maintainer and lead programmer
-- [The contributors](https://github.com/KadeDev/Kade-Engine/graphs/contributors)
+## Friday Night Funkin'
+[ninjamuffin99](https://twitter.com/ninja_muffin99) - Programmer
+
+[PhantomArcade3K](https://twitter.com/phantomarcade3k) and 
+
+[Evilsk8r](https://twitter.com/evilsk8r) - Art
+
+[Kawaisprite](https://twitter.com/kawaisprite) - Musician
+## Plank Engine
+[ThePlank (me!)](https://github.com/ThePlank) - Owner And Main Coder
+
+[SnakDev](https://github.com/SnakDev) - Co-Owner and stupid detail adder
+## Special Thanks
+[KadeDev](https://github.com/KadeDev) - Kade Engine
+
+[Verwex](https://github.com/Verwex) - Memory counter
+
+### Additional guides
+
+[Command line basics](https://ninjamuffin99.newgrounds.com/news/post/1090480)
 
 
-
-### Shoutouts
-- [GWebDev](https://github.com/GrowtopiaFli) - Video Code
-- [Rozebud](https://github.com/ThatRozebudDude) - Ideas (that I stole)
-- [Puyo](https://github.com/puyoxyz) - Setting up appveyor and a lot of other help
-- [Smokey](https://github.com/Smokey555) - telling me that I should do the tricky asset loading
-- [Poco](https://github.com/poco0317) - math degree (aka most of the fucking math in this project)
+</div>

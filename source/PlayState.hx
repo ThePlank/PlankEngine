@@ -14,9 +14,6 @@ import openfl.ui.Keyboard;
 import openfl.events.KeyboardEvent;
 import Replay.Ana;
 import Replay.Analysis;
-#if cpp
-import webm.WebmPlayer;
-#end
 import flixel.input.keyboard.FlxKey;
 import haxe.Exception;
 import openfl.geom.Matrix;
@@ -1709,8 +1706,8 @@ class PlayState extends MusicBeatState
 				allowedToHeadbang = false;
 		}
 
-		if (useVideo)
-			GlobalVideo.get().resume();
+		// if (useVideo)
+		// 	GlobalVideo.get().resume();
 
 		#if windows
 		// Updating Discord Rich Presence (with Time Left)
@@ -2277,16 +2274,16 @@ class PlayState extends MusicBeatState
 		if (PlayStateChangeables.botPlay && FlxG.keys.justPressed.ONE)
 			camHUD.visible = !camHUD.visible;
 
-		if (useVideo && GlobalVideo.get() != null && !stopUpdate)
-		{
-			if (GlobalVideo.get().ended && !removedVideo)
-			{
-				remove(videoSprite);
-				FlxG.stage.window.onFocusOut.remove(focusOut);
-				FlxG.stage.window.onFocusIn.remove(focusIn);
-				removedVideo = true;
-			}
-		}
+		// if (useVideo && GlobalVideo.get() != null && !stopUpdate)
+		// {
+		// 	if (GlobalVideo.get().ended && !removedVideo)
+		// 	{
+		// 		remove(videoSprite);
+		// 		FlxG.stage.window.onFocusOut.remove(focusOut);
+		// 		FlxG.stage.window.onFocusIn.remove(focusIn);
+		// 		removedVideo = true;
+		// 	}
+		// }
 
 		#if cpp
 		if (executeModchart && luaModchart != null && songStarted)
@@ -2418,16 +2415,16 @@ class PlayState extends MusicBeatState
 
 		if (FlxG.keys.justPressed.SEVEN && songStarted)
 		{
-			if (useVideo)
-			{
-				GlobalVideo.get().stop();
-				remove(videoSprite);
-				#if sys
-				FlxG.stage.window.onFocusOut.remove(focusOut);
-				FlxG.stage.window.onFocusIn.remove(focusIn);
-				#end
-				removedVideo = true;
-			}
+			// if (useVideo)
+			// {
+			// 	GlobalVideo.get().stop();
+			// 	remove(videoSprite);
+			// 	#if sys
+			// 	FlxG.stage.window.onFocusOut.remove(focusOut);
+			// 	FlxG.stage.window.onFocusIn.remove(focusIn);
+			// 	#end
+			// 	removedVideo = true;
+			// }
 			cannotDie = true;
 			#if cpp
 			DiscordClient.changePresence("Chart Editor", null, null, true);
@@ -3316,13 +3313,13 @@ class PlayState extends MusicBeatState
 		endingSong = true;
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, handleInput);
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, releaseInput);
-		if (useVideo)
-		{
-			GlobalVideo.get().stop();
-			FlxG.stage.window.onFocusOut.remove(focusOut);
-			FlxG.stage.window.onFocusIn.remove(focusIn);
-			PlayState.instance.remove(PlayState.instance.videoSprite);
-		}
+		// if (useVideo)
+		// {
+		// 	GlobalVideo.get().stop();
+		// 	FlxG.stage.window.onFocusOut.remove(focusOut);
+		// 	FlxG.stage.window.onFocusIn.remove(focusIn);
+		// 	PlayState.instance.remove(PlayState.instance.videoSprite);
+		// }
 
 
 		if (!loadRep)
@@ -3334,8 +3331,8 @@ class PlayState extends MusicBeatState
 			PlayStateChangeables.useDownscroll = false;
 		}
 
-		if (FlxG.save.data.fpsCap > 290)
-			(cast(Lib.current.getChildAt(0), Main)).setFPSCap(290);
+		if (FlxG.save.data.fpsCap > 120)
+			(cast(Lib.current.getChildAt(0), Main)).setFPSCap(120);
 
 		#if cpp
 		if (luaModchart != null)
@@ -3865,7 +3862,7 @@ class PlayState extends MusicBeatState
 			{
 				if (daNote.isSustainNote && daNote.canBeHit && daNote.mustPress && holdArray[daNote.noteData] && daNote.sustainActive)
 				{
-					trace(daNote.sustainActive);
+					// trace(daNote.sustainActive);
 					goodNoteHit(daNote);
 				}
 			});
@@ -4072,8 +4069,6 @@ class PlayState extends MusicBeatState
 	public var fuckingVolume:Float = 1;
 	public var useVideo = false;
 
-	public static var webmHandler:WebmHandler;
-
 	public var playingDathing = false;
 
 	public var videoSprite:FlxSprite;
@@ -4100,63 +4095,63 @@ class PlayState extends MusicBeatState
 		// nada
 	}
 
-	public function backgroundVideo(source:String) // for background videos
-	{
-		#if cpp
-		useVideo = true;
+	// public function backgroundVideo(source:String) // for background videos
+	// {
+	// 	#if cpp
+	// 	useVideo = true;
 
-		FlxG.stage.window.onFocusOut.add(focusOut);
-		FlxG.stage.window.onFocusIn.add(focusIn);
+	// 	FlxG.stage.window.onFocusOut.add(focusOut);
+	// 	FlxG.stage.window.onFocusIn.add(focusIn);
 
-		var ourSource:String = "assets/videos/daWeirdVid/dontDelete.webm";
-		//WebmPlayer.SKIP_STEP_LIMIT = 90;
-		var str1:String = "WEBM SHIT";
-		webmHandler = new WebmHandler();
-		webmHandler.source(ourSource);
-		webmHandler.makePlayer();
-		webmHandler.webm.name = str1;
+	// 	var ourSource:String = "assets/videos/daWeirdVid/dontDelete.webm";
+	// 	//WebmPlayer.SKIP_STEP_LIMIT = 90;
+	// 	var str1:String = "WEBM SHIT";
+	// 	webmHandler = new WebmHandler();
+	// 	webmHandler.source(ourSource);
+	// 	webmHandler.makePlayer();
+	// 	webmHandler.webm.name = str1;
 
-		GlobalVideo.setWebm(webmHandler);
+	// 	GlobalVideo.setWebm(webmHandler);
 
-		GlobalVideo.get().source(source);
-		GlobalVideo.get().clearPause();
-		if (GlobalVideo.isWebm)
-		{
-			GlobalVideo.get().updatePlayer();
-		}
-		GlobalVideo.get().show();
+	// 	GlobalVideo.get().source(source);
+	// 	GlobalVideo.get().clearPause();
+	// 	if (GlobalVideo.isWebm)
+	// 	{
+	// 		GlobalVideo.get().updatePlayer();
+	// 	}
+	// 	GlobalVideo.get().show();
 
-		if (GlobalVideo.isWebm)
-		{
-			GlobalVideo.get().restart();
-		}
-		else
-		{
-			GlobalVideo.get().play();
-		}
+	// 	if (GlobalVideo.isWebm)
+	// 	{
+	// 		GlobalVideo.get().restart();
+	// 	}
+	// 	else
+	// 	{
+	// 		GlobalVideo.get().play();
+	// 	}
 
-		var data = webmHandler.webm.bitmapData;
+	// 	var data = webmHandler.webm.bitmapData;
 
-		videoSprite = new FlxSprite(-470, -30).loadGraphic(data);
+	// 	videoSprite = new FlxSprite(-470, -30).loadGraphic(data);
 
-		videoSprite.setGraphicSize(Std.int(videoSprite.width * 1.2));
+	// 	videoSprite.setGraphicSize(Std.int(videoSprite.width * 1.2));
 
-		remove(gf);
-		remove(boyfriend);
-		remove(dad);
-		add(videoSprite);
-		add(gf);
-		add(boyfriend);
-		add(dad);
+	// 	remove(gf);
+	// 	remove(boyfriend);
+	// 	remove(dad);
+	// 	add(videoSprite);
+	// 	add(gf);
+	// 	add(boyfriend);
+	// 	add(dad);
 
-		trace('poggers');
+	// 	trace('poggers');
 
-		if (!songStarted)
-			webmHandler.pause();
-		else
-			webmHandler.resume();
-		#end
-	}
+	// 	if (!songStarted)
+	// 		webmHandler.pause();
+	// 	else
+	// 		webmHandler.resume();
+	// 	#end
+	// }
 
 	function noteMiss(direction:Int = 1, daNote:Note):Void
 	{

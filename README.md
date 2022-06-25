@@ -76,7 +76,6 @@ So for each of those type `haxelib install [library]` so shit like `haxelib inst
 You'll also need to install a couple things that involve Gits. To do this, you need to do a few things first.
 1. Download [git-scm](https://git-scm.com/downloads). Works for Windows, Mac, and Linux, just select your build.
 2. Follow instructions to install the application properly.
-3. Run `haxelib git polymod https://github.com/larsiusprime/polymod.git` to install Polymod.
 4. Run `haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc` to install Discord RPC.
 5. Run `haxelib git flixel-addons https://github.com/HaxeFlixel/flixel-addons` in the terminal/command-prompt.
 

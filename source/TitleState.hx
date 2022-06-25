@@ -26,7 +26,7 @@ import flixel.util.FlxTimer;
 import lime.app.Application;
 import openfl.Assets;
 
-#if windows
+#if discord_rpc
 import Discord.DiscordClient;
 #end
 
@@ -52,9 +52,6 @@ class TitleState extends MusicBeatState
 
 	override public function create():Void
 	{
-		#if polymod
-		polymod.Polymod.init({modRoot: "mods", dirs: ['introMod']});
-		#end
 		
 		#if sys
 		if (!sys.FileSystem.exists(Sys.getCwd() + "/assets/replays"))

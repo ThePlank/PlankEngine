@@ -66,7 +66,7 @@ import lime.utils.Assets;
 import openfl.display.BlendMode;
 import openfl.display.StageQuality;
 import openfl.filters.ShaderFilter;
-#if cpp
+#if discord_rpc
 import Discord.DiscordClient;
 #end
 #if cpp
@@ -339,7 +339,7 @@ class PlayState extends MusicBeatState
 
 		trace('Mod chart: ' + executeModchart + " - " + Paths.lua(songLowercase + "/modchart"));
 
-		#if windows
+		#if discord_rpc
 		// Making difficulty text for Discord Rich Presence.
 		storyDifficultyText = CoolUtil.difficultyFromInt(storyDifficulty);
 
@@ -1709,7 +1709,7 @@ class PlayState extends MusicBeatState
 		// if (useVideo)
 		// 	GlobalVideo.get().resume();
 
-		#if windows
+		#if discord_rpc
 		// Updating Discord Rich Presence (with Time Left)
 		DiscordClient.changePresence(detailsText
 			+ " "
@@ -2106,7 +2106,7 @@ class PlayState extends MusicBeatState
 				vocals.pause();
 			}
 
-			#if cpp
+			#if discord_rpc
 			DiscordClient.changePresence("PAUSED on "
 				+ SONG.song
 				+ " ("
@@ -2140,7 +2140,7 @@ class PlayState extends MusicBeatState
 				startTimer.active = true;
 			paused = false;
 
-			#if cpp
+			#if discord_rpc
 			if (startTimer.finished)
 			{
 				DiscordClient.changePresence(detailsText
@@ -2178,7 +2178,7 @@ class PlayState extends MusicBeatState
 		vocals.time = Conductor.songPosition;
 		vocals.play();
 
-		#if cpp
+		#if discord_rpc
 		DiscordClient.changePresence(detailsText
 			+ " "
 			+ SONG.song
@@ -2426,7 +2426,7 @@ class PlayState extends MusicBeatState
 			// 	removedVideo = true;
 			// }
 			cannotDie = true;
-			#if cpp
+			#if discord_rpc
 			DiscordClient.changePresence("Chart Editor", null, null, true);
 			#end
 
@@ -2850,7 +2850,7 @@ class PlayState extends MusicBeatState
 
 				openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
 
-				#if cpp
+				#if discord_rpc
 				// Game Over doesn't get his own variable because it's only used here
 				DiscordClient.changePresence("GAME OVER -- "
 					+ SONG.song
@@ -2886,7 +2886,7 @@ class PlayState extends MusicBeatState
 
 				openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
 
-				#if cpp
+				#if discord_rpc
 				// Game Over doesn't get his own variable because it's only used here
 				DiscordClient.changePresence("GAME OVER -- "
 					+ SONG.song
@@ -3954,7 +3954,7 @@ class PlayState extends MusicBeatState
 				
 				if (boyfriend.holdTimer > Conductor.stepCrochet * 4 * 0.001 && (!holdArray.contains(true) || PlayStateChangeables.botPlay))
 				{
-					if (boyfriend.animation.curAnim.name.startsWith('sing') && !boyfriend.animation.curAnim.name.endsWith('miss') && (boyfriend.animation.curAnim.curFrame >= 10 || boyfriend.animation.curAnim.finished))
+					if (StringTools.startsWith(boyfriend.animation.curAnim.name, 'sing') && !StringTools.endsWith(boyfriend.animation.curAnim.name, 'miss') && (boyfriend.animation.curAnim.curFrame >= 10 || boyfriend.animation.curAnim.finished))
 						boyfriend.playAnim('idle');
 				}
 				else if (!FlxG.save.data.ghost)
@@ -4018,7 +4018,7 @@ class PlayState extends MusicBeatState
 
 		if (boyfriend.holdTimer > Conductor.stepCrochet * 4 * 0.001 && (!holdArray.contains(true) || PlayStateChangeables.botPlay))
 		{
-			if (boyfriend.animation.curAnim.name.startsWith('sing') && !boyfriend.animation.curAnim.name.endsWith('miss') && (boyfriend.animation.curAnim.curFrame >= 10 || boyfriend.animation.curAnim.finished))
+			if (StringTools.startsWith(boyfriend.animation.curAnim.name, 'sing') && !StringTools.endsWith(boyfriend.animation.curAnim.name, 'miss') && (boyfriend.animation.curAnim.curFrame >= 10 || boyfriend.animation.curAnim.finished))
 				boyfriend.playAnim('idle');
 		}
 
@@ -4528,7 +4528,7 @@ class PlayState extends MusicBeatState
 		// yes this updates every step.
 		// yes this is bad
 		// but i'm doing it to update misses and accuracy
-		#if windows
+		#if discord_rpc
 		// Song duration in a float, useful for the time left feature
 		songLength = FlxG.sound.music.length;
 
@@ -4589,7 +4589,7 @@ class PlayState extends MusicBeatState
 			// Conductor.changeBPM(SONG.bpm);
 
 			// Dad doesnt interupt his own notes
-			if ((!dad.animation.curAnim.name.startsWith("sing")) && dad.curCharacter != 'gf')
+			if ((!StringTools.startsWith(dad.animation.curAnim.name, "sing")) && dad.curCharacter != 'gf')
 				if ((curBeat % idleBeat == 0 || !idleToBeat) || dad.curCharacter == "spooky")
 					dad.dance(idleToBeat, SONG.notes[Math.floor(curStep / 16)].p1AltAnim);
 		}
@@ -4623,7 +4623,7 @@ class PlayState extends MusicBeatState
 			gf.dance();
 		}
 
-		if (!boyfriend.animation.curAnim.name.startsWith("sing") && (curBeat % idleBeat == 0 || !idleToBeat))
+		if (!StringTools.startsWith(boyfriend.animation.curAnim.name, "sing") && (curBeat % idleBeat == 0 || !idleToBeat))
 		{
 			boyfriend.playAnim('idle' + ((SONG.notes[Math.floor(curStep / 16)].p2AltAnim && boyfriend.animation.getByName('idle-alt') != null) ? '-alt' : ''), idleToBeat);
 		}

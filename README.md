@@ -1,14 +1,8 @@
 
 <div align="center">
   
-  ![GitHub forks](https://img.shields.io/github/forks/ThePlank/PlankEngine?label=table%20forks&logo=github&style=for-the-badge)
-  ![GitHub](https://img.shields.io/github/license/ThePlank/PlankEngine?style=for-the-badge)
-  ![GitHub issues](https://img.shields.io/github/issues/ThePlank/PlankEngine?logo=github&style=for-the-badge)
-  [![shield](https://img.shields.io/badge/sex-is%20cool-white?style=for-the-badge)](https://shields.io)
-  [![shield](https://img.shields.io/badge/do%20not-sue%20me-red?style=for-the-badge)](https://shields.io)
-  [![shield](https://img.shields.io/badge/hscript-sucks%20ass-yellowgreen?style=for-the-badge)](https://shields.io)
-  ![GitHub repo file count](https://img.shields.io/github/directory-file-count/ThePlank/PlankEngine?label=the%20ammount%20of%20spaghetti&style=for-the-badge)
-  ![Discord](https://img.shields.io/discord/867820493965230136?label=the%20ammount%20of%20retarded%20pepole%20chatting&logo=discord&style=for-the-badge)
+
+
   [![forthebadge](https://forthebadge.com/images/badges/0-percent-optimized.svg)](https://forthebadge.com)
   [![forthebadge](https://forthebadge.com/images/badges/does-not-contain-treenuts.svg)](https://forthebadge.com)
   [![forthebadge](https://forthebadge.com/images/badges/compatibility-club-penguin.svg)](https://forthebadge.com)
@@ -18,7 +12,16 @@
   [![forthebadge](https://forthebadge.com/images/badges/you-didnt-ask-for-this.svg)](https://forthebadge.com)
   [![forthebadge](https://forthebadge.com/images/badges/it-works-why.svg)](https://forthebadge.com)
   [![forthebadge](https://forthebadge.com/images/badges/contains-tasty-spaghetti-code.svg)](https://forthebadge.com)
-  [![forthebadge](data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNjUuNDUiIGhlaWdodD0iMzUiIHZpZXdCb3g9IjAgMCAxNjUuNDUgMzUiPjxyZWN0IGNsYXNzPSJzdmdfX3JlY3QiIHg9IjAiIHk9IjAiIHdpZHRoPSI3Ny44OSIgaGVpZ2h0PSIzNSIgZmlsbD0iIzMxQzRGMyIvPjxyZWN0IGNsYXNzPSJzdmdfX3JlY3QiIHg9Ijc1Ljg5IiB5PSIwIiB3aWR0aD0iODkuNTYiIGhlaWdodD0iMzUiIGZpbGw9IiMzODlBRDUiLz48cGF0aCBjbGFzcz0ic3ZnX190ZXh0IiBkPSJNMTUuNzggMjJMMTQuMzEgMjJMMTQuMzEgMTMuNDdMMTUuNzggMTMuNDdMMTUuNzggMjJaTTI4LjA1IDIyTDI2LjU3IDIyTDI2LjU3IDEzLjQ3TDI4LjA1IDEzLjQ3TDI4LjA1IDE3LjAyTDMxLjg3IDE3LjAyTDMxLjg3IDEzLjQ3TDMzLjM0IDEzLjQ3TDMzLjM0IDIyTDMxLjg3IDIyTDMxLjg3IDE4LjIxTDI4LjA1IDE4LjIxTDI4LjA1IDIyWk0zOC44NiAyMkwzNy4zMiAyMkw0MC41NCAxMy40N0w0MS44NyAxMy40N0w0NS4xMCAyMkw0My41NiAyMkw0Mi44NiAyMC4wMUwzOS41NSAyMC4wMUwzOC44NiAyMlpNNDEuMjEgMTUuMjhMMzkuOTcgMTguODJMNDIuNDQgMTguODJMNDEuMjEgMTUuMjhaTTUwLjc0IDE0LjY2TDQ4LjEwIDE0LjY2TDQ4LjEwIDEzLjQ3TDU0Ljg3IDEzLjQ3TDU0Ljg3IDE0LjY2TDUyLjIxIDE0LjY2TDUyLjIxIDIyTDUwLjc0IDIyTDUwLjc0IDE0LjY2Wk02NC4yMCAyMkw1OC42MyAyMkw1OC42MyAxMy40N0w2NC4xNiAxMy40N0w2NC4xNiAxNC42Nkw2MC4xMSAxNC42Nkw2MC4xMSAxNy4wMkw2My42MSAxNy4wMkw2My42MSAxOC4xOUw2MC4xMSAxOC4xOUw2MC4xMSAyMC44Mkw2NC4yMCAyMC44Mkw2NC4yMCAyMloiIGZpbGw9IiNGRkZGRkYiLz48cGF0aCBjbGFzcz0ic3ZnX190ZXh0IiBkPSJNOTEuNTAgMjJMODkuMDcgMjJMOTIuNzggMTMuNjBMOTUuMTIgMTMuNjBMOTguODQgMjJMOTYuMzcgMjJMOTUuNzEgMjAuMzdMOTIuMTYgMjAuMzdMOTEuNTAgMjJaTTkzLjkzIDE1LjkzTDkyLjg1IDE4LjYxTDk1LjAxIDE4LjYxTDkzLjkzIDE1LjkzWk0xMDUuMTkgMjJMMTAyLjk5IDIyTDEwMi45OSAxMy42MEwxMDQuOTUgMTMuNjBMMTA3LjkwIDE4LjQ1TDExMC43OCAxMy42MEwxMTIuNzQgMTMuNjBMMTEyLjc2IDIyTDExMC41OCAyMkwxMTAuNTYgMTcuNTVMMTA4LjM5IDIxLjE3TDEwNy4zNCAyMS4xN0wxMDUuMTkgMTcuNjdMMTA1LjE5IDIyWk0xMTcuNDkgMTcuODBMMTE3LjQ5IDE3LjgwUTExNy40OSAxNi41NSAxMTguMTAgMTUuNTVRMTE4LjcwIDE0LjU2IDExOS43NiAxNC4wMFExMjAuODMgMTMuNDMgMTIyLjE2IDEzLjQzTDEyMi4xNiAxMy40M1ExMjMuNDkgMTMuNDMgMTI0LjU1IDE0LjAwUTEyNS42MSAxNC41NiAxMjYuMjIgMTUuNTVRMTI2LjgzIDE2LjU1IDEyNi44MyAxNy44MEwxMjYuODMgMTcuODBRMTI2LjgzIDE5LjA1IDEyNi4yMiAyMC4wNFExMjUuNjEgMjEuMDQgMTI0LjU1IDIxLjYwUTEyMy40OSAyMi4xNyAxMjIuMTYgMjIuMTdMMTIyLjE2IDIyLjE3UTEyMC44MyAyMi4xNyAxMTkuNzYgMjEuNjBRMTE4LjcwIDIxLjA0IDExOC4xMCAyMC4wNFExMTcuNDkgMTkuMDUgMTE3LjQ5IDE3LjgwWk0xMTkuODkgMTcuODBMMTE5Ljg5IDE3LjgwUTExOS44OSAxOC41MSAxMjAuMTkgMTkuMDVRMTIwLjQ5IDE5LjYwIDEyMS4wMSAxOS45MFExMjEuNTMgMjAuMjAgMTIyLjE2IDIwLjIwTDEyMi4xNiAyMC4yMFExMjIuODAgMjAuMjAgMTIzLjMxIDE5LjkwUTEyMy44MyAxOS42MCAxMjQuMTMgMTkuMDVRMTI0LjQzIDE4LjUxIDEyNC40MyAxNy44MEwxMjQuNDMgMTcuODBRMTI0LjQzIDE3LjA5IDEyNC4xMyAxNi41NFExMjMuODMgMTYgMTIzLjMxIDE1LjcwUTEyMi44MCAxNS40MCAxMjIuMTYgMTUuNDBMMTIyLjE2IDE1LjQwUTEyMS41MiAxNS40MCAxMjEuMDEgMTUuNzBRMTIwLjQ5IDE2IDEyMC4xOSAxNi41NFExMTkuODkgMTcuMDkgMTE5Ljg5IDE3LjgwWk0xMzMuODkgMjJMMTMxLjU2IDIyTDEzMS41NiAxMy42MEwxMzMuNTEgMTMuNjBMMTM3LjIyIDE4LjA3TDEzNy4yMiAxMy42MEwxMzkuNTUgMTMuNjBMMTM5LjU1IDIyTDEzNy42MCAyMkwxMzMuODkgMTcuNTJMMTMzLjg5IDIyWk0xNDQuMjggMTcuODBMMTQ0LjI4IDE3LjgwUTE0NC4yOCAxNi41NCAxNDQuODggMTUuNTRRMTQ1LjQ4IDE0LjU1IDE0Ni41NSAxMy45OVExNDcuNjIgMTMuNDMgMTQ4Ljk2IDEzLjQzTDE0OC45NiAxMy40M1ExNTAuMTQgMTMuNDMgMTUxLjA3IDEzLjgzUTE1Mi4wMSAxNC4yMiAxNTIuNjMgMTQuOTdMMTUyLjYzIDE0Ljk3TDE1MS4xMiAxNi4zM1ExNTAuMjggMTUuNDAgMTQ5LjEwIDE1LjQwTDE0OS4xMCAxNS40MFExNDkuMDkgMTUuNDAgMTQ5LjA4IDE1LjQwTDE0OS4wOCAxNS40MFExNDguMDAgMTUuNDAgMTQ3LjM0IDE2LjA2UTE0Ni42OCAxNi43MSAxNDYuNjggMTcuODBMMTQ2LjY4IDE3LjgwUTE0Ni42OCAxOC41MCAxNDYuOTggMTkuMDRRMTQ3LjI4IDE5LjU5IDE0Ny44MiAxOS44OVExNDguMzYgMjAuMjAgMTQ5LjA2IDIwLjIwTDE0OS4wNiAyMC4yMFExNDkuNzQgMjAuMjAgMTUwLjM0IDE5LjkzTDE1MC4zNCAxOS45M0wxNTAuMzQgMTcuNjJMMTUyLjQ0IDE3LjYyTDE1Mi40NCAyMS4xMFExNTEuNzIgMjEuNjEgMTUwLjc4IDIxLjg5UTE0OS44NSAyMi4xNyAxNDguOTEgMjIuMTdMMTQ4LjkxIDIyLjE3UTE0Ny41OSAyMi4xNyAxNDYuNTQgMjEuNjFRMTQ1LjQ4IDIxLjA1IDE0NC44OCAyMC4wNVExNDQuMjggMTkuMDYgMTQ0LjI4IDE3LjgwWiIgZmlsbD0iI0ZGRkZGRiIgeD0iODguODkiLz48L3N2Zz4=)](https://forthebadge.com)
+  [![shield](https://img.shields.io/badge/sex-is%20cool-white?style=for-the-badge)](https://shields.io)
+  [![shield](https://img.shields.io/badge/do%20not-sue%20me-red?style=for-the-badge)](https://shields.io)
+  [![shield](https://img.shields.io/badge/hscript-sucks%20ass-yellowgreen?style=for-the-badge)](https://shields.io)
+  ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/ThePlank/PlankEngine/Build?label=stolen%20cli&logo=github&style=for-the-badge)
+  ![GitHub repo file count](https://img.shields.io/github/directory-file-count/ThePlank/PlankEngine?label=the%20ammount%20of%20spaghetti&style=for-the-badge)
+  ![GitHub forks](https://img.shields.io/github/forks/ThePlank/PlankEngine?label=table%20forks&logo=github&style=for-the-badge)
+  ![GitHub](https://img.shields.io/github/license/ThePlank/PlankEngine?style=for-the-badge)
+  ![GitHub issues](https://img.shields.io/github/issues/ThePlank/PlankEngine?logo=github&style=for-the-badge)
+  [![Twitter](https://img.shields.io/twitter/url?label=talk%20crap%20about%20the%20engine&logoColor=purple&style=social&url=https%3A%2F%2Fgithub.com%2FThePlank%2FPlankEngine)](https://twitter.com/intent/tweet?text=Wow:&url=https%3A%2F%2Fgithub.com%2FThePlank%2FPlankEngine)
+
 
 
 ![Logo](assets/preload/images/plankEngineLogo.png "Title")

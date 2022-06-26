@@ -115,7 +115,6 @@
 	<haxelib name="hscript" />
 
 	<haxelib name="actuate" />
-	<!-- <haxelib name="extension-webm"/> Make sure to use https://github.com/KadeDev/extension-webm/ -->
 	<haxelib name="hxCodec"/>
 
 	<!--In case you want to use the ui package-->
@@ -136,6 +135,7 @@
 
 	<!--Enable the Flixel core recording system-->
 	<!--<haxedef name="FLX_RECORD" />-->
+
 
 	<!--Disable the right and middle mouse buttons-->
 	<!-- <haxedef name="FLX_NO_MOUSE_ADVANCED" /> -->
@@ -161,6 +161,7 @@
 	<!--Disable the Flixel core debugger. Automatically gets set whenever you compile in release mode!-->
 	<haxedef name="FLX_NO_DEBUG" unless="debug" />
 
+	<!-- Disable to stop letting memory going over 1GB -->
 	<haxedef name="HXCPP_GC_BIG_BLOCKS"/>
 
 	<!--Enable this for Nape release builds for a serious peformance improvement-->
@@ -182,4 +183,12 @@
 
 	<!-- <haxedef name="SKIP_TO_PLAYSTATE" if="debug" /> -->
 	
+	<!-- Disable if you don't want mods folder support -->
+	<haxedef name="MODS_ALLOWED"/>
+
+	<!-- Disable if you don't want psych engine's lua system -->
+	<haxedef name="PSYCH_LUA_ALLOWED"/>
+
+	<!-- Disable if you don't want plank engine's hscript system -->
+	<haxedef name="PLANK_HSCRIPT_ALLOWED"/>
 </project>

@@ -37,8 +37,9 @@ jobs:
           haxelib install flixel-tools
           haxelib install flixel-ui
           haxelib install flixel-addons
-          haxelib git linc_luajit https://github.com/AndreiRudenko/linc_luajit
+          haxelib git linc_luajit https://github.com/nebulazorua/linc_luajit
           haxelib install hscript
+          haxelib install hscript-ex
           haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
           haxelib install hxcpp-debug-server
           haxelib install hxCodec
@@ -75,8 +76,9 @@ jobs:
           haxelib install flixel-tools
           haxelib install flixel-ui
           haxelib install flixel-addons
-          haxelib git linc_luajit https://github.com/AndreiRudenko/linc_luajit
+          haxelib git linc_luajit https://github.com/nebulazorua/linc_luajit
           haxelib install hscript
+          haxelib install hscript-ex
           haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
           haxelib install hxcpp-debug-server
           haxelib install hxCodec
@@ -115,8 +117,9 @@ jobs:
           haxelib install flixel-tools
           haxelib install flixel-ui
           haxelib install flixel-addons
-          haxelib git linc_luajit https://github.com/AndreiRudenko/linc_luajit
+          haxelib git linc_luajit https://github.com/nebulazorua/linc_luajit
           haxelib install hscript
+          haxelib install hscript-ex
           haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
           haxelib install hxcpp-debug-server
           haxelib install hxCodec

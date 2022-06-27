@@ -16,4 +16,4 @@ Changes marked with 💖 will be listed in the short version of the changelog in
 - Fixed song names so they don't crash (💖)
 
 ## Links
-[GitHub Release](https://github.com/KadeDev/Kade-Engine/releases/tag/1.5.3) · [Last Windows CI build](https://ci.appveyor.com/project/KadeDev/kade-engine-windows/builds/39671466) · [Last macOS CI build](https://ci.appveyor.com/project/KadeDev/kade-engine-macos/builds/39671465) · [Last Linux CI build](https://ci.appveyor.com/project/KadeDev/kade-engine-linux/builds/39671464)
+[GitHub Release](https://github.com/ThePlank/PlankEngine/releases/tag/1.5.3) · [Last Windows CI build](https://ci.appveyor.com/project/KadeDev/kade-engine-windows/builds/39671466) · [Last macOS CI build](https://ci.appveyor.com/project/KadeDev/kade-engine-macos/builds/39671465) · [Last Linux CI build](https://ci.appveyor.com/project/KadeDev/kade-engine-linux/builds/39671464)

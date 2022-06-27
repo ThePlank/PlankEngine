@@ -106,6 +106,7 @@ class TitleState extends abstracts.MusicBeatState
 	}
 
 	var logoBl:FlxSprite;
+	var bg:FlxSprite;
 	var gfDance:FlxSprite;
 	var danceLeft:Bool = false;
 	var titleText:FlxSprite;
@@ -114,10 +115,11 @@ class TitleState extends abstracts.MusicBeatState
 	{
 		persistentUpdate = true;
 
-		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
-		// bg.antialiasing = FlxG.save.data.antialiasing;
-		// bg.setGraphicSize(Std.int(bg.width * 0.6));
-		// bg.updateHitbox();
+		bg = new FlxSprite();
+
+		bg.loadGraphic(Paths.image("titleBG"));
+		bg.scale.set(1.2, 1.2);
+		bg.updateHitbox();
 		add(bg);
 
 		if (Main.watermarks) {
@@ -257,6 +259,10 @@ class TitleState extends abstracts.MusicBeatState
 			}
 		}
 		#end
+
+		if (bg != null) {
+			bg.screenCenter();
+		}
 
 		if (pressedEnter && !transitioning && skippedIntro)
 		{

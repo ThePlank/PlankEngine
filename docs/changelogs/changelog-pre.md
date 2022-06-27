@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **THIS UPDATE WILL RESET YOUR SAVE FOR KADE ENGINE**, so you gotta redo all of ur settings.
 
 ### Added
-- Lua Modchart support [(documentation located here)](https://github.com/KadeDev/Kade-Engine/blob/master/ModCharts.md)
+- Lua Modchart support [(documentation located here)](https://github.com/ThePlank/PlankEngine/blob/master/ModCharts.md)
 - New option called watermarks which removes all watermarks from Kade Engine
 - Chart spesfic offsets
 

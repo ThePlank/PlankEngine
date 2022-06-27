@@ -24,7 +24,7 @@
 
 
 
-![Logo](assets/preload/images/plankEngineLogo.png "Title")
+![Logo](assets/preload/images/PlankEngineLogo.png "Title")
   
 Brings numerous quality of life and features together
 # Friday Night Funkin'

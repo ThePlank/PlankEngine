@@ -88,7 +88,7 @@ class Main extends Sprite
 		}
 
 		#if !cpp
-		framerate = 60;
+		framerate = 120;
 		#end
 
 		#if cpp

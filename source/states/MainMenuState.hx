@@ -58,7 +58,6 @@ class MainMenuState extends abstracts.MusicBeatState
 
 		persistentUpdate = persistentDraw = true;
 
-        var yScroll:Float = Math.max(0.25 - (0.05 * (optionShit.length - 4)), 0.1);
 		var bg:FlxSprite = new FlxSprite(-100).loadGraphic(Paths.image('menuBG'));
 		bg.setGraphicSize(Std.int(bg.width * 1.1));
 		bg.updateHitbox();
@@ -70,7 +69,6 @@ class MainMenuState extends abstracts.MusicBeatState
 		add(camFollow);
 
 		magenta = new FlxSprite(-80).loadGraphic(Paths.image('menuDesat'));
-		magenta.scrollFactor.set(0, yScroll);
 		magenta.setGraphicSize(Std.int(magenta.width * 1.1));
 		magenta.updateHitbox();
 		magenta.screenCenter();

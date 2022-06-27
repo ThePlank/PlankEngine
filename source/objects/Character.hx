@@ -233,52 +233,6 @@ class Character extends FlxSprite
 
 				flipX = true;
 
-			case 'BOYFRIEND-OG':
-				var tex = Paths.getSparrowAtlas('BOYFRIEND-OG','shared',true);
-				frames = tex;
-
-				trace(tex.frames.length);
-
-				animation.addByPrefix('idle', 'BF idle dance', 24, false);
-				animation.addByPrefix('singUP', 'BF NOTE UP0', 24, false);
-				animation.addByPrefix('singLEFT', 'BF NOTE LEFT0', 24, false);
-				animation.addByPrefix('singRIGHT', 'BF NOTE RIGHT0', 24, false);
-				animation.addByPrefix('singDOWN', 'BF NOTE DOWN0', 24, false);
-				animation.addByPrefix('singUPmiss', 'BF NOTE UP MISS', 24, false);
-				animation.addByPrefix('singLEFTmiss', 'BF NOTE LEFT MISS', 24, false);
-				animation.addByPrefix('singRIGHTmiss', 'BF NOTE RIGHT MISS', 24, false);
-				animation.addByPrefix('singDOWNmiss', 'BF NOTE DOWN MISS', 24, false);
-				animation.addByPrefix('hey', 'BF HEY', 24, false);
-
-				animation.addByPrefix('firstDeath', "BF dies", 24, false);
-				animation.addByPrefix('deathLoop', "BF Dead Loop", 24, false);
-				animation.addByPrefix('deathConfirm', "BF Dead confirm", 24, false);
-
-				animation.addByPrefix('scared', 'BF idle shaking', 24);
-
-				loadOffsetFile(curCharacter);
-
-				playAnim('idle');
-
-				flipX = true;
-
-				case 'BF_DEATH':
-					var tex = Paths.getSparrowAtlas('BF_DEATH','shared',true);
-					frames = tex;
-	
-					trace(tex.frames.length);
-	
-					animation.addByPrefix('firstDeath', "BF dies", 24, false);
-					animation.addByPrefix('deathLoop', "BF Dead Loop", 24, false);
-					animation.addByPrefix('deathConfirm', "BF Dead confirm", 24, false);
-	
-	
-					loadOffsetFile(curCharacter);
-	
-					playAnim('firstDeath');
-	
-					flipX = true;
-
 			case 'bf-christmas':
 				var tex = Paths.getSparrowAtlas('bfChristmas','shared',true);
 				frames = tex;

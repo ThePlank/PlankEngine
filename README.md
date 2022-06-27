@@ -57,7 +57,7 @@ If you want to compile the game yourself, continue reading!
 </div>
 
 First you need to install Haxe and HaxeFlixel. I'm too lazy to write and keep updated with that setup (which is pretty simple). 
-1. [Install Haxe 4.2.4](https://haxe.org/download/version/4.2.4/) (Download 4.2.4 properly...)(REMEMBER! INSTALL IT PROPERLY.)
+1. [Install Haxe 4.2.4](https://haxe.org/download/version/4.2.4/) (Download Haxe 4.2.4 properly...) (REMEMBER! INSTALL IT PROPERLY.)
 2. [Install HaxeFlixel](https://haxeflixel.com/documentation/install-haxeflixel/) after downloading Haxe
 3. Download [git-scm](https://git-scm.com/downloads). Works for Windows, Mac, and Linux, just select your build.
 

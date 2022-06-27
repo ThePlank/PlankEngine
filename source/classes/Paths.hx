@@ -128,36 +128,15 @@ class Paths
 
 	inline static public function getSparrowAtlas(key:String, ?library:String, ?isCharacter:Bool = false)
 	{
-		var usecahce = FlxG.save.data.cacheImages;
-		#if !cpp
-		usecahce = false;
-		#end
 		if (isCharacter)
-			if (usecahce)
-				#if cpp
-				return FlxAtlasFrames.fromSparrow(imageCached(key), file('images/characters/$key.xml', library));
-				#else
-				return null;
-				#end
-			else
 				return FlxAtlasFrames.fromSparrow(image('characters/$key', library), file('images/characters/$key.xml', library));
 		return FlxAtlasFrames.fromSparrow(image(key, library), file('images/$key.xml', library));
 	}
+
 	
 	inline static public function getPackerAtlas(key:String, ?library:String, ?isCharacter:Bool = false)
 	{
-		var usecahce = FlxG.save.data.cacheImages;
-		#if !cpp
-		usecahce = false;
-		#end
 		if (isCharacter)
-			if (usecahce)
-				#if cpp
-				return FlxAtlasFrames.fromSpriteSheetPacker(imageCached(key), file('images/characters/$key.txt', library));
-				#else
-				return null;
-				#end
-			else
 				return FlxAtlasFrames.fromSpriteSheetPacker(image('characters/$key'), file('images/characters/$key.txt', library));
 		return FlxAtlasFrames.fromSpriteSheetPacker(image(key, library), file('images/$key.txt', library));
 	}

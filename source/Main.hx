@@ -1,6 +1,6 @@
 package;
 
-import states.TitleState;
+import states.Caching;
 import lime.app.Application;
 #if discord_rpc
 import classes.Discord.DiscordClient;
@@ -83,7 +83,10 @@ class Main extends Sprite
 		#end
 
 		#if cpp
-		FlxG.switchState(new TitleState());
+		initialState = Caching;
+		game = new FlxGame(gameWidth, gameHeight, initialState, zoom, framerate, framerate, skipSplash, startFullscreen);
+		#else
+		game = new FlxGame(gameWidth, gameHeight, initialState, zoom, framerate, framerate, skipSplash, startFullscreen);
 		#end
 		addChild(game);
 		#if discord_rpc

@@ -46,4 +46,8 @@ class CoolUtil
 		}
 		return dumbArray;
 	}
+
+	public static function boundTo(arg0:Float, arg1:Int, arg2:Int):Float {
+		throw new haxe.exceptions.NotImplementedException();
+	}
 }

@@ -57,8 +57,9 @@ If you want to compile the game yourself, continue reading!
 </div>
 
 First you need to install Haxe and HaxeFlixel. I'm too lazy to write and keep updated with that setup (which is pretty simple). 
-1. [Install Haxe 4.1.5](https://haxe.org/download/version/4.1.5/) (Download 4.1.5 instead of 4.2.0 because 4.2.0 is broken and is not working with gits properly...)
+1. [Install Haxe 4.2.4](https://haxe.org/download/version/4.2.4/) (Download 4.2.4 properly...)(REMEMBER! INSTALL IT PROPERLY.)
 2. [Install HaxeFlixel](https://haxeflixel.com/documentation/install-haxeflixel/) after downloading Haxe
+3. Download [git-scm](https://git-scm.com/downloads). Works for Windows, Mac, and Linux, just select your build.
 
 Other installations you'd need is the additional libraries, a fully updated list will be in `Project.xml` in the project root. Currently, these are all of the things you need to install:
 
@@ -69,6 +70,8 @@ flixel-addons
 flixel-ui
 lime
 openfl
+actuate
+hxCodec
 hscript
 ```
 
@@ -76,11 +79,18 @@ hscript
 
 So for each of those type `haxelib install [library]` so shit like `haxelib install hscript`
 
-You'll also need to install a couple things that involve Gits. To do this, you need to do a few things first.
 1. Download [git-scm](https://git-scm.com/downloads). Works for Windows, Mac, and Linux, just select your build.
 2. Follow instructions to install the application properly.
 4. Run `haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc` to install Discord RPC.
-5. Run `haxelib git flixel-addons https://github.com/HaxeFlixel/flixel-addons` in the terminal/command-prompt.
+5. Run `haxelib git linc_luajit https://github.com/nebulazorua/linc_luajit` to install linc_luajit
+6. Run `haxelib git hscript-ex https://github.com/ianharrigan/hscript-ex` for hscript-ex
+7. Run `haxelib git flixel-addons https://github.com/HaxeFlixel/flixel-addons` for flixel-addons
+
+(AGAIN!)You use `haxelib install [library name]` It's just like
+`haxelib install actuate`
+
+And you just copy (CTRL + C) and paste (CTRL + V) the ones with the ones that have links it's just like
+`haxelib git linc_luajit https://github.com/nebulazorua/linc_luajit`
 
 You should have everything ready for compiling the game! Follow the guide below to continue!
 

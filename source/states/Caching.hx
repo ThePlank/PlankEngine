@@ -1,5 +1,6 @@
 package states;
 
+import flixel.ui.FlxButton;
 import util.HelperFunctions;
 #if sys
 import lime.app.Application;
@@ -39,6 +40,10 @@ class Caching extends abstracts.MusicBeatState
 
 	var loaded = false;
 
+	var skipButton:FlxButton;
+
+	var ecache:Bool = true;
+
 	var text:FlxText;
 	var plankLogo:FlxSprite;
 
@@ -58,7 +63,7 @@ class Caching extends abstracts.MusicBeatState
 
 		KadeEngineData.initSave();
 
-		FlxG.mouse.visible = false;
+		//FlxG.mouse.visible = false;
 
 		FlxG.worldBounds.set(0,0);
 
@@ -81,6 +86,14 @@ class Caching extends abstracts.MusicBeatState
 			plankLogo.antialiasing = true;
 		
 		plankLogo.alpha = 0;
+
+		skipButton = new FlxButton(50, 50, "Skip", () -> {
+			FlxG.switchState(new TitleState());
+		});
+		add(skipButton);
+		#else
+		FlxG.switchState(new TitleState());
+		#end
 
 		FlxGraphic.defaultPersist = FlxG.save.data.cacheImages;
 
@@ -187,4 +200,3 @@ class Caching extends abstracts.MusicBeatState
 	}
 
 }
-#end

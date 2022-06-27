@@ -95,7 +95,7 @@ class OutdatedSubState extends abstracts.MusicBeatState
 	{
 		if (controls.ACCEPT && MainMenuState.nightly == "")
 		{
-			fancyOpenURL("https://kadedev.github.io/Kade-Engine/changelogs/changelog-" + needVer);
+			fancyOpenURL("https://github.com/ThePlank/PlankEngine/tree/main/docs/changelogs" + needVer);
 		}
 		else if (controls.ACCEPT)
 		{

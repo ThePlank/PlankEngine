@@ -1,6 +1,5 @@
 package classes;
 
-import states.Caching;
 import flixel.graphics.FlxGraphic;
 import flixel.FlxG;
 import flixel.graphics.frames.FlxAtlasFrames;
@@ -144,15 +143,6 @@ class Paths
 				return FlxAtlasFrames.fromSparrow(image('characters/$key', library), file('images/characters/$key.xml', library));
 		return FlxAtlasFrames.fromSparrow(image(key, library), file('images/$key.xml', library));
 	}
-
-	#if cpp
-	inline static public function imageCached(key:String):FlxGraphic
-	{
-		var data = Caching.bitmapData.get(key);
-		trace('finding ${key} - ${data.bitmap}');
-		return data;
-	}
-	#end
 	
 	inline static public function getPackerAtlas(key:String, ?library:String, ?isCharacter:Bool = false)
 	{

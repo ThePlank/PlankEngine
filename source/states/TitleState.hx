@@ -124,10 +124,10 @@ class TitleState extends abstracts.MusicBeatState
 
 		if (Main.watermarks) {
 			logoBl = new FlxSprite(-150, 1500);
-			logoBl.frames = Paths.getSparrowAtlas('plankEngineLogoBumpin');
+			logoBl.frames = Paths.getSparrowAtlas('PlankEngineLogoBumpin');
 		} else {
 			logoBl = new FlxSprite(-150, -100);
-			logoBl.frames = Paths.getSparrowAtlas('plankEngineLogoBumpin');
+			logoBl.frames = Paths.getSparrowAtlas('PlankEngineLogoBumpin');
 		}
 		logoBl.antialiasing = FlxG.save.data.antialiasing;
 		logoBl.animation.addByPrefix('bump', 'logo bumpin', 24, false);

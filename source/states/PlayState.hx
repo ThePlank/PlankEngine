@@ -176,8 +176,6 @@ class PlayState extends abstracts.MusicBeatState
 
 	public static var offsetTesting:Bool = false;
 
-	public var isSMFile:Bool = false;
-
 	var notesHitArray:Array<Date> = [];
 	var currentFrames:Int = 0;
 	var idleToBeat:Bool = true; // change if bf and dad would idle to the beat of the song

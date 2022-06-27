@@ -122,10 +122,10 @@ class TitleState extends abstracts.MusicBeatState
 
 		if (Main.watermarks) {
 			logoBl = new FlxSprite(-150, 1500);
-			logoBl.frames = Paths.getSparrowAtlas('PlankEngineLogoBumpin');
+			logoBl.frames = Paths.getSparrowAtlas('plankEngineLogoBumpin');
 		} else {
 			logoBl = new FlxSprite(-150, -100);
-			logoBl.frames = Paths.getSparrowAtlas('PlankEngineLogoBumpin');
+			logoBl.frames = Paths.getSparrowAtlas('plankEngineLogoBumpin');
 		}
 		logoBl.antialiasing = FlxG.save.data.antialiasing;
 		logoBl.animation.addByPrefix('bump', 'logo bumpin', 24, false);
@@ -385,7 +385,7 @@ class TitleState extends abstracts.MusicBeatState
 					createCoolText(['In Partnership', 'with']);
 			case 7:
 				if (Main.watermarks)
-					addMoreText('Plank Dev \nArdo Dev');
+					addMoreText('Plank Dev and Ardo Dev');
 				else
 				{
 					addMoreText('Newgrounds');

@@ -38,7 +38,7 @@ class Caching extends MusicBeatState
 	var loaded = false;
 
 	var text:FlxText;
-	var kadeLogo:FlxSprite;
+	var plankLogo:FlxSprite;
 
 	public static var bitmapData:Map<String,FlxGraphic>;
 
@@ -67,18 +67,18 @@ class Caching extends MusicBeatState
 		text.alignment = FlxTextAlign.CENTER;
 		text.alpha = 0;
 
-		kadeLogo = new FlxSprite(FlxG.width / 2, FlxG.height / 2).loadGraphic(Paths.image('KadeEngineLogo'));
-		kadeLogo.x -= kadeLogo.width / 2;
-		kadeLogo.y -= kadeLogo.height / 2 + 100;
-		text.y -= kadeLogo.height / 2 - 125;
+		plankLogo = new FlxSprite(FlxG.width / 2, FlxG.height / 2).loadGraphic(Paths.image('PlankEngineLogo'));
+		plankLogo.x -= plankLogo.width / 2;
+		plankLogo.y -= plankLogo.height / 2 + 100;
+		text.y -= plankLogo.height / 2 - 125;
 		text.x -= 170;
-		kadeLogo.setGraphicSize(Std.int(kadeLogo.width * 0.6));
+		plankLogo.setGraphicSize(Std.int(plankLogo.width * 0.6));
 		if(FlxG.save.data.antialiasing != null)
-			kadeLogo.antialiasing = FlxG.save.data.antialiasing;
+			plankLogo.antialiasing = FlxG.save.data.antialiasing;
 		else
-			kadeLogo.antialiasing = true;
+			plankLogo.antialiasing = true;
 		
-		kadeLogo.alpha = 0;
+		plankLogo.alpha = 0;
 
 		FlxGraphic.defaultPersist = FlxG.save.data.cacheImages;
 
@@ -110,7 +110,7 @@ class Caching extends MusicBeatState
 
 		add(bar);
 
-		add(kadeLogo);
+		add(plankLogo);
 		add(text);
 
 		trace('starting caching..');
@@ -124,7 +124,7 @@ class Caching extends MusicBeatState
 				if (toBeDone != 0 && done != toBeDone)
 					{
 						var alpha = HelperFunctions.truncateFloat(done / toBeDone * 100,2) / 100;
-						kadeLogo.alpha = alpha;
+						plankLogo.alpha = alpha;
 						text.alpha = alpha;
 						text.text = "Loading... (" + done + "/" + toBeDone + ")";
 					}

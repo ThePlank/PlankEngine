@@ -42,6 +42,8 @@ class MusicBeatState extends FlxUIState
 		{
 			for(i in assets)
 			{
+
+				i.kill();
 				remove(i);
 			}
 		}

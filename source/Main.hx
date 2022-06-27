@@ -1,6 +1,11 @@
 package;
 
 import states.Caching;
+import sys.io.File;
+import sys.FileSystem;
+import haxe.CallStack;
+import openfl.events.UncaughtErrorEvent;
+import states.TitleState;
 import lime.app.Application;
 #if discord_rpc
 import classes.Discord.DiscordClient;
@@ -28,13 +33,16 @@ class Main extends Sprite
 	var startFullscreen:Bool = false; // Whether to start the game in fullscreen on desktop targets
 
 	public static var watermarks = true; // Whether to put Kade Engine literally anywhere
+	
+
+	public static var errorMessages:Array<String> = ["When where you when clup penguin was kill?\ni was at home eating dorito", 
+		"*insert breaking bad refrence here*", "bruh", "🗿💀🗿💀🗿💀🗿💀🗿💀"];
 
 	// You can pretty much ignore everything from here on - your code should go in your states.
 
 	public static function main():Void
 	{
-
-		// quick checks 
+		// quick checks
 
 		Lib.current.addChild(new Main());
 	}
@@ -42,6 +50,8 @@ class Main extends Sprite
 	public function new()
 	{
 		super();
+
+		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);
 
 		if (stage != null)
 		{
@@ -52,7 +62,6 @@ class Main extends Sprite
 			addEventListener(Event.ADDED_TO_STAGE, init);
 		}
 	}
-
 
 	private function init(?E:Event):Void
 	{
@@ -92,10 +101,10 @@ class Main extends Sprite
 		#if discord_rpc
 		DiscordClient.initialize();
 
-		Application.current.onExit.add (function (exitCode) {
+		Application.current.onExit.add(function(exitCode)
+		{
 			DiscordClient.shutdown();
-		 });
-		 
+		});
 		#end
 
 		#if !mobile
@@ -109,7 +118,47 @@ class Main extends Sprite
 
 	var fpsCounter:FPS;
 
-	public function toggleFPS(fpsEnabled:Bool):Void {
+	function onCrash(e:UncaughtErrorEvent)
+	{
+		var completeErrorMessage = "";
+		var stack:Array<StackItem> = CallStack.exceptionStack(true);
+		var dateNow:String = Date.now().toString();
+		
+		dateNow = StringTools.replace(dateNow, " ", "_");
+		dateNow = StringTools.replace(dateNow, ":", "'");
+
+		var path:String = "./crash/" + "PLE_" + dateNow + ".txt";
+
+		completeErrorMessage += 'Seems like Plank Engine has crashed!\n${errorMessages[Math.round(Math.random()) * errorMessages.length]}\n\n"Call Stack:\n';
+
+		for (stackItem in stack)
+		{
+			switch (stackItem)
+			{
+				case FilePos(s, file, line, column):
+					completeErrorMessage += file + " (line " + line + ")\n";
+				default:
+					Sys.println(stackItem);
+			}
+		}
+
+		completeErrorMessage += '\nPlease report this to the Plank Engine Github repository (https://github.com/ThePlank/PlankEngine), or in the Plank Engine Discord server.';
+
+		if (FlxG.random.bool(20))
+			completeErrorMessage += '\n bitch.';
+
+		Application.current.window.alert(completeErrorMessage, "PLE Error!");
+
+		if (!FileSystem.exists("./crash/"))
+			FileSystem.createDirectory("./crash/");
+
+		File.saveContent(path, completeErrorMessage + "\n");
+
+		Sys.exit(1);
+	}
+
+	public function toggleFPS(fpsEnabled:Bool):Void
+	{
 		fpsCounter.visible = fpsEnabled;
 	}
 

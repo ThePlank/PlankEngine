@@ -1082,6 +1082,13 @@ class PlayState extends abstracts.MusicBeatState
 				boyfriend.y += 220;
 				gf.x += 180;
 				gf.y += 300;
+			case 'tank':
+				boyfriend.x += 810;
+				boyfriend.y += 100;
+				gf.x += 200;
+				gf.y += 65;
+				dad.x += 20;
+				dad.y += 100;
 		}
 
 		if (!PlayStateChangeables.Optimize)

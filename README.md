@@ -48,7 +48,7 @@ These instructions are for compiling the game's source code!
 
 If you want to just download and install and play the game normally, go to github to download the game for PC!
 
-https://github.com/ThePlank/PlankEngine/releases
+https://github.com/ThePlank/PlankEngine/actions
 
 If you want to compile the game yourself, continue reading!
 
@@ -123,7 +123,7 @@ As for Mac, `lime test mac` should work, if not the internet surely has a guide 
 ## Plank Engine
 [ThePlank (me!)](https://github.com/ThePlank) - Owner And Main Coder
 
-[SnakDev](https://github.com/SnakDev) - Co-Owner and stupid detail adder
+[ArdoDev-stupid](https://github.com/ArdoDev-stupid) - Co-Owner and stupid detail adder
 ## Special Thanks
 [KadeDev](https://github.com/KadeDev) - Kade Engine
 

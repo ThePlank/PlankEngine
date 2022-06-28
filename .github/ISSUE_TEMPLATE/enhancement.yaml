@@ -1,0 +1,18 @@
+name: Enhancement
+description: Request a enhancement to the engine be made
+title: "[Enhancement]: "
+labels: ["Enhancement"]
+assignees:
+  - ThePlank
+body:
+  - type: markdown
+    attributes:
+      value: "Asking for 6+/etc keys, stage editor and winning icons will result in a ban."
+      
+  - type: textarea
+    id: description
+    attributes:
+      label: "Describe your enhancement here."
+    validations:
+      required: true
+      

@@ -100,6 +100,20 @@ class PlayState extends abstracts.MusicBeatState
 	var songLength:Float = 0;
 	var kadeEngineWatermark:FlxText;
 
+	public var camZoom:Float; // The zoom of the camera to have at the start of the game
+	public var hideLastBG:Bool = false; // True = hide last BGs and show ones from slowBacks on certain step, False = Toggle visibility of BGs from SlowBacks on certain step
+	// Use visible property to manage if BG would be visible or not at the start of the game
+	public var tweenDuration:Float = 2; // How long will it tween hiding/showing BGs, variable above must be set to True for tween to activate
+	public var toAdd:Array<Dynamic> = []; // Add BGs on stage startup, load BG in by using "toAdd.push(bgVar);"
+	// Layering algorithm for noobs: Everything loads by the method of "On Top", example: You load wall first(Every other added BG layers on it), then you load road(comes on top of wall and doesn't clip through it), then loading street lights(comes on top of wall and road)
+	public var swagBacks:Map<String,
+		Dynamic> = []; // Store BGs here to use them later (for example with slowBacks, using your custom stage event or to adjust position in stage debug menu(press 8 while in PlayState with debug build of the game))
+	public var swagGroup:Map<String, FlxTypedGroup<Dynamic>> = []; // Store Groups
+	public var animatedBacks:Array<FlxSprite> = []; // Store animated backgrounds and make them play animation(Animation must be named Idle!! Else use swagGroup/swagBacks and script it in stepHit/beatHit function of this file!!)
+	public var layInFront:Array<Array<FlxSprite>> = [[], [], []]; // BG layering, format: first [0] - in front of GF, second [1] - in front of opponent, third [2] - in front of boyfriend(and technically also opponent since Haxe layering moment)
+	public var slowBacks:Map<Int,
+		Array<FlxSprite>> = [];
+
 	#if cpp
 	// Discord RPC variables
 	var storyDifficultyText:String = "";
@@ -476,7 +490,9 @@ class PlayState extends abstracts.MusicBeatState
 						stageCheck = 'school';
 					}
 					// i should check if its stage (but this is when none is found in chart anyway)
-			}
+				case 7:
+				    stageCheck = 'tank';
+			    }
 		}
 		else
 		{
@@ -821,6 +837,101 @@ class PlayState extends abstracts.MusicBeatState
 							add(waveSpriteFG);
 						 */
 					}
+					case 'tank':
+						{
+								camZoom = 0.9;
+								var tankSky:FlxSprite = new FlxSprite(-400, -400).loadGraphic(Paths.image('tankSky', 'week7'));
+								tankSky.antialiasing = FlxG.save.data.antialiasing;
+								tankSky.scrollFactor.set(0, 0);
+								swagBacks['tankSky'] = tankSky;
+								toAdd.push(tankSky);
+								if (FlxG.save.data.distractions)
+								{
+									var tankClouds:FlxSprite = new FlxSprite(FlxG.random.int(-700, -100),
+										FlxG.random.int(-20, 20)).loadGraphic(Paths.image('tankClouds', 'week7'));
+									tankClouds.antialiasing = FlxG.save.data.antialiasing;
+									tankClouds.scrollFactor.set(0.9, 0.9);
+									swagBacks['tankClouds'] = tankClouds;
+									toAdd.push(tankClouds);
+			
+									var tankMountains:FlxSprite = new FlxSprite(-300, -20).loadGraphic(Paths.image('tankMountains', 'week7'));
+									tankMountains.antialiasing = FlxG.save.data.antialiasing;
+									tankMountains.setGraphicSize(Std.int(1.2 * tankMountains.width));
+									tankMountains.scrollFactor.set(0.2, 0.2);
+									tankMountains.updateHitbox();
+			
+									swagBacks['tankMountains'] = tankMountains;
+									toAdd.push(tankMountains);
+			
+									var tankBuildings:FlxSprite = new FlxSprite(-200, 0).loadGraphic(Paths.image('tankBuildings', 'week7'));
+			
+									tankBuildings.setGraphicSize(Std.int(1.1 * tankBuildings.width));
+									tankBuildings.scrollFactor.set(0.3, 0.3);
+									tankBuildings.antialiasing = FlxG.save.data.antialiasing;
+									tankBuildings.updateHitbox();
+									swagBacks['tankBuildings'] = tankBuildings;
+									toAdd.push(tankBuildings);
+								}
+			
+								var tankRuins:FlxSprite = new FlxSprite(-200, 0).loadGraphic(Paths.image('tankRuins', 'week7'));
+								tankRuins.setGraphicSize(Std.int(1.1 * tankRuins.width));
+								tankRuins.antialiasing = FlxG.save.data.antialiasing;
+								tankRuins.scrollFactor.set(0.35, 0.35);
+								tankRuins.updateHitbox();
+								swagBacks['tankRuins'] = tankRuins;
+								toAdd.push(tankRuins);
+			
+								if (FlxG.save.data.distractions)
+								{
+									var smokeLeft:FlxSprite = new FlxSprite(-200, -100);
+									smokeLeft.antialiasing = FlxG.save.data.antialiasing;
+									smokeLeft.scrollFactor.set(0.4, 0.4);
+									smokeLeft.frames = Paths.getSparrowAtlas('smokeLeft', 'week7');
+									smokeLeft.animation.addByPrefix('idle', 'SmokeBlurLeft instance ', true);
+									smokeLeft.animation.play('idle');
+									swagBacks['smokeLeft'] = smokeLeft;
+									toAdd.push(smokeLeft);
+			
+									var smokeRight:FlxSprite = new FlxSprite(1100, -100);
+									smokeRight.antialiasing = FlxG.save.data.antialiasing;
+									smokeRight.scrollFactor.set(0.4, 0.4);
+									smokeRight.frames = Paths.getSparrowAtlas('smokeRight', 'week7');
+									smokeRight.animation.addByPrefix('idle', 'SmokeRight instance ', true);
+									smokeRight.animation.play('idle');
+									swagBacks['smokeRight'] = smokeRight;
+									toAdd.push(smokeRight);
+			
+									var tankWatchTower:FlxSprite = new FlxSprite(100, 50);
+									tankWatchTower.antialiasing = FlxG.save.data.antialiasing;
+									tankWatchTower.scrollFactor.set(0.5, 0.5);
+									tankWatchTower.frames = Paths.getSparrowAtlas('tankWatchtower', 'week7');
+									tankWatchTower.animation.addByPrefix('idle', 'watchtower gradient color instance ');
+									tankWatchTower.animation.play('idle');
+									tankWatchTower.active = true;
+									swagBacks['tankWatchTower'] = tankWatchTower;
+									toAdd.push(tankWatchTower);
+								}
+								var tankGround:FlxSprite = new FlxSprite(300, 300);
+								tankGround.scrollFactor.set(0.5, 0.5);
+								tankGround.antialiasing = FlxG.save.data.antialiasing;
+								tankGround.frames = Paths.getSparrowAtlas('tankRolling', 'week7');
+								tankGround.animation.addByPrefix('idle', 'BG tank w lighting instance ', true);
+								tankGround.animation.play('idle');
+								swagBacks['tankGround'] = tankGround;
+								toAdd.push(tankGround);
+			
+								var tankmanRun = new FlxTypedGroup<TankmenBG>();
+								swagBacks['tankmanRun'] = tankmanRun;
+								toAdd.push(tankmanRun);
+			
+								var tankField:FlxSprite = new FlxSprite(-420, -150).loadGraphic(Paths.image('tankGround', 'week7'));
+								tankField.antialiasing = FlxG.save.data.antialiasing;
+								tankField.setGraphicSize(Std.int(1.15 * tankField.width));
+								tankField.updateHitbox();
+								swagBacks['tankField'] = tankField;
+								toAdd.push(tankField);
+						
+						}
 				default:
 					{
 						defaultCamZoom = 0.9;

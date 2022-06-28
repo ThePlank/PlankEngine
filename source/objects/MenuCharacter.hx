@@ -59,6 +59,7 @@ class MenuCharacter extends FlxSprite
 		animation.addByPrefix('mom', "Mom Idle BLACK LINES", 24, false);
 		animation.addByPrefix('parents-christmas', "Parent Christmas Idle", 24, false);
 		animation.addByPrefix('senpai', "SENPAI idle Black Lines", 24, false);
+		animation.addByPrefix('tankman', "Tankman Menu BLACK", 24, false);
 
 		setGraphicSize(Std.int(width * scale));
 		updateHitbox();

@@ -248,15 +248,15 @@ class Character extends FlxSprite
 					animation.addByPrefix('singLEFTmiss', 'BF NOTE LEFT MISS', 24, false);
 					animation.addByPrefix('singRIGHTmiss', 'BF NOTE RIGHT MISS', 24, false);
 					animation.addByPrefix('singDOWNmiss', 'BF NOTE DOWN MISS', 24, false);
-					addOffset('idle', -5);
-					addOffset("singUP", -29, 27);
-					addOffset("singRIGHT", -38, -7);
-					addOffset("singLEFT", 12, -6);
-					addOffset("singDOWN", -10, -50);
-					addOffset("singUPmiss", -29, 27);
-					addOffset("singRIGHTmiss", -30, 21);
-					addOffset("singLEFTmiss", 12, 24);
-					addOffset("singDOWNmiss", -11, -19);
+					addOffset('idle', 0, -5);
+					addOffset("singUP", -29, 10);
+					addOffset("singRIGHT", -41, 23);
+					addOffset("singLEFT", 12, 7);
+					addOffset("singDOWN", -10, -10);
+					addOffset("singUPmiss", -29, 10);
+					addOffset("singRIGHTmiss", 41, 33);
+					addOffset("singLEFTmiss", 12, 7);
+					addOffset("singDOWNmiss", -10, -10);
 	
 					playAnim('idle');
 	
@@ -274,13 +274,13 @@ class Character extends FlxSprite
 						animation.addByPrefix('ugh', 'TANKMAN UGH instance', 24);
 		
 						
-						addOffset('idle', 0, -243);
-						addOffset("singUP",0, -243);
-						addOffset("singRIGHT", 0, -243);
-						addOffset("singLEFT", 0, -243);
-						addOffset("singDOWN", 0, -243);
-						addOffset("good", 0, -243); 
-						addOffset("ugh", 0, -243); 
+						addOffset('idle', 0, 0);
+						addOffset("singUP", 48, 54);
+						addOffset("singRIGHT", -21, -31);
+						addOffset("singLEFT", 84, -14);
+						addOffset("singDOWN", 76, -101);
+						addOffset("good", 1, 16); 
+						addOffset("ugh", -15, -8); 
 	
 					playAnim('idle');
 					flipX = true;

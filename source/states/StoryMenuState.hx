@@ -39,7 +39,8 @@ class StoryMenuState extends abstracts.MusicBeatState
 			['Pico', 'Philly Nice', "Blammed"],
 			['Satin Panties', "High", "Milf"],
 			['Cocoa', 'Eggnog', 'Winter Horrorland'],
-			['Senpai', 'Roses', 'Thorns']
+			['Senpai', 'Roses', 'Thorns'],
+			['Ugh', 'Guns', 'Stress']
 		];
 	}
 	var curDifficulty:Int = 1;
@@ -53,7 +54,8 @@ class StoryMenuState extends abstracts.MusicBeatState
 		['pico', 'bf', 'gf'],
 		['mom', 'bf', 'gf'],
 		['parents-christmas', 'bf', 'gf'],
-		['senpai', 'bf', 'gf']
+		['senpai', 'bf', 'gf'],
+		['tankman', 'bf', 'gf']
 	];
 
 	var weekNames:Array<String> = CoolUtil.coolTextFile(Paths.txt('data/weekNames'));

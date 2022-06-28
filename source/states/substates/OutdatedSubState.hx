@@ -13,16 +13,12 @@ import lime.app.Application;
 class OutdatedSubState extends abstracts.MusicBeatState
 {
 	public static var leftState:Bool = false;
+	var plankLogo:FlxSprite;
 
-	public static var needVer:String = "IDFK LOL";
-	public static var currChanges:String = "dk";
-	
-	private var bgColors:Array<String> = [
-		'#314d7f',
-		'#4e7093',
-		'#70526e',
-		'#594465'
-	];
+	public static var version:String = "69.420.0";
+	public static var changelog:Array<String> = ["beans"];
+
+	private var bgColors:Array<String> = ['#314d7f', '#4e7093', '#70526e', '#594465'];
 	private var colorRotation:Int = 1;
 
 	override function create()
@@ -34,68 +30,38 @@ class OutdatedSubState extends abstracts.MusicBeatState
 		bg.screenCenter();
 		bg.antialiasing = FlxG.save.data.antialiasing;
 		add(bg);
-		
-		var plankLogo:FlxSprite = new FlxSprite(FlxG.width, 0).loadGraphic(Paths.image('PlankEngineLogo'));
+
+		plankLogo = new FlxSprite(FlxG.width, 0).loadGraphic(Paths.image('PlankEngineLogo'));
 		plankLogo.scale.y = 0.3;
 		plankLogo.scale.x = 0.3;
 		plankLogo.x -= plankLogo.frameHeight;
-		plankLogo.y -= 180;
-		plankLogo.alpha = 0.8;
+		plankLogo.y -= 100;
 		plankLogo.antialiasing = FlxG.save.data.antialiasing;
 		add(plankLogo);
-		
-		var txt:FlxText = new FlxText(0, 0, FlxG.width,
-			"Your Kade Engine is outdated!\nYou are on "
-			+ MainMenuState.kadeEngineVer
-			+ "\nwhile the most recent version is " + needVer + "."
-			+ "\n\nWhat's new:\n\n"
-			+ currChanges
-			+ "\n& more changes and bugfixes in the full changelog"
-			+ "\n\nPress Space to view the full changelog and update\nor ESCAPE to ignore this",
-			32);
 
-		if (MainMenuState.nightly != "")
-			txt.text = 
-			"You are on\n"
-			+ MainMenuState.kadeEngineVer
-			+ "\nWhich is a PRE-RELEASE BUILD!"
-			+ "\n\nReport all bugs to the author of the pre-release.\nSpace/Escape ignores this.";
-		
+		var txt:FlxText = new FlxText(0, 0, FlxG.width,
+			'Plank engine is out of date!\nYour PLE version is ${MainMenuState.plankEngineVer}, but the newest version is ${version}.\n\nChangelog:\n', 32);
+
+		for (i in changelog) {
+			txt.text += '${i}\n';
+		}
+
 		txt.setFormat("VCR OSD Mono", 32, FlxColor.fromRGB(200, 200, 200), CENTER);
 		txt.borderColor = FlxColor.BLACK;
 		txt.borderSize = 3;
 		txt.borderStyle = FlxTextBorderStyle.OUTLINE;
 		txt.screenCenter();
 		add(txt);
-		
-		FlxTween.color(bg, 2, bg.color, FlxColor.fromString(bgColors[colorRotation]));
-		FlxTween.angle(plankLogo, plankLogo.angle, -10, 2, {ease: FlxEase.quartInOut});
-		
-		new FlxTimer().start(2, function(tmr:FlxTimer)
-		{
-			FlxTween.color(bg, 2, bg.color, FlxColor.fromString(bgColors[colorRotation]));
-			if(colorRotation < (bgColors.length - 1)) colorRotation++;
-			else colorRotation = 0;
-		}, 0);
-		
-		new FlxTimer().start(2, function(tmr:FlxTimer)
-		{
-			if(plankLogo.angle == -10) FlxTween.angle(plankLogo, plankLogo.angle, 10, 2, {ease: FlxEase.quartInOut});
-			else FlxTween.angle(plankLogo, plankLogo.angle, -10, 2, {ease: FlxEase.quartInOut});
-		}, 0);
-		
-		new FlxTimer().start(0.8, function(tmr:FlxTimer)
-		{
-			if(plankLogo.alpha == 0.8) FlxTween.tween(plankLogo, {alpha: 1}, 0.8, {ease: FlxEase.quartInOut});
-			else FlxTween.tween(plankLogo, {alpha: 0.8}, 0.8, {ease: FlxEase.quartInOut});
-		}, 0);
 	}
+
+	var totalElapsed = 0.0;
 
 	override function update(elapsed:Float)
 	{
+		totalElapsed += elapsed;
 		if (controls.ACCEPT && MainMenuState.nightly == "")
 		{
-			fancyOpenURL("https://github.com/ThePlank/PlankEngine/tree/main/docs/changelogs" + needVer);
+			fancyOpenURL("https://github.com/ThePlank/PlankEngine/tree/main/docs/changelogs" + version);
 		}
 		else if (controls.ACCEPT)
 		{
@@ -107,6 +73,9 @@ class OutdatedSubState extends abstracts.MusicBeatState
 			leftState = true;
 			FlxG.switchState(new MainMenuState());
 		}
+
+		plankLogo.y = (-100 + Math.sin(totalElapsed * 4) * 5);
+
 		super.update(elapsed);
 	}
 }

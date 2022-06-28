@@ -1,5 +1,8 @@
 package states;
 
+import haxe.Exception;
+import haxe.Json;
+import haxe.Http;
 import states.substates.OutdatedSubState;
 import classes.Conductor;
 import classes.Highscore;
@@ -282,36 +285,25 @@ class TitleState extends abstracts.MusicBeatState
 			new FlxTimer().start(2, function(tmr:FlxTimer)
 			{
 				// Get current version of Kade Engine
-				
-				var http = new haxe.Http("https://github.com/ThePlank/PlankEngine/blob/main/version.downloadMe");
-				var returnedData:Array<String> = [];
-				
-				http.onData = function (data:String)
-				{
-					returnedData[0] = data.substring(0, data.indexOf(';'));
-					returnedData[1] = data.substring(data.indexOf('-'), data.length);
-				  	if (!MainMenuState.kadeEngineVer.contains(returnedData[0].trim()) && !OutdatedSubState.leftState)
+
+				try {
+					var stringJson = Http.requestUrl("https://raw.githubusercontent.com/ThePlank/PlankEngine/main/version.json");
+					var destingedJson = Json.parse(stringJson);
+
+					if (destingedJson == null)
+						throw new Exception("dude, there is no json!");
+
+					if (!Application.current.meta.get('version').contains(destingedJson.version) && !OutdatedSubState.leftState)
 					{
-						trace('outdated lmao! ' + returnedData[0] + ' != ' + MainMenuState.kadeEngineVer);
-						OutdatedSubState.needVer = returnedData[0];
-						OutdatedSubState.currChanges = returnedData[1];
-						FlxG.switchState(new MainMenuState());
-						clean();
+						trace('outdated! ' + destingedJson.version + ' != ' + Application.current.meta.get('version'));
+						OutdatedSubState.version = destingedJson.version;
+						OutdatedSubState.changelog = destingedJson.changelog;
+						clear();
+						FlxG.switchState(new OutdatedSubState());
 					}
-					else
-					{
-						FlxG.switchState(new MainMenuState());
-						clean();
-					}
+				} catch(err) {
+					FlxG.log.warn('error getting engine/mod version! error: $err');
 				}
-				
-				http.onError = function (error) {
-				  trace('error: $error');
-				  FlxG.switchState(new MainMenuState()); // fail but we go anyway
-				  clean();
-				}
-				
-				http.request();
 			});
 			// FlxG.sound.play(Paths.music('titleShoot'), 0.7);
 		}

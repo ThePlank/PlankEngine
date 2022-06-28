@@ -14,6 +14,7 @@ body:
       value: "A bug happened!"
     validations:
       required: true
+      
   - type: dropdown
     id: version
     attributes:
@@ -23,6 +24,7 @@ body:
         - 0.5 (Prerelease)
     validations:
       required: true
+      
   - type: dropdown
     id: browsers
     attributes:
@@ -33,6 +35,7 @@ body:
         - Chrome
         - Safari
         - Microsoft Edge
+        
   - type: dropdown
     id: browsers
     attributes:
@@ -43,13 +46,16 @@ body:
         - HScript
         - Source
         - None
+        
   - type: textarea
     id: logs
     attributes:
       label: Relevant log output
       description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
       render: shell
+      
   - type: input
   id: modified-files
   attributes:
       label: If any, what files did you modify and in what way?
+      

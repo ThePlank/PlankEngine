@@ -198,6 +198,27 @@ class DownscrollOption extends Option
 	}
 }
 
+class JudgementeOptionOption extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function press():Bool
+	{
+		FlxG.save.data.JudgementeOption = !FlxG.save.data.JudgementeOption;
+		display = updateDisplay();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return FlxG.save.data.JudgementeOption ? "Open" : "Off";
+	}
+}
+
 class GhostTapOption extends Option
 {
 	public function new(desc:String)
@@ -421,7 +442,7 @@ class ShowInput extends Option
 }
 
 
-class Judgement extends Option
+class JudgementeOption extends Option
 {
 	
 
@@ -928,6 +949,7 @@ class ResetSettings extends Option
 		FlxG.save.data.weekUnlocked = null;
 		FlxG.save.data.newInput = null;
 		FlxG.save.data.downscroll = null;
+		FlxG.save.data.JudgementeOption = null;
 		FlxG.save.data.antialiasing = null;
 		FlxG.save.data.missSounds = null;
 		FlxG.save.data.dfjk = null;

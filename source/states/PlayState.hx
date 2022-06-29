@@ -126,7 +126,7 @@ class PlayState extends abstracts.MusicBeatState
 	
 	public var originalX:Float;
 
-	var judgementCounter:FlxText;
+	var JudgementeOptionCounter:FlxText;
 
 	public static var dad:Character;
 	public static var gf:Character;
@@ -306,6 +306,7 @@ class PlayState extends abstracts.MusicBeatState
 		inResults = false;
 
 		PlayStateChangeables.useDownscroll = FlxG.save.data.downscroll;
+		PlayStateChangeables.JudgementeOption = FlxG.save.data.JudgementeOption;
 		PlayStateChangeables.safeFrames = FlxG.save.data.frames;
 		PlayStateChangeables.scrollSpeed = FlxG.save.data.scrollSpeed;
 		PlayStateChangeables.botPlay = FlxG.save.data.botplay;
@@ -1071,6 +1072,7 @@ class PlayState extends abstracts.MusicBeatState
 			// FlxG.watch.addQuick('Queued',inputsQueued);
 
 			PlayStateChangeables.useDownscroll = rep.replay.isDownscroll;
+			PlayStateChangeables.JudgementeOption = rep.replay.JudgementeOption;
 			PlayStateChangeables.safeFrames = rep.replay.sf;
 			PlayStateChangeables.botPlay = true;
 		}
@@ -1286,17 +1288,18 @@ class PlayState extends abstracts.MusicBeatState
 		iconP2.y = healthBar.y - (iconP2.height / 2);
 		add(iconP2);
 
-		judgementCounter = new FlxText(20, 0, 0, "", 20);
-		judgementCounter.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, FlxTextAlign.LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		judgementCounter.borderSize = 2;
-		judgementCounter.borderQuality = 2;
-		judgementCounter.scrollFactor.set();
-		judgementCounter.screenCenter(Y);
-		judgementCounter.text = "Sicks:" + sicks + "\nGoods:" + goods + "\nBads: " + bads + "\nShits: " + shits + "\nMisses: " + misses;
-		add(judgementCounter);
+		JudgementeOptionCounter = new FlxText(20, 0, 0, "", 20);
+		JudgementeOptionCounter.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, FlxTextAlign.LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		JudgementeOptionCounter.borderSize = 2;
+		JudgementeOptionCounter.borderQuality = 2;
+		JudgementeOptionCounter.scrollFactor.set();
+		JudgementeOptionCounter.screenCenter(Y);
+		JudgementeOptionCounter.text = "Sicks:" + sicks + "\nGoods:" + goods + "\nBads: " + bads + "\nShits: " + shits + "\nMisses: " + misses;
+		if (FlxG.save.data.JudgementeOption)
+		add(JudgementeOptionCounter);
 
 		strumLineNotes.cameras = [camHUD];
-		judgementCounter.cameras = [camHUD];
+		JudgementeOptionCounter.cameras = [camHUD];
 		grpNoteSplashes.cameras = [camHUD];
 		notes.cameras = [camHUD];
 		healthBar.cameras = [camHUD];
@@ -2449,7 +2452,7 @@ class PlayState extends abstracts.MusicBeatState
 
 		scoreTxt.x = (originalX - (lengthInPx / 2)) + 335;
 
-		judgementCounter.text = "Sicks:" + sicks + "\nGoods:" + goods + "\nBads: " + bads + "\nShits: " + shits + "\nMisses: " + misses;
+		JudgementeOptionCounter.text = "Sicks:" + sicks + "\nGoods:" + goods + "\nBads: " + bads + "\nShits: " + shits + "\nMisses: " + misses;
 
 		if (controls.PAUSE && startedCountdown && canPause && !cannotDie)
 		{
@@ -3384,6 +3387,7 @@ class PlayState extends abstracts.MusicBeatState
 			PlayStateChangeables.botPlay = false;
 			PlayStateChangeables.scrollSpeed = 1;
 			PlayStateChangeables.useDownscroll = false;
+			PlayStateChangeables.JudgementeOption = false;
 		}
 
 		if (FlxG.save.data.fpsCap > 120)

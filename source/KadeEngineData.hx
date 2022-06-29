@@ -18,6 +18,9 @@ class KadeEngineData
 		if (FlxG.save.data.downscroll == null)
 			FlxG.save.data.downscroll = false;
 
+		if (FlxG.save.data.JudgementeOption == null)
+			FlxG.save.data.JudgementeOption = false;
+
 		if (FlxG.save.data.antialiasing == null)
 			FlxG.save.data.antialiasing = true;
 

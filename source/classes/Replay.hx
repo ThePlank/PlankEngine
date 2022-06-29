@@ -50,6 +50,8 @@ typedef ReplayJSON =
 	public var noteSpeed:Float;
 	public var chartPath:String;
 	public var isDownscroll:Bool;
+	public var JudgementeOption:Bool;
+
 	public var sf:Int;
 	public var ana:Analysis;
 }
@@ -68,6 +70,7 @@ class Replay
 			songDiff: 1,
 			noteSpeed: 1.5,
 			isDownscroll: false,
+			JudgementeOption: false,
 			songNotes: [],
 			replayGameVer: version,
 			chartPath: "",
@@ -102,6 +105,7 @@ class Replay
 			"sf": Conductor.safeFrames,
 			"noteSpeed": (FlxG.save.data.scrollSpeed > 1 ? FlxG.save.data.scrollSpeed : PlayState.SONG.speed),
 			"isDownscroll": FlxG.save.data.downscroll,
+			"JudgementeOption": FlxG.save.data.JudgementeOption,
 			"songNotes": notearray,
 			"songJudgements": judge,
 			"ana": ana

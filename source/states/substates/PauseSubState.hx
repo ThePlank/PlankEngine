@@ -234,6 +234,7 @@ class PauseSubState extends abstracts.MusicBeatSubstate
 						FlxG.save.data.botplay = false;
 						FlxG.save.data.scrollSpeed = 1;
 						FlxG.save.data.downscroll = false;
+						FlxG.save.data.JudgementeOption = false;
 					}
 					PlayState.loadRep = false;
 					// #if windows

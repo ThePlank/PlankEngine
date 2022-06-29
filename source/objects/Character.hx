@@ -1,4 +1,4 @@
-package;
+package objects;
 
 import classes.Conductor;
 import flixel.FlxSprite;

@@ -233,7 +233,7 @@ class GameplayCustomizeState extends abstracts.MusicBeatState
         super.beatHit();
 
         bf.playAnim('idle', true);
-        dad.dance(true);
+        dad.dance(/*true*/);
         gf.dance();
 
         FlxG.camera.zoom += 0.015;

@@ -140,9 +140,6 @@ class PlayState extends abstracts.MusicBeatState
 
 	private var curSection:Int = 0;
 
-	public var GF_X:Float = 400;
-	public var GF_Y:Float = 130;
-
 	private var camFollow:FlxObject;
 
 	private static var prevCamFollow:FlxObject;
@@ -502,11 +499,6 @@ class PlayState extends abstracts.MusicBeatState
 		{
 			stageCheck = SONG.stage;
 		}
-
-		GF_X = girlfriend[0];
-		GF_Y = girlfriend[1];
-
-		gfGroup = new FlxSpriteGroup(GF_X, GF_Y);
 
 		if (!PlayStateChangeables.Optimize)
 		{
@@ -961,12 +953,6 @@ class PlayState extends abstracts.MusicBeatState
 				curGf = 'gf';
 		}
 
-		if(dad.curCharacter.startsWith('gf')) {
-			dad.setPosition(GF_X, GF_Y);
-			if(gf != null)
-				gf.visible = false;
-		}
-
 		gf = new Character(400, 130, curGf);
 		gf.scrollFactor.set(0.95, 0.95);
 
@@ -1337,16 +1323,6 @@ class PlayState extends abstracts.MusicBeatState
 		startingSong = true;
 
 		trace('starting');
-
-		function startCharacterPos(char:Character, ?gfCheck:Bool = false) {
-			if(gfCheck && char.curCharacter.startsWith('gf')) { //IF DAD IS GIRLFRIEND, HE GOES TO HER POSITION
-				char.setPosition(GF_X, GF_Y);
-				char.scrollFactor.set(0.95, 0.95);
-				char.danceEveryNumBeats = 2;
-			}
-			char.x += char.positionArray[0];
-			char.y += char.positionArray[1];
-		}
 
 		if (isStoryMode)
 		{
@@ -4707,19 +4683,10 @@ class PlayState extends abstracts.MusicBeatState
 			// Conductor.changeBPM(SONG.bpm);
 
 			// Dad doesnt interupt his own notes
-			if (gf != null && curBeat % Math.round(gfSpeed * gf.danceEveryNumBeats) == 0 && gf.animation.curAnim != null && !gf.animation.curAnim.name.startsWith("sing") && !gf.stunned)
-				{
-					gf.dance();
-				}
-				if (curBeat % boyfriend.danceEveryNumBeats == 0 && boyfriend.animation.curAnim != null && !boyfriend.animation.curAnim.name.startsWith('sing') && !boyfriend.stunned)
-				{
-					boyfriend.dance();
-				}
-				if (curBeat % dad.danceEveryNumBeats == 0 && dad.animation.curAnim != null && !dad.animation.curAnim.name.startsWith('sing') && !dad.stunned)
-				{
-					dad.dance();
-				}
-
+			if ((!StringTools.startsWith(dad.animation.curAnim.name, "sing")) && dad.curCharacter != 'gf')
+				if ((curBeat % idleBeat == 0 || !idleToBeat) || dad.curCharacter == "spooky")
+					dad.dance(/*idleToBeat, SONG.notes[Math.floor(curStep / 16)].p1AltAnim*/);
+		}
 		// FlxG.log.add('change bpm' + SONG.notes[Std.int(curStep / 16)].changeBPM);
 		wiggleShit.update(Conductor.crochet);
 

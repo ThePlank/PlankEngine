@@ -1,6 +1,8 @@
 
 package states;
 
+import objects.Boyfriend;
+import objects.Character;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;

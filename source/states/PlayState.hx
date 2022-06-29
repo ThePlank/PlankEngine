@@ -461,40 +461,41 @@ class PlayState extends abstracts.MusicBeatState
 		// defaults if no stage was found in chart
 		var stageCheck:String = 'stage';
 
-		if (SONG.stage == null)
-		{
-			switch (storyWeek)
+			/*if (SONG.stage == null)
 			{
-				case 2:
-					stageCheck = 'halloween';
-				case 3:
-					stageCheck = 'philly';
-				case 4:
-					stageCheck = 'limo';
-				case 5:
-					if (songLowercase == 'winter-horrorland')
-					{
-						stageCheck = 'mallEvil';
+				switch (storyWeek)
+				{
+					case 2:
+						stageCheck = 'halloween';
+					case 3:
+						stageCheck = 'philly';
+					case 4:
+						stageCheck = 'limo';
+					case 5:
+						if (songLowercase == 'winter-horrorland')
+						{
+							stageCheck = 'mallEvil';
+						}
+						else
+						{
+							stageCheck = 'mall';
+						}
+					case 6:
+						if (songLowercase == 'thorns')
+						{
+							stageCheck = 'schoolEvil';
+						}
+						else
+						{
+							stageCheck = 'school';
+						}
+						// i should check if its stage (but this is when none is found in chart anyway)
+					case 7:
+						stageCheck = 'tank';
 					}
-					else
-					{
-						stageCheck = 'mall';
-					}
-				case 6:
-					if (songLowercase == 'thorns')
-					{
-						stageCheck = 'schoolEvil';
-					}
-					else
-					{
-						stageCheck = 'school';
-					}
-					// i should check if its stage (but this is when none is found in chart anyway)
-				case 7:
-				    stageCheck = 'tank';
-			    }
-		}
-		else
+			}
+			else
+		*/
 		{
 			stageCheck = SONG.stage;
 		}
@@ -839,98 +840,56 @@ class PlayState extends abstracts.MusicBeatState
 					}
 					case 'tank':
 						{
-								camZoom = 0.9;
-								var tankSky:FlxSprite = new FlxSprite(-400, -400).loadGraphic(Paths.image('tankSky', 'week7'));
-								tankSky.antialiasing = FlxG.save.data.antialiasing;
-								tankSky.scrollFactor.set(0, 0);
-								swagBacks['tankSky'] = tankSky;
-								toAdd.push(tankSky);
-								if (FlxG.save.data.distractions)
-								{
-									var tankClouds:FlxSprite = new FlxSprite(FlxG.random.int(-700, -100),
-										FlxG.random.int(-20, 20)).loadGraphic(Paths.image('tankClouds', 'week7'));
-									tankClouds.antialiasing = FlxG.save.data.antialiasing;
-									tankClouds.scrollFactor.set(0.9, 0.9);
-									swagBacks['tankClouds'] = tankClouds;
-									toAdd.push(tankClouds);
-			
-									var tankMountains:FlxSprite = new FlxSprite(-300, -20).loadGraphic(Paths.image('tankMountains', 'week7'));
-									tankMountains.antialiasing = FlxG.save.data.antialiasing;
-									tankMountains.setGraphicSize(Std.int(1.2 * tankMountains.width));
-									tankMountains.scrollFactor.set(0.2, 0.2);
-									tankMountains.updateHitbox();
-			
-									swagBacks['tankMountains'] = tankMountains;
-									toAdd.push(tankMountains);
-			
-									var tankBuildings:FlxSprite = new FlxSprite(-200, 0).loadGraphic(Paths.image('tankBuildings', 'week7'));
-			
-									tankBuildings.setGraphicSize(Std.int(1.1 * tankBuildings.width));
-									tankBuildings.scrollFactor.set(0.3, 0.3);
-									tankBuildings.antialiasing = FlxG.save.data.antialiasing;
-									tankBuildings.updateHitbox();
-									swagBacks['tankBuildings'] = tankBuildings;
-									toAdd.push(tankBuildings);
-								}
-			
-								var tankRuins:FlxSprite = new FlxSprite(-200, 0).loadGraphic(Paths.image('tankRuins', 'week7'));
-								tankRuins.setGraphicSize(Std.int(1.1 * tankRuins.width));
-								tankRuins.antialiasing = FlxG.save.data.antialiasing;
-								tankRuins.scrollFactor.set(0.35, 0.35);
-								tankRuins.updateHitbox();
-								swagBacks['tankRuins'] = tankRuins;
-								toAdd.push(tankRuins);
-			
-								if (FlxG.save.data.distractions)
-								{
-									var smokeLeft:FlxSprite = new FlxSprite(-200, -100);
-									smokeLeft.antialiasing = FlxG.save.data.antialiasing;
-									smokeLeft.scrollFactor.set(0.4, 0.4);
-									smokeLeft.frames = Paths.getSparrowAtlas('smokeLeft', 'week7');
-									smokeLeft.animation.addByPrefix('idle', 'SmokeBlurLeft instance ', true);
-									smokeLeft.animation.play('idle');
-									swagBacks['smokeLeft'] = smokeLeft;
-									toAdd.push(smokeLeft);
-			
-									var smokeRight:FlxSprite = new FlxSprite(1100, -100);
-									smokeRight.antialiasing = FlxG.save.data.antialiasing;
-									smokeRight.scrollFactor.set(0.4, 0.4);
-									smokeRight.frames = Paths.getSparrowAtlas('smokeRight', 'week7');
-									smokeRight.animation.addByPrefix('idle', 'SmokeRight instance ', true);
-									smokeRight.animation.play('idle');
-									swagBacks['smokeRight'] = smokeRight;
-									toAdd.push(smokeRight);
-			
-									var tankWatchTower:FlxSprite = new FlxSprite(100, 50);
-									tankWatchTower.antialiasing = FlxG.save.data.antialiasing;
-									tankWatchTower.scrollFactor.set(0.5, 0.5);
-									tankWatchTower.frames = Paths.getSparrowAtlas('tankWatchtower', 'week7');
-									tankWatchTower.animation.addByPrefix('idle', 'watchtower gradient color instance ');
-									tankWatchTower.animation.play('idle');
-									tankWatchTower.active = true;
-									swagBacks['tankWatchTower'] = tankWatchTower;
-									toAdd.push(tankWatchTower);
-								}
-								var tankGround:FlxSprite = new FlxSprite(300, 300);
-								tankGround.scrollFactor.set(0.5, 0.5);
-								tankGround.antialiasing = FlxG.save.data.antialiasing;
-								tankGround.frames = Paths.getSparrowAtlas('tankRolling', 'week7');
-								tankGround.animation.addByPrefix('idle', 'BG tank w lighting instance ', true);
-								tankGround.animation.play('idle');
-								swagBacks['tankGround'] = tankGround;
-								toAdd.push(tankGround);
-			
+								var sky:BGSprite = new BGSprite('tankSky', -400, -400, 0, 0);
+								add(sky);
+								
+								var clouds:BGSprite = new BGSprite('tankClouds', FlxG.random.int(-700, -100), FlxG.random.int(-20, 20), 0.1, 0.1);
+								clouds.active = true;
+								clouds.velocity.x = FlxG.random.float(5, 15);
+								add(clouds);
+								
+								var mountains:BGSprite = new BGSprite('tankMountains', -300, -20, 0.2, 0.2);
+								mountains.setGraphicSize(Std.int(1.2 * mountains.width));
+								mountains.updateHitbox();
+								add(mountains);
+								
+								var buildings:BGSprite = new BGSprite('tankBuildings', -200, 0, 0.3, 0.3);
+								buildings.setGraphicSize(Std.int(1.1 * buildings.width));
+								buildings.updateHitbox();
+								add(buildings);
+								
+								var ruins:BGSprite = new BGSprite('tankRuins',-200,0,.35,.35);
+								ruins.setGraphicSize(Std.int(1.1 * ruins.width));
+								ruins.updateHitbox();
+								add(ruins);
+								
+								var smokeLeft:BGSprite = new BGSprite('smokeLeft', -200, -100, 0.4, 0.4, ['SmokeBlurLeft'], true);
+								add(smokeLeft);
+								var smokeRight:BGSprite = new BGSprite('smokeRight', 1100, -100, 0.4, 0.4, ['SmokeRight'], true);
+								add(smokeRight);
+								
+								var tankWatchtower = new BGSprite('tankWatchtower', 100, 50, 0.5, 0.5, ['watchtower gradient color']);
+								add(tankWatchtower);
+								
+								var tankGround = new BGSprite('tankRolling', 300, 300, 0.5, 0.5,['BG tank w lighting'], true);
+								add(tankGround);
+								
 								var tankmanRun = new FlxTypedGroup<TankmenBG>();
-								swagBacks['tankmanRun'] = tankmanRun;
-								toAdd.push(tankmanRun);
-			
-								var tankField:FlxSprite = new FlxSprite(-420, -150).loadGraphic(Paths.image('tankGround', 'week7'));
-								tankField.antialiasing = FlxG.save.data.antialiasing;
-								tankField.setGraphicSize(Std.int(1.15 * tankField.width));
-								tankField.updateHitbox();
-								swagBacks['tankField'] = tankField;
-								toAdd.push(tankField);
-						
+								add(tankmanRun);
+								
+								var ground:BGSprite = new BGSprite('tankGround', -420, -150);
+								ground.setGraphicSize(Std.int(1.15 * ground.width));
+								ground.updateHitbox();
+								add(ground);
+								
+								var MoveTank = new FlxTypedGroup<MoveTanks>();
+								swagBacks['MoveTanks'] = MoveTanks;
+								toAdd.push(MoveTank);
+								
+								var foregroundSprites = new FlxTypedGroup<BGSprite>();
+								foregroundSprites.add(new BGSprite('tank0', -500, 650, 1.7, 1.5, ['fg']));
+								foregroundSprites.add(new BGSprite('tank2', 450, 940, 1.5, 1.5, ['foreground']));
+								foregroundSprites.add(new BGSprite('tank5', 1620, 700, 1.5, 1.5, ['fg']));
 						}
 				default:
 					{

@@ -121,7 +121,7 @@ class Main extends Sprite
 	function onCrash(e:UncaughtErrorEvent)
 	{
 		var completeErrorMessage = "";
-		var stack:Array<StackItem> = CallStack.exceptionStack(true);
+		var stack:Array<StackItem> = CallStack.exceptionStack();
 		var dateNow:String = Date.now().toString();
 		
 		dateNow = StringTools.replace(dateNow, " ", "_");
@@ -129,7 +129,7 @@ class Main extends Sprite
 
 		var path:String = "./crash/" + "PLE_" + dateNow + ".txt";
 
-		completeErrorMessage += 'Seems like Plank Engine has crashed!\n${errorMessages[Math.round(Math.random()) * errorMessages.length]}\n\n"Call Stack:\n';
+		completeErrorMessage += 'Seems like Plank Engine has crashed!\n${FlxG.random.getObject(errorMessages)}\n\nCall Stack:\n';
 
 		for (stackItem in stack)
 		{
@@ -137,6 +137,7 @@ class Main extends Sprite
 			{
 				case FilePos(s, file, line, column):
 					completeErrorMessage += file + " (line " + line + ")\n";
+					Sys.println(file + " (line " + line + ")");
 				default:
 					Sys.println(stackItem);
 			}

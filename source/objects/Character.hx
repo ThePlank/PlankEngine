@@ -263,24 +263,24 @@ class Character extends FlxSprite
 					flipX = true;
 
 					case 'tankman':
-						tex = Paths.getSparrowAtlas('characters/Tank', 'shared');
+						tex = Paths.getSparrowAtlas('characters/tankmanCaptain', 'shared');
 						frames = tex;
-						animation.addByPrefix('idle', 'Tankman Idle Dance instance', 24);
-						animation.addByPrefix('singUP', 'Tankman UP note instance', 24);
-						animation.addByPrefix('singLEFT', 'Tankman Right Note instance', 24);
-						animation.addByPrefix('singDOWN', 'Tankman DOWN note instance', 24);
-						animation.addByPrefix('singRIGHT', 'Tankman Note Left instance', 24);
-						animation.addByPrefix('good', 'PRETTY GOOD tankman instance', 24);
-						animation.addByPrefix('ugh', 'TANKMAN UGH instance', 24);
+						animation.addByPrefix('idle', 'Tankman Idle Dance', 24);
+						animation.addByPrefix('singUP', 'Tankman UP note', 24);
+						animation.addByPrefix('singLEFT', 'Tankman Right Note', 24);
+						animation.addByPrefix('singDOWN', 'Tankman DOWN', 24);
+						animation.addByPrefix('singRIGHT', 'Tankman Note Left', 24);
+						animation.addByPrefix('good', 'PRETTY GOOD tankman', 24);
+						animation.addByPrefix('ugh', 'TANKMAN UGH', 24);
 		
 						
-						addOffset('idle', 0, -243);
-						addOffset("singUP", 48, -243);
-						addOffset("singRIGHT", -21, -243);
-						addOffset("singLEFT", 84, -243);
-						addOffset("singDOWN", 76, -243);
-						addOffset("good", 1, -243); 
-						addOffset("ugh", -15, -243); 
+						addOffset('idle', 0, 0);
+						addOffset("singUP", 48, 54);
+						addOffset("singRIGHT", -21, -31);
+						addOffset("singLEFT", 84, -14);
+						addOffset("singDOWN", 76, -101);
+						addOffset("good", 1, 16); 
+						addOffset("ugh", -15, -8); 
 	
 					playAnim('idle');
 

@@ -973,6 +973,8 @@ class PlayState extends abstracts.MusicBeatState
 
 			case "spooky":
 				dad.y += 200;
+			case "tankman":
+				dad.y += 200;
 			case "monster":
 				dad.y += 100;
 			case 'monster-christmas':
@@ -4579,6 +4581,26 @@ class PlayState extends abstracts.MusicBeatState
 		if (FlxG.sound.music.time > Conductor.songPosition + 20 || FlxG.sound.music.time < Conductor.songPosition - 20)
 		{
 			resyncVocals();
+		}
+
+	    if (curStep == 59 && curSong == 'Ugh')
+		{
+			dad.playAnim('ugh', true);
+		}
+
+		if (curStep == 443 && curSong == 'Ugh')
+		{
+			dad.playAnim('ugh', true);
+		}
+
+		if (curStep == 523 && curSong == 'Ugh')
+		{
+			dad.playAnim('ugh', true);
+		}
+
+		if (curStep == 827 && curSong == 'Ugh')
+		{
+			dad.playAnim('ugh', true);
 		}
 
 		// #if cpp

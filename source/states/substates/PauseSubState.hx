@@ -4,7 +4,7 @@ import util.CoolUtil;
 import classes.KeyBinds;
 import flixel.input.gamepad.FlxGamepad;
 import openfl.Lib;
-#if windows
+#if PSYCH_LUA_ALLOWED
 import llua.Lua;
 #end
 import classes.Controls.Control;

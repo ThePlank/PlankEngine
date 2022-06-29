@@ -121,7 +121,7 @@ class Main extends Sprite
 	function onCrash(e:UncaughtErrorEvent)
 	{
 		var completeErrorMessage = "";
-		var stack:Array<StackItem> = CallStack.exceptionStack();
+		var stack:Array<StackItem> = CallStack.exceptionStack(true);
 		var dateNow:String = Date.now().toString();
 		
 		dateNow = StringTools.replace(dateNow, " ", "_");

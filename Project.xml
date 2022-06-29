@@ -116,12 +116,12 @@
 	<haxelib name="hscript-ex" />
 
 	<haxelib name="actuate" />
-	<haxelib name="hxCodec"/>
+	<haxelib name="hxCodec" if="cpp"/>
 
 	<!--In case you want to use the ui package-->
 	<haxelib name="flixel-ui" />
 	
-	<haxelib name="discord_rpc" if="windows"/>
+	<haxelib name="discord_rpc" if="cpp"/>
 	<haxelib name="linc_luajit"/>
 
 	<!-- <haxelib name="hxcpp-debug-server" if="desktop"/> -->
@@ -188,7 +188,7 @@
 	<haxedef name="MODS_ALLOWED"/>
 
 	<!-- Disable if you don't want psych engine's lua system -->
-	<haxedef name="PSYCH_LUA_ALLOWED"/>
+	<haxedef name="PSYCH_LUA_ALLOWED" if="cpp" />
 
 	<!-- Disable if you don't want plank engine's hscript system -->
 	<haxedef name="PLANK_HSCRIPT_ALLOWED"/>

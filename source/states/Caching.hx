@@ -30,6 +30,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import flixel.text.FlxText;
 import classes.PlayerSettings;
+import StringTools;
 
 using StringTools;
 
@@ -49,9 +50,9 @@ class Caching extends abstracts.MusicBeatState
 
 	public static var bitmapData:Map<String,FlxGraphic>;
 
-	var images = [];
-	var music = [];
-	var charts = [];
+	var images:Array<String> = [];
+	var music:Array<String> = [];
+	var charts:Array<String> = [];
 
 
 	override function create()
@@ -178,7 +179,7 @@ class Caching extends abstracts.MusicBeatState
 		{
 			if (!doCache)
 				continue;
-			var replaced = i.replace(".png","");
+			var replaced = StringTools.replace(i, ".png", "");
 			var data:BitmapData = BitmapData.fromFile("assets/shared/images/characters/" + i);
 			trace('id ' + replaced + ' file - assets/shared/images/characters/' + i + ' ${data.width}');
 			var graph = FlxGraphic.fromBitmapData(data);

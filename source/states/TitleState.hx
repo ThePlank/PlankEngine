@@ -1,5 +1,6 @@
 package states;
 
+import classes.PlayerSettings;
 import haxe.Exception;
 import haxe.Json;
 import haxe.Http;

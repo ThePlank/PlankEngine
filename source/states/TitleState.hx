@@ -10,7 +10,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.addons.display.FlxGridOverlay;
-import flixel.addons.transition.FlxTransitionSprite.GraphicTransTileDiamond;
+import flixel.addons.transition.FlxTransitionSprite.GraphicTransTileCircle;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.addons.transition.TransitionData;
 import flixel.graphics.FlxGraphic;
@@ -29,11 +29,9 @@ import flixel.util.FlxTimer;
 import lime.app.Application;
 import openfl.Assets;
 import objects.Alphabet;
-
 #if discord_rpc
 import classes.Discord.DiscordClient;
 #end
-
 #if cpp
 import sys.thread.Thread;
 #end
@@ -56,7 +54,6 @@ class TitleState extends abstracts.MusicBeatState
 
 	override public function create():Void
 	{
-		
 		#if sys
 		if (!sys.FileSystem.exists(Sys.getCwd() + "/assets/replays"))
 			sys.FileSystem.createDirectory(Sys.getCwd() + "/assets/replays");
@@ -66,21 +63,16 @@ class TitleState extends abstracts.MusicBeatState
 		{
 			trace("Loaded " + openfl.Assets.getLibrary("default").assetsLoaded + " assets (DEFAULT)");
 		}
-		
-		#if !cpp
 
+		#if !cpp
 		FlxG.save.bind('funkin', 'ninjamuffin99');
 
 		PlayerSettings.init();
 
 		KadeEngineData.initSave();
-		
 		#end
 
-
-				
 		Highscore.load();
-
 
 		curWacky = FlxG.random.getObject(getIntroTextShit());
 
@@ -125,10 +117,13 @@ class TitleState extends abstracts.MusicBeatState
 		bg.updateHitbox();
 		add(bg);
 
-		if (Main.watermarks) {
+		if (Main.watermarks)
+		{
 			logoBl = new FlxSprite(-150, 1500);
 			logoBl.frames = Paths.getSparrowAtlas('PlankEngineLogoBumpin');
-		} else {
+		}
+		else
+		{
 			logoBl = new FlxSprite(-150, -100);
 			logoBl.frames = Paths.getSparrowAtlas('PlankEngineLogoBumpin');
 		}
@@ -192,15 +187,14 @@ class TitleState extends abstracts.MusicBeatState
 
 		if (initialized)
 			skipIntro();
-		else {
-			var diamond:FlxGraphic = FlxGraphic.fromClass(GraphicTransTileDiamond);
+		else
+		{
+			var diamond:FlxGraphic = FlxGraphic.fromClass(GraphicTransTileCircle);
 			diamond.persist = true;
 			diamond.destroyOnNoUse = false;
 
-			FlxTransitionableState.defaultTransIn = new TransitionData(FADE, FlxColor.BLACK, 1, new FlxPoint(0, -1), {asset: diamond, width: 32, height: 32},
-				new FlxRect(-200, -200, FlxG.width * 1.4, FlxG.height * 1.4));
-			FlxTransitionableState.defaultTransOut = new TransitionData(FADE, FlxColor.BLACK, 0.7, new FlxPoint(0, 1),
-				{asset: diamond, width: 32, height: 32}, new FlxRect(-200, -200, FlxG.width * 1.4, FlxG.height * 1.4));
+			FlxTransitionableState.defaultTransIn = new TransitionData(TILES, FlxColor.BLACK, 0.8, new FlxPoint(0, -1), {asset: diamond, width: 32, height: 32}, new FlxRect(-200, -200, FlxG.width * 1.4, FlxG.height * 1.4));
+			FlxTransitionableState.defaultTransOut = new TransitionData(TILES, FlxColor.BLACK, 0.8, new FlxPoint(0, -1), {asset: diamond, width: 32, height: 32}, new FlxRect(-200, -200, FlxG.width * 1.4, FlxG.height * 1.4));
 
 			transIn = FlxTransitionableState.defaultTransIn;
 			transOut = FlxTransitionableState.defaultTransOut;
@@ -263,13 +257,13 @@ class TitleState extends abstracts.MusicBeatState
 		}
 		#end
 
-		if (bg != null) {
+		if (bg != null)
+		{
 			bg.screenCenter();
 		}
 
 		if (pressedEnter && !transitioning && skippedIntro)
 		{
-
 			if (FlxG.save.data.flashing)
 				titleText.animation.play('press');
 
@@ -282,30 +276,27 @@ class TitleState extends abstracts.MusicBeatState
 			MainMenuState.firstStart = true;
 			MainMenuState.finishedFunnyMove = false;
 
-			new FlxTimer().start(2, function(tmr:FlxTimer)
+			try
 			{
-				// Get current version of Kade Engine
+				var stringJson = Http.requestUrl("https://raw.githubusercontent.com/ThePlank/PlankEngine/main/version.json");
+				var destingedJson = Json.parse(stringJson);
 
-				try {
-					var stringJson = Http.requestUrl("https://raw.githubusercontent.com/ThePlank/PlankEngine/main/version.json");
-					var destingedJson = Json.parse(stringJson);
+				if (destingedJson == null)
+					throw new Exception("dude, there is no json!");
 
-					if (destingedJson == null)
-						throw new Exception("dude, there is no json!");
-
-					if (!Application.current.meta.get('version').contains(destingedJson.version) && !OutdatedSubState.leftState)
-					{
-						trace('outdated! ' + destingedJson.version + ' != ' + Application.current.meta.get('version'));
-						OutdatedSubState.version = destingedJson.version;
-						OutdatedSubState.changelog = destingedJson.changelog;
-						clear();
-						FlxG.switchState(new OutdatedSubState());
-					}
-				} catch(err) {
-					FlxG.log.warn('error getting engine/mod version! error: $err');
+				if (!Application.current.meta.get('version').contains(destingedJson.version) && !OutdatedSubState.leftState)
+				{
+					trace('outdated! ' + destingedJson.version + ' != ' + Application.current.meta.get('version'));
+					OutdatedSubState.version = destingedJson.version;
+					OutdatedSubState.changelog = destingedJson.changelog;
+					clear();
+					FlxG.switchState(new OutdatedSubState());
 				}
-			});
-			// FlxG.sound.play(Paths.music('titleShoot'), 0.7);
+			}
+			catch (err)
+			{
+				FlxG.log.warn('error getting engine/mod version! error: $err');
+			}
 		}
 
 		if (pressedEnter && !skippedIntro && initialized)
@@ -433,17 +424,17 @@ class TitleState extends abstracts.MusicBeatState
 			FlxG.camera.flash(FlxColor.WHITE, 4);
 			remove(credGroup);
 
-			FlxTween.tween(logoBl,{y: -100}, 1.4, {ease: FlxEase.expoInOut});
+			FlxTween.tween(logoBl, {y: -100}, 1.4, {ease: FlxEase.expoInOut});
 
 			logoBl.angle = -4;
 
 			new FlxTimer().start(0.01, function(tmr:FlxTimer)
-				{
-					if(logoBl.angle == -4) 
-						FlxTween.angle(logoBl, logoBl.angle, 4, 4, {ease: FlxEase.quartInOut});
-					if (logoBl.angle == 4) 
-						FlxTween.angle(logoBl, logoBl.angle, -4, 4, {ease: FlxEase.quartInOut});
-				}, 0);
+			{
+				if (logoBl.angle == -4)
+					FlxTween.angle(logoBl, logoBl.angle, 4, 4, {ease: FlxEase.quartInOut});
+				if (logoBl.angle == 4)
+					FlxTween.angle(logoBl, logoBl.angle, -4, 4, {ease: FlxEase.quartInOut});
+			}, 0);
 
 			skippedIntro = true;
 		}

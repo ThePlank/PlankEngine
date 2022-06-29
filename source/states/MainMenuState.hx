@@ -98,7 +98,7 @@ class MainMenuState extends abstracts.MusicBeatState
 			menuItem.ID = i;
 			menuItem.screenCenter(X);
 			menuItems.add(menuItem);
-			menuItem.scrollFactor.set(1, 1);
+			menuItem.scrollFactor.set(0, 1);
 			menuItem.antialiasing = FlxG.save.data.antialiasing;
 			if (firstStart)
 				FlxTween.tween(menuItem,{y: 60 + (i * 200) },1 + (i * 0.25) ,{ease: FlxEase.expoOut, onComplete: function(flxTween:FlxTween) 

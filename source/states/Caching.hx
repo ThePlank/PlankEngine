@@ -42,7 +42,7 @@ class Caching extends abstracts.MusicBeatState
 
 	var skipButton:FlxButton;
 
-	var ecache:Bool = true;
+	var doCache:Bool = true;
 
 	var text:FlxText;
 	var plankLogo:FlxSprite;
@@ -88,7 +88,7 @@ class Caching extends abstracts.MusicBeatState
 		plankLogo.alpha = 0;
 
 		skipButton = new FlxButton(50, 50, "Skip", () -> {
-			FlxG.switchState(new TitleState());
+			doCache = false;
 		});
 		add(skipButton);
 		#else
@@ -136,13 +136,18 @@ class Caching extends abstracts.MusicBeatState
 		sys.thread.Thread.create(() -> {
 			while(!loaded)
 			{
-				if (toBeDone != 0 && done != toBeDone)
+				if (toBeDone != 0 && done != toBeDone && doCache)
 					{
 						var alpha = HelperFunctions.truncateFloat(done / toBeDone * 100,2) / 100;
 						plankLogo.alpha = alpha;
 						text.alpha = alpha;
 						text.text = "Loading... (" + done + "/" + toBeDone + ")";
 					}
+				if (!doCache) {
+					plankLogo.alpha = 1;
+					text.alpha = 1;
+					text.text = "Skipping...";
+				}
 			}
 		
 		});
@@ -171,6 +176,8 @@ class Caching extends abstracts.MusicBeatState
 
 		for (i in images)
 		{
+			if (!doCache)
+				continue;
 			var replaced = i.replace(".png","");
 			var data:BitmapData = BitmapData.fromFile("assets/shared/images/characters/" + i);
 			trace('id ' + replaced + ' file - assets/shared/images/characters/' + i + ' ${data.width}');
@@ -183,6 +190,8 @@ class Caching extends abstracts.MusicBeatState
 
 		for (i in music)
 		{
+			if (!doCache)
+				continue;
 			FlxG.sound.cache(Paths.inst(i));
 			FlxG.sound.cache(Paths.voices(i));
 			trace("cached " + i);

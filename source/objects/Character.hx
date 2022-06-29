@@ -274,15 +274,16 @@ class Character extends FlxSprite
 						animation.addByPrefix('ugh', 'TANKMAN UGH instance', 24);
 		
 						
-						addOffset('idle', 0, 0);
-						addOffset("singUP", 48, 54);
-						addOffset("singRIGHT", -21, -31);
-						addOffset("singLEFT", 84, -14);
-						addOffset("singDOWN", 76, -101);
-						addOffset("good", 1, 16); 
-						addOffset("ugh", -15, -8); 
+						addOffset('idle', 0, -243);
+						addOffset("singUP", 48, -243);
+						addOffset("singRIGHT", -21, -243);
+						addOffset("singLEFT", 84, -243);
+						addOffset("singDOWN", 76, -243);
+						addOffset("good", 1, -243); 
+						addOffset("ugh", -15, -243); 
 	
 					playAnim('idle');
+
 					flipX = true;
 
 					case 'bf-and-gf-but-dead':

@@ -126,7 +126,7 @@ class PlayState extends abstracts.MusicBeatState
 	
 	public var originalX:Float;
 
-	var JudgementeOptionCounter:FlxText;
+	var judgementeOptionCounter:FlxText;
 
 	public static var dad:Character;
 	public static var gf:Character;
@@ -421,7 +421,6 @@ class PlayState extends abstracts.MusicBeatState
 				SONG.eventObjects = [new Event("Init BPM",0,SONG.bpm,"BPM Change")];
 			}
 	
-
 		TimingStruct.clearTimings();
 
 		var currentIndex = 0;
@@ -1288,18 +1287,17 @@ class PlayState extends abstracts.MusicBeatState
 		iconP2.y = healthBar.y - (iconP2.height / 2);
 		add(iconP2);
 
-		JudgementeOptionCounter = new FlxText(20, 0, 0, "", 20);
-		JudgementeOptionCounter.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, FlxTextAlign.LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		JudgementeOptionCounter.borderSize = 2;
-		JudgementeOptionCounter.borderQuality = 2;
-		JudgementeOptionCounter.scrollFactor.set();
-		JudgementeOptionCounter.screenCenter(Y);
-		JudgementeOptionCounter.text = "Sicks:" + sicks + "\nGoods:" + goods + "\nBads: " + bads + "\nShits: " + shits + "\nMisses: " + misses;
-		if (FlxG.save.data.JudgementeOption)
-		add(JudgementeOptionCounter);
+		judgementeOptionCounter = new FlxText(20, 0, 0, "", 20);
+		judgementeOptionCounter.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, FlxTextAlign.LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		judgementeOptionCounter.borderSize = 2;
+		judgementeOptionCounter.borderQuality = 2;
+		judgementeOptionCounter.scrollFactor.set();
+		judgementeOptionCounter.screenCenter(Y);
+		judgementeOptionCounter.text = "Sicks:" + sicks + "\nGoods:" + goods + "\nBads: " + bads + "\nShits: " + shits + "\nMisses: " + misses;
+		add(judgementeOptionCounter);
 
 		strumLineNotes.cameras = [camHUD];
-		JudgementeOptionCounter.cameras = [camHUD];
+		judgementeOptionCounter.cameras = [camHUD];
 		grpNoteSplashes.cameras = [camHUD];
 		notes.cameras = [camHUD];
 		healthBar.cameras = [camHUD];
@@ -2452,7 +2450,7 @@ class PlayState extends abstracts.MusicBeatState
 
 		scoreTxt.x = (originalX - (lengthInPx / 2)) + 335;
 
-		JudgementeOptionCounter.text = "Sicks:" + sicks + "\nGoods:" + goods + "\nBads: " + bads + "\nShits: " + shits + "\nMisses: " + misses;
+		judgementeOptionCounter.text = "Sicks:" + sicks + "\nGoods:" + goods + "\nBads: " + bads + "\nShits: " + shits + "\nMisses: " + misses;
 
 		if (controls.PAUSE && startedCountdown && canPause && !cannotDie)
 		{
@@ -2635,6 +2633,12 @@ class PlayState extends abstracts.MusicBeatState
 					// Conductor.songPosition += FlxG.elapsed * 1000;
 					// trace('MISSED FRAME');
 				}
+			}
+
+			switch (curStage)
+			{
+				case 'tank':
+					new FlxTypedGroup<MoveTanks>();(elapsed);
 			}
 
 			// Conductor.lastSongPos = FlxG.sound.music.time;

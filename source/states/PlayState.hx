@@ -840,44 +840,44 @@ class PlayState extends abstracts.MusicBeatState
 					}
 					case 'tank':
 						{
-								var sky:BGSprite = new BGSprite('tankSky', 'week7', -400, -400, 0, 0);
+								var sky:BGSprite = new BGSprite('week7/tankSky', -400, -400, 0, 0);
 								add(sky);
 								
-								var clouds:BGSprite = new BGSprite('tankClouds', 'week7' FlxG.random.int(-700, -100), FlxG.random.int(-20, 20), 0.1, 0.1);
+								var clouds:BGSprite = new BGSprite('week7/tankClouds', FlxG.random.int(-700, -100), FlxG.random.int(-20, 20), 0.1, 0.1);
 								clouds.active = true;
 								clouds.velocity.x = FlxG.random.float(5, 15);
 								add(clouds);
 								
-								var mountains:BGSprite = new BGSprite('tankMountains' 'week7', -300, -20, 0.2, 0.2);
+								var mountains:BGSprite = new BGSprite('week7/tankMountains', -300, -20, 0.2, 0.2);
 								mountains.setGraphicSize(Std.int(1.2 * mountains.width));
 								mountains.updateHitbox();
 								add(mountains);
 								
-								var buildings:BGSprite = new BGSprite('tankBuildings', 'week7' -200, 0, 0.3, 0.3);
+								var buildings:BGSprite = new BGSprite('week7/tankBuildings', -200, 0, 0.3, 0.3);
 								buildings.setGraphicSize(Std.int(1.1 * buildings.width));
 								buildings.updateHitbox();
 								add(buildings);
 								
-								var ruins:BGSprite = new BGSprite('tankRuins', 'week7'-200,0,.35,.35);
+								var ruins:BGSprite = new BGSprite('week7/tankRuins',-200,0,.35,.35);
 								ruins.setGraphicSize(Std.int(1.1 * ruins.width));
 								ruins.updateHitbox();
 								add(ruins);
 								
-								var smokeLeft:BGSprite = new BGSprite('smokeLeft', 'week7' -200, -100, 0.4, 0.4, ['SmokeBlurLeft'], true);
+								var smokeLeft:BGSprite = new BGSprite('week7/smokeLeft', -200, -100, 0.4, 0.4, ['SmokeBlurLeft'], true);
 								add(smokeLeft);
-								var smokeRight:BGSprite = new BGSprite('smokeRight', 'week7' 1100, -100, 0.4, 0.4, ['SmokeRight'], true);
+								var smokeRight:BGSprite = new BGSprite('week7/smokeRight', 1100, -100, 0.4, 0.4, ['SmokeRight'], true);
 								add(smokeRight);
 								
-								var tankWatchtower = new BGSprite('tankWatchtower', 'week7' 100, 50, 0.5, 0.5, ['watchtower gradient color']);
+								var tankWatchtower = new BGSprite('week7/tankWatchtower', 100, 50, 0.5, 0.5, ['watchtower gradient color']);
 								add(tankWatchtower);
 								
-								var tankGround = new BGSprite('tankRolling', 'week7' 300, 300, 0.5, 0.5,['BG tank w lighting'], true);
+								var tankGround = new BGSprite('week7/tankRolling', 300, 300, 0.5, 0.5,['BG tank w lighting'], true);
 								add(tankGround);
 								
 								var tankmanRun = new FlxTypedGroup<TankmenBG>();
 								add(tankmanRun);
 								
-								var ground:BGSprite = new BGSprite('tankGround', 'week7' -420, -150);
+								var ground:BGSprite = new BGSprite('week7/tankGround', -420, -150);
 								ground.setGraphicSize(Std.int(1.15 * ground.width));
 								ground.updateHitbox();
 								add(ground);
@@ -887,9 +887,9 @@ class PlayState extends abstracts.MusicBeatState
 								toAdd.push(MoveTank);
 								
 								var foregroundSprites = new FlxTypedGroup<BGSprite>();
-								foregroundSprites.add(new BGSprite('tank0', 'week7' -500, 650, 1.7, 1.5, ['fg']));
-								foregroundSprites.add(new BGSprite('tank2', 'week7' 450, 940, 1.5, 1.5, ['foreground']));
-								foregroundSprites.add(new BGSprite('tank5', 'week7' 1620, 700, 1.5, 1.5, ['fg']));
+								foregroundSprites.add(new BGSprite('week7/tank0', -500, 650, 1.7, 1.5, ['fg']));
+								foregroundSprites.add(new BGSprite('week7/tank2', 450, 940, 1.5, 1.5, ['foreground']));
+								foregroundSprites.add(new BGSprite('week7/tank5', 1620, 700, 1.5, 1.5, ['fg']));
 						}
 				default:
 					{

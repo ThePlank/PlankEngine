@@ -170,9 +170,7 @@ jobs:
         run: |
           md C:/hashlink
           git clone https://github.com/HaxeFoundation/hashlink C:/hashlink
-          haxelib run lime setup hashlink
-          n
-          C:/hashlink
+          haxelib run lime setup hashlink n C:/hashlink
       - name: Create Version Tag
         run: echo "${{github.run_id}}" > VERSION
       - name: Compile

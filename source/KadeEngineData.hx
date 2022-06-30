@@ -128,7 +128,7 @@ class KadeEngineData
 		
 		KeyBinds.gamepad = gamepad != null;
 
-		Conductor.recalculateTimings();
+		// Conductor.recalculateTimings();
 		PlayerSettings.player1.controls.loadKeyBinds();
 		KeyBinds.keyCheck();
 

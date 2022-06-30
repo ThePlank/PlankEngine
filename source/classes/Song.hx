@@ -16,7 +16,7 @@ typedef SwagSong =
 {
 	var song:String;
 	var notes:Array<SwagSection>;
-	var events:Array<Dynamic>;
+	var eventObjects:Array<Event>;
 	var bpm:Float;
 	var needsVoices:Bool;
 	var speed:Float;
@@ -31,11 +31,27 @@ typedef SwagSong =
 	var validScore:Bool;
 }
 
+class Event
+{
+	public var name:String;
+	public var position:Float;
+	public var value:Float;
+	public var type:String;
+
+	public function new(name:String,pos:Float,value:Float,type:String)
+	{
+		this.name = name;
+		this.position = pos;
+		this.value = value;
+		this.type = type;
+	}
+}
+
 class Song
 {
 	public var song:String;
 	public var notes:Array<SwagSection>;
-	public var events:Array<Dynamic>;
+	public var eventObjects:Array<Event>;
 	public var bpm:Float;
 	public var needsVoices:Bool = true;
 	public var arrowSkin:String;
@@ -134,6 +150,61 @@ class Song
 		onLoadJson(songJson);
 		return songJson;
 	}
+
+	public static function conversionChecks(song:SwagSong):SwagSong
+		{
+			var ba = song.bpm;
+	
+			var index = 0;
+			trace("conversion stuff " + song.song + " " + song.notes.length);
+			var convertedStuff:Array<Song.Event> = [];
+	
+	
+			if (song.eventObjects == null)
+				song.eventObjects = [new Song.Event("Init BPM",0,song.bpm,"BPM Change")];
+	
+			for(i in song.eventObjects)
+			{
+				var name = Reflect.field(i,"name");
+				var type = Reflect.field(i,"type");
+				var pos = Reflect.field(i,"position");
+				var value = Reflect.field(i,"value");
+	
+				convertedStuff.push(new Song.Event(name,pos,value,type));
+			}
+	
+			song.eventObjects = convertedStuff;
+	
+			for(i in song.notes)
+			{
+				var currentBeat = 4 * index;
+	
+				var currentSeg = TimingStruct.getTimingAtBeat(currentBeat);
+	
+				if (currentSeg == null)
+					continue;
+	
+				var beat:Float = currentSeg.startBeat + (currentBeat - currentSeg.startBeat);
+	
+				if (i.changeBPM && i.bpm != ba)
+				{
+					trace("converting changebpm for section " + index);
+					ba = i.bpm;
+					song.eventObjects.push(new Song.Event("FNF BPM Change " + index,beat,i.bpm,"BPM Change"));
+				}
+	
+				for(ii in i.sectionNotes)
+				{
+					if (ii[3] == null)
+						ii[3] = false;
+				}
+	
+				index++;
+			}
+	
+			return song;
+	
+		}
 
 	public static function parseJSONshit(rawJson:String):SwagSong
 	{

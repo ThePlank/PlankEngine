@@ -53,6 +53,8 @@ class Alphabet extends FlxSpriteGroup
 	var yScale:Float;
 
 	// ThatGuy: Added 2 more variables, xScale and yScale for resizing text
+	public var lettersArray:Array<AlphaCharacter> = [];
+
 	public function new(x:Float, y:Float, text:String = "", ?bold:Bool = false, typed:Bool = false, shouldMove:Bool = false, xScale:Float = 1, yScale:Float = 1)
 	{
 		pastX = x;
@@ -84,10 +86,13 @@ class Alphabet extends FlxSpriteGroup
 
 	public function reType(text, xScale:Float = 1, yScale:Float = 1)
 	{
-		for (i in listOAlphabets)
-			remove(i);
-		_finalText = text;
-		this.text = text;
+		for (i in 0...lettersArray.length) {
+			var letter = lettersArray[0];
+			letter.destroy();
+			remove(letter);
+			lettersArray.remove(letter);
+		}
+		lettersArray = [];
 
 		lastSprite = null;
 
@@ -154,6 +159,7 @@ class Alphabet extends FlxSpriteGroup
 				add(letter);
 
 				lastSprite = letter;
+				lettersArray.push(letter);
 			}
 
 			// loopNum += 1;

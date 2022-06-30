@@ -1,5 +1,9 @@
 package states;
 
+import objects.AttachedSprite;
+import util.CoolUtil;
+import classes.WeekData;
+import objects.Alphabet;
 import abstracts.MusicBeatState;
 import flash.text.TextField;
 import flixel.FlxG;
@@ -24,6 +28,7 @@ import flash.geom.Rectangle;
 import flixel.ui.FlxButton;
 import flixel.FlxBasic;
 import sys.io.File;
+import states.TitleState;
 /*import haxe.zip.Reader;
 import haxe.zip.Entry;
 import haxe.zip.Uncompress;
@@ -31,7 +36,7 @@ import haxe.zip.Writer;*/
 
 using StringTools;
 
-class ModsMenuState extends MusicBeatState
+class ModsState extends MusicBeatState
 {
 	var mods:Array<ModMetadata> = [];
 	static var changedAThing = false;
@@ -64,12 +69,9 @@ class ModsMenuState extends MusicBeatState
 
 	override function create()
 	{
-		Paths.clearStoredMemory();
-		Paths.clearUnusedMemory();
 		WeekData.setDirectoryFromWeek();
 
 		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
-		bg.antialiasing = ClientPrefs.globalAntialiasing;
 		add(bg);
 		bg.screenCenter();
 
@@ -476,7 +478,7 @@ class ModsMenuState extends MusicBeatState
 			{
 				//MusicBeatState.switchState(new TitleState());
 				TitleState.initialized = false;
-				TitleState.closedState = false;
+				TitleState.leftState = false;
 				FlxG.sound.music.fadeOut(0.3);
 				if(FreeplayState.vocals != null)
 				{
@@ -487,16 +489,16 @@ class ModsMenuState extends MusicBeatState
 			}
 			else
 			{
-				MusicBeatState.switchState(new MainMenuState());
+				FlxG.switchState(new MainMenuState());
 			}
 		}
 
-		if(controls.UI_UP_P)
+		if(controls.UP_P)
 		{
 			changeSelection(-1);
 			FlxG.sound.play(Paths.sound('scrollMenu'));
 		}
-		if(controls.UI_DOWN_P)
+		if(controls.DOWN_P)
 		{
 			changeSelection(1);
 			FlxG.sound.play(Paths.sound('scrollMenu'));
@@ -715,7 +717,7 @@ class ModMetadata
 		this.folder = folder;
 		this.name = folder;
 		this.description = "No description provided.";
-		this.color = ModsMenuState.defaultColor;
+		this.color = ModsState.defaultColor;
 		this.restart = false;
 
 		//Try loading json

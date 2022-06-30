@@ -1,8 +1,8 @@
-package states.substates;
+//package states.substates;
 import util.Ratings;
 import classes.Song;
 import classes.Conductor;
-import classes.Replay;
+//import classes.Replay;
 import classes.Highscore;
 import classes.PlayerSettings;
 import util.CoolUtil;
@@ -107,7 +107,7 @@ class ResultsScreen extends FlxSubState
         Score: ${PlayState.instance.songScore}\n
         Accuracy: ${HelperFunctions.truncateFloat(PlayState.instance.accuracy,2)}%\n\n
         ${Ratings.GenerateLetterRank(PlayState.instance.accuracy)}\n\n
-        ${!PlayState.loadRep ? "F1 - View replay\nF2 - Replay song" : ""}
+        ${!PlayState.loadRep ? "F2 - Replay song" : ""}
         ');
         comboText.size = 28;
         comboText.setBorderStyle(FlxTextBorderStyle.OUTLINE,FlxColor.BLACK,4,1);
@@ -149,7 +149,7 @@ class ResultsScreen extends FlxSubState
         var mean:Float = 0;
 
 
-        for (i in 0...PlayState.rep.replay.songNotes.length)
+        /*for (i in 0...PlayState.rep.replay.songNotes.length)
         {
             // 0 = time
             // 1 = length
@@ -168,6 +168,7 @@ class ResultsScreen extends FlxSubState
             if (obj[1] != -1)
                 graph.addToHistory(diff, judge, obj3);
         }
+        */
 
         if (sicks == Math.POSITIVE_INFINITY || sicks == Math.NaN)
             sicks = 0;
@@ -176,9 +177,9 @@ class ResultsScreen extends FlxSubState
 
         graph.update();
 
-        mean = HelperFunctions.truncateFloat(mean / PlayState.rep.replay.songNotes.length,2);
+       // mean = HelperFunctions.truncateFloat(mean / PlayState.rep.replay.songNotes.length,2);
 
-        settingsText = new FlxText(20,FlxG.height + 50,0,'SF: ${PlayState.rep.replay.sf} | Ratio (SA/GA): ${Math.round(sicks)}:1 ${Math.round(goods)}:1 | Mean: ${mean}ms | Played on ${PlayState.SONG.song} ${CoolUtil.difficultyFromInt(PlayState.storyDifficulty).toUpperCase()}');
+        settingsText = new FlxText(20,FlxG.height + 50,0,'Ratio (SA/GA): ${Math.round(sicks)}:1 ${Math.round(goods)}:1 | Mean: ${mean}ms | Played on ${PlayState.SONG.song} ${CoolUtil.difficultyFromInt(PlayState.storyDifficulty).toUpperCase()}');
         settingsText.size = 16;
         settingsText.setBorderStyle(FlxTextBorderStyle.OUTLINE,FlxColor.BLACK,2,1);
         settingsText.color = FlxColor.WHITE;
@@ -240,7 +241,7 @@ class ResultsScreen extends FlxSubState
             PlayState.instance.clean();
         }
 
-        if (FlxG.keys.justPressed.F1 && !PlayState.loadRep)
+       /* if (FlxG.keys.justPressed.F1 && !PlayState.loadRep)
         {
             trace(PlayState.rep.path);
             PlayState.rep = Replay.LoadReplay(PlayState.rep.path);
@@ -255,6 +256,7 @@ class ResultsScreen extends FlxSubState
                 case 'dad-battle': songFormat = 'Dadbattle';
                 case 'philly-nice': songFormat = 'Philly';
             }
+            */
 
 			var songHighscore = StringTools.replace(PlayState.SONG.song, " ", "-");
 			switch (songHighscore) {
@@ -269,18 +271,18 @@ class ResultsScreen extends FlxSubState
 
             var poop = "";
 
-            poop = Highscore.formatSong(PlayState.rep.replay.songName, PlayState.rep.replay.songDiff);
+            //poop = Highscore.formatSong(PlayState.rep.replay.songName, PlayState.rep.replay.songDiff);
 
             music.fadeOut(0.3);
 
-            PlayState.SONG = Song.conversionChecks(Song.loadFromJson(poop, PlayState.rep.replay.songName));
-            PlayState.isStoryMode = false;
-            PlayState.storyDifficulty = PlayState.rep.replay.songDiff;
-            LoadingState.loadAndSwitchState(new PlayState());
-            PlayState.instance.clean();
+           // PlayState.SONG = Song.conversionChecks(Song.loadFromJson(poop, PlayState.rep.replay.songName));
+            //PlayState.isStoryMode = false;
+            //PlayState.storyDifficulty = PlayState.rep.replay.songDiff;
+            //LoadingState.loadAndSwitchState(new PlayState());
+            //PlayState.instance.clean();
         }
 
-        if (FlxG.keys.justPressed.F2  && !PlayState.loadRep)
+        if (FlxG.keys.justPressed.F2)
         {
             PlayState.rep = null;
 

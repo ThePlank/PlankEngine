@@ -2,28 +2,22 @@ package classes;
 
 typedef SwagSection =
 {
-	var startTime:Float;
-	var endTime:Float;
-	var sectionNotes:Array<Array<Dynamic>>;
-	var lengthInSteps:Int;
+	var sectionNotes:Array<Dynamic>;
+	var sectionBeats:Float;
 	var typeOfSection:Int;
 	var mustHitSection:Bool;
+	var gfSection:Bool;
 	var bpm:Float;
 	var changeBPM:Bool;
 	var altAnim:Bool;
-	var p1AltAnim:Bool;
-	var p2AltAnim:Bool;
 }
 
 class Section
 {
-	public var startTime:Float = 0;
-	public var endTime:Float = 0;
-	public var sectionNotes:Array<Array<Dynamic>> = [];
-	public var changeBPM:Bool = false;
-	public var bpm:Float = 0;
+	public var sectionNotes:Array<Dynamic> = [];
 
-	public var lengthInSteps:Int = 16;
+	public var sectionBeats:Float = 4;
+	public var gfSection:Bool = false;
 	public var typeOfSection:Int = 0;
 	public var mustHitSection:Bool = true;
 
@@ -32,8 +26,9 @@ class Section
 	 */
 	public static var COPYCAT:Int = 0;
 
-	public function new(lengthInSteps:Int = 16)
+	public function new(sectionBeats:Float = 4)
 	{
-		this.lengthInSteps = lengthInSteps;
+		this.sectionBeats = sectionBeats;
+		trace('test created section: ' + sectionBeats);
 	}
 }

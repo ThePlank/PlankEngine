@@ -1,4 +1,4 @@
-package states;
+//package states;
 
 import classes.Song;
 import classes.Highscore;

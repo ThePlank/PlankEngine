@@ -40,15 +40,14 @@ import flixel.text.FlxText;
 import objects.NoteSplash;
 import flixel.FlxObject;
 import objects.Note;
-import classes.Replay;
+//import classes.Replay;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.system.FlxSound;
 import flixel.ui.FlxBar;
 import flixel.FlxSprite;
 import classes.shaders.WiggleEffect;
-import classes.Replay.Analysis;
+//import classes.Replay.Analysis;
 import classes.KeyBinds;
-import states.substates.ResultsScreen;
 import flixel.addons.transition.FlxTransitionableState;
 import classes.Highscore;
 import util.ConvertScore;
@@ -87,7 +86,7 @@ class PlayState extends abstracts.MusicBeatState
 
 	public static var songPosBar:FlxBar;
 
-	public static var rep:Replay;
+	//public static var rep:Replay;
 	public static var loadRep:Bool = false;
 	public static var inResults:Bool = false;
 
@@ -223,7 +222,7 @@ class PlayState extends abstracts.MusicBeatState
 
 	var songScoreDef:Int = 0;
 	var scoreTxt:FlxText;
-	var replayTxt:FlxText;
+	//var replayTxt:FlxText;
 
 	public static var campaignScore:Int = 0;
 
@@ -255,9 +254,9 @@ class PlayState extends abstracts.MusicBeatState
 	// BotPlay text
 	private var botPlayState:FlxText;
 	// Replay shit
-	private var saveNotes:Array<Dynamic> = [];
-	private var saveJudge:Array<String> = [];
-	private var replayAna:Analysis = new Analysis(); // replay analysis
+	//private var saveNotes:Array<Dynamic> = [];
+	//private var saveJudge:Array<String> = [];
+	//private var replayAna:Analysis = new Analysis(); // replay analysis
 
 	public static var highestCombo:Int = 0;
 
@@ -1064,17 +1063,17 @@ class PlayState extends abstracts.MusicBeatState
 			add(boyfriend);
 		}
 
-		if (loadRep)
-		{
-			FlxG.watch.addQuick('rep rpesses', repPresses);
-			FlxG.watch.addQuick('rep releases', repReleases);
+		//if (loadRep)
+		//{
+		//	FlxG.watch.addQuick('rep rpesses', repPresses);
+		//	FlxG.watch.addQuick('rep releases', repReleases);
 			// FlxG.watch.addQuick('Queued',inputsQueued);
 
-			PlayStateChangeables.useDownscroll = rep.replay.isDownscroll;
-			PlayStateChangeables.JudgementeOption = rep.replay.JudgementeOption;
-			PlayStateChangeables.safeFrames = rep.replay.sf;
-			PlayStateChangeables.botPlay = true;
-		}
+		//	PlayStateChangeables.useDownscroll = rep.replay.isDownscroll;
+		//	PlayStateChangeables.JudgementeOption = rep.replay.JudgementeOption;
+		//	PlayStateChangeables.safeFrames = rep.replay.sf;
+		//	PlayStateChangeables.botPlay = true;
+		//}
 
 		trace('uh ' + PlayStateChangeables.safeFrames);
 
@@ -1259,6 +1258,7 @@ class PlayState extends abstracts.MusicBeatState
 
 		add(scoreTxt);
 
+     /*
 		replayTxt = new FlxText(healthBarBG.x + healthBarBG.width / 2 - 75, healthBarBG.y + (PlayStateChangeables.useDownscroll ? 100 : -100), 0, "REPLAY",
 			20);
 		replayTxt.setFormat(Paths.font("vcr.ttf"), 42, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
@@ -1269,6 +1269,7 @@ class PlayState extends abstracts.MusicBeatState
 		{
 			add(replayTxt);
 		}
+		*/
 		// Literally copy-paste of the above, fu
 		botPlayState = new FlxText(healthBarBG.x + healthBarBG.width / 2 - 75, healthBarBG.y + (PlayStateChangeables.useDownscroll ? 100 : -100), 0,
 			"BOTPLAY", 20);
@@ -1312,8 +1313,8 @@ class PlayState extends abstracts.MusicBeatState
 			songPosBar.cameras = [camHUD];
 		}
 		kadeEngineWatermark.cameras = [camHUD];
-		if (loadRep)
-			replayTxt.cameras = [camHUD];
+		//if (loadRep)
+			//replayTxt.cameras = [camHUD];
 
 		// if (SONG.song == 'South')
 		// FlxG.camera.alpha = 0.7;
@@ -1372,13 +1373,13 @@ class PlayState extends abstracts.MusicBeatState
 			startCountdown();
 		}
 
-		if (!loadRep)
+		/*if (!loadRep)
 			rep = new Replay("na");
 
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, handleInput);
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, releaseInput);
 		super.create();
-	}
+	}*/
 
 	function schoolIntro(?dialogueBox:DialogueBox):Void
 	{
@@ -1599,6 +1600,7 @@ class PlayState extends abstracts.MusicBeatState
 	var previousFrameTime:Int = 0;
 	var lastReportedPlayheadPosition:Int = 0;
 	var songTime:Float = 0;
+}
 
 	private function getKey(charCode:Int):String
 	{
@@ -3384,9 +3386,9 @@ class PlayState extends abstracts.MusicBeatState
 		// }
 
 
-		if (!loadRep)
-			rep.SaveReplay(saveNotes, saveJudge, replayAna);
-		else
+		//if (!loadRep)
+			//rep.SaveReplay(saveNotes, saveJudge, replayAna);
+	//	else
 		{
 			PlayStateChangeables.botPlay = false;
 			PlayStateChangeables.scrollSpeed = 1;
@@ -3461,7 +3463,7 @@ class PlayState extends abstracts.MusicBeatState
 					vocals.stop();
 					if (FlxG.save.data.scoreScreen)
 					{
-						openSubState(new ResultsScreen());
+						openSubState(new StoryMenuState());
 						new FlxTimer().start(1, function(tmr:FlxTimer)
 							{
 								inResults = true;
@@ -3475,20 +3477,12 @@ class PlayState extends abstracts.MusicBeatState
 						clean();
 					}
 
-					// #if cpp
-					// if (luaModchart != null)
-					// {
-					// 	luaModchart.die();
-					// 	luaModchart = null;
-					// }
-					// #end
+				if (SONG.validScore)
+				{
+					Highscore.saveWeekScore(storyWeek, campaignScore, storyDifficulty);
+				}
 
-					if (SONG.validScore)
-					{
-						Highscore.saveWeekScore(storyWeek, campaignScore, storyDifficulty);
-					}
-
-					StoryMenuState.unlockNextWeek(storyWeek);
+				StoryMenuState.unlockNextWeek(storyWeek);
 				}
 				else
 				{
@@ -3528,7 +3522,7 @@ class PlayState extends abstracts.MusicBeatState
 					LoadingState.loadAndSwitchState(new PlayState());
 					clean();
 				}
-			}
+		    }
 			else
 			{
 				trace('WENT BACK TO FREEPLAY??');
@@ -4039,11 +4033,11 @@ class PlayState extends abstracts.MusicBeatState
 				}
 			}
 
-			if (!loadRep)
-				for (i in anas)
-					if (i != null)
-						replayAna.anaArray.push(i); // put em all there
-		}
+			//if (!loadRep)
+			//	for (i in anas)
+			//		if (i != null)
+			//			replayAna.anaArray.push(i); // put em all there
+		//}
 		if (PlayStateChangeables.botPlay)
 		notes.forEachAlive(function(daNote:Note)
 		{
@@ -4053,7 +4047,7 @@ class PlayState extends abstracts.MusicBeatState
 			if (daNote.mustPress && daNote.rating == "sick" || (diff > 0 && daNote.mustPress))
 			{
 				// Force good note hit regardless if it's too late to hit it or not as a fail safe
-					if (loadRep)
+					/*if (loadRep)
 					{
 						// trace('ReplayNote ' + tmpRepNote.strumtime + ' | ' + tmpRepNote.direction);
 						var n = findByTime(daNote.strumTime);
@@ -4064,7 +4058,7 @@ class PlayState extends abstracts.MusicBeatState
 							boyfriend.holdTimer = daNote.sustainLength;
 						}
 					}
-					else
+					else*/
 					{
 						goodNoteHit(daNote);
 						boyfriend.holdTimer = daNote.sustainLength;
@@ -4115,28 +4109,6 @@ class PlayState extends abstracts.MusicBeatState
 					spr.centerOffsets();
 			});
 		}
-	}
-
-	public function findByTime(time:Float):Array<Dynamic>
-	{
-		for (i in rep.replay.songNotes)
-		{
-			// trace('checking ' + Math.round(i[0]) + ' against ' + Math.round(time));
-			if (i[0] == time)
-				return i;
-		}
-		return null;
-	}
-
-	public function findByTimeIndex(time:Float):Int
-	{
-		for (i in 0...rep.replay.songNotes.length)
-		{
-			// trace('checking ' + Math.round(i[0]) + ' against ' + Math.round(time));
-			if (rep.replay.songNotes[i][0] == time)
-				return i;
-		}
-		return -1;
 	}
 
 	public var fuckingVolume:Float = 1;
@@ -4237,30 +4209,6 @@ class PlayState extends abstracts.MusicBeatState
 			}
 			combo = 0;
 			misses++;
-
-			if (daNote != null)
-			{
-				if (!loadRep)
-				{
-					saveNotes.push([
-						daNote.strumTime,
-						0,
-						direction,
-						166 * Math.floor((PlayState.rep.replay.sf / 60) * 1000) / 166
-					]);
-					saveJudge.push("miss");
-				}
-			}
-			else if (!loadRep)
-			{
-				saveNotes.push([
-					Conductor.songPosition,
-					0,
-					direction,
-					166 * Math.floor((PlayState.rep.replay.sf / 60) * 1000) / 166
-				]);
-				saveJudge.push("miss");
-			}
 
 			// var noteDiff:Float = Math.abs(daNote.strumTime - Conductor.songPosition);
 			// var wife:Float = EtternaFunctions.wife3(noteDiff, FlxG.save.data.etternaMode ? 1 : 1.7);
@@ -4397,13 +4345,7 @@ class PlayState extends abstracts.MusicBeatState
 
 		var noteDiff:Float = -(note.strumTime - Conductor.songPosition);
 
-		if (loadRep)
-		{
-			noteDiff = findByTime(note.strumTime)[3];
-			note.rating = rep.replay.songJudgements[findByTimeIndex(note.strumTime)];
-		}
-		else
-			note.rating = Ratings.CalculateRating(noteDiff);
+		note.rating = Ratings.CalculateRating(noteDiff);
 
 		if (note.rating == "miss")
 			return;

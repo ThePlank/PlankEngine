@@ -1,209 +1,151 @@
 package abstracts;
 
-import classes.PlayerSettings;
-import classes.TimingStruct;
-import classes.Conductor;
-import flixel.FlxBasic;
-#if discord_rpc
-import classes.Discord.DiscordClient;
-#end
-import flixel.util.FlxColor;
-import openfl.Lib;
 import classes.Conductor.BPMChangeEvent;
 import flixel.FlxG;
 import flixel.addons.ui.FlxUIState;
+import flixel.math.FlxRect;
+import flixel.util.FlxTimer;
+import flixel.addons.transition.FlxTransitionableState;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
+import flixel.FlxSprite;
+import flixel.util.FlxColor;
+import flixel.util.FlxGradient;
 import classes.Controls;
+import flixel.FlxState;
+import flixel.FlxBasic;
 
 class MusicBeatState extends FlxUIState
 {
-	private var lastBeat:Float = 0;
-	private var lastStep:Float = 0;
+	private var curSection:Int = 0;
+	private var stepsToDo:Int = 0;
 
 	private var curStep:Int = 0;
 	private var curBeat:Int = 0;
-	private var curDecimalBeat:Float = 0;
+
+	private var curDecStep:Float = 0;
+	private var curDecBeat:Float = 0;
 	private var controls(get, never):Controls;
 
 	inline function get_controls():Controls
 		return PlayerSettings.player1.controls;
 
-	private var assets:Array<FlxBasic> = [];
-
-	override function add(Object:flixel.FlxBasic):flixel.FlxBasic
-	{
-		if (FlxG.save.data.optimize)
-			assets.push(Object);
-		return super.add(Object);
-	}
-
-	public function clean()
-	{
-		if (FlxG.save.data.optimize)
-		{
-			for(i in assets)
-			{
-
-				i.kill();
-				remove(i);
-			}
-		}
-	}
-
-	override function create()
-	{
-		TimingStruct.clearTimings();
-		(cast (Lib.current.getChildAt(0), Main)).setFPSCap(FlxG.save.data.fpsCap);
-
-		if (transIn != null)
-			trace('reg ' + transIn.region);
-
+	override function create() {
+		var skip:Bool = FlxTransitionableState.skipNextTransOut;
 		super.create();
+
+		if(!skip) {
+			openSubState(new CustomFadeTransition(0.7, true));
+		}
+		FlxTransitionableState.skipNextTransOut = false;
 	}
-
-
-	var array:Array<FlxColor> = [
-		FlxColor.fromRGB(148, 0, 211),
-		FlxColor.fromRGB(75, 0, 130),
-		FlxColor.fromRGB(0, 0, 255),
-		FlxColor.fromRGB(0, 255, 0),
-		FlxColor.fromRGB(255, 255, 0),
-		FlxColor.fromRGB(255, 127, 0),
-		FlxColor.fromRGB(255, 0 , 0)
-	];
-
-	var skippedFrames = 0;
 
 	override function update(elapsed:Float)
 	{
 		//everyStep();
-		/*var nextStep:Int = updateCurStep();
+		var oldStep:Int = curStep;
 
-		if (nextStep >= 0)
+		updateCurStep();
+		updateBeat();
+
+		if (oldStep != curStep)
 		{
-			if (nextStep > curStep)
-			{
-				for (i in curStep...nextStep)
-				{
-					curStep++;
-					updateBeat();
-					stepHit();
-				}
-			}
-			else if (nextStep < curStep)
-			{
-				//Song reset?
-				curStep = nextStep;
-				updateBeat();
+			if(curStep > 0)
 				stepHit();
-			}
-		}*/
 
-		if (Conductor.songPosition < 0)
-			curDecimalBeat = 0;
-		else
-		{
-			if (TimingStruct.AllTimings.length > 1)
+			if(PlayState.SONG != null)
 			{
-				var data = TimingStruct.getTimingAtTimestamp(Conductor.songPosition);
-
-				FlxG.watch.addQuick("Current Conductor Timing Seg", data.bpm);
-
-				Conductor.crochet = ((60 / data.bpm) * 1000);
-
-				var step = ((60 / data.bpm) * 1000) / 4;
-				var startInMS = (data.startTime * 1000);
-
-				curDecimalBeat = data.startBeat + (((Conductor.songPosition/1000) - data.startTime) * (data.bpm / 60));
-				var ste:Int = Math.floor(data.startStep + ((Conductor.songPosition - startInMS) / step));
-				if (ste >= 0)
-				{
-					if (ste > curStep)
-					{
-						for (i in curStep...ste)
-						{
-							curStep++;
-							updateBeat();
-							stepHit();
-						}
-					}
-					else if (ste < curStep)
-					{
-						trace("reset steps for some reason?? at " + Conductor.songPosition);
-						//Song reset?
-						curStep = ste;
-						updateBeat();
-						stepHit();
-					}
-				}
-			}
-			else
-			{
-				curDecimalBeat = (Conductor.songPosition / 1000) * (Conductor.bpm/60);
-				var nextStep:Int = Math.floor(Conductor.songPosition / Conductor.stepCrochet);
-				if (nextStep >= 0)
-				{
-					if (nextStep > curStep)
-					{
-						for (i in curStep...nextStep)
-						{
-							curStep++;
-							updateBeat();
-							stepHit();
-						}
-					}
-					else if (nextStep < curStep)
-					{
-						//Song reset?
-						// trace("(no bpm change) reset steps for some reason?? at " + Conductor.songPosition);
-						curStep = nextStep;
-						updateBeat();
-						stepHit();
-					}
-				}
-				Conductor.crochet = ((60 / Conductor.bpm) * 1000);
+				if (oldStep < curStep)
+					updateSection();
+				else
+					rollbackSection();
 			}
 		}
 
-
-		if (FlxG.save.data.fpsRain && skippedFrames >= 6)
-			{
-				if (currentColor >= array.length)
-					currentColor = 0;
-				(cast (Lib.current.getChildAt(0), Main)).changeFPSColor(array[currentColor]);
-				currentColor++;
-				skippedFrames = 0;
-			}
-			else
-				skippedFrames++;
-
-		if ((cast (Lib.current.getChildAt(0), Main)).getFPSCap != FlxG.save.data.fpsCap && FlxG.save.data.fpsCap <= 290)
-			(cast (Lib.current.getChildAt(0), Main)).setFPSCap(FlxG.save.data.fpsCap);
+		if(FlxG.save.data != null) FlxG.save.data.fullscreen = FlxG.fullscreen;
 
 		super.update(elapsed);
 	}
 
-	private function updateBeat():Void
+	private function updateSection():Void
 	{
-		lastBeat = curBeat;
-		curBeat = Math.floor(curStep / 4);
+		if(stepsToDo < 1) stepsToDo = Math.round(getBeatsOnSection() * 4);
+		while(curStep >= stepsToDo)
+		{
+			curSection++;
+			var beats:Float = getBeatsOnSection();
+			stepsToDo += Math.round(beats * 4);
+			sectionHit();
+		}
 	}
 
-	public static var currentColor = 0;
-
-	private function updateCurStep():Int
+	private function rollbackSection():Void
 	{
-		var lastChange:BPMChangeEvent = {
-			stepTime: 0,
-			songTime: 0,
-			bpm: 0
-		}
-		for (i in 0...Conductor.bpmChangeMap.length)
+		if(curStep < 0) return;
+
+		var lastSection:Int = curSection;
+		curSection = 0;
+		stepsToDo = 0;
+		for (i in 0...PlayState.SONG.notes.length)
 		{
-			if (Conductor.songPosition >= Conductor.bpmChangeMap[i].songTime)
-				lastChange = Conductor.bpmChangeMap[i];
+			if (PlayState.SONG.notes[i] != null)
+			{
+				stepsToDo += Math.round(getBeatsOnSection() * 4);
+				if(stepsToDo > curStep) break;
+				
+				curSection++;
+			}
 		}
 
-		return lastChange.stepTime + Math.floor((Conductor.songPosition - lastChange.songTime) / Conductor.stepCrochet);
+		if(curSection > lastSection) sectionHit();
+	}
+
+	private function updateBeat():Void
+	{
+		curBeat = Math.floor(curStep / 4);
+		curDecBeat = curDecStep/4;
+	}
+
+	private function updateCurStep():Void
+	{
+		var lastChange = Conductor.getBPMFromSeconds(Conductor.songPosition);
+
+		var shit = ((Conductor.songPosition - ClientPrefs.noteOffset) - lastChange.songTime) / lastChange.stepCrochet;
+		curDecStep = lastChange.stepTime + shit;
+		curStep = lastChange.stepTime + Math.floor(shit);
+	}
+
+	public static function switchState(nextState:FlxState) {
+		// Custom made Trans in
+		var curState:Dynamic = FlxG.state;
+		var leState:MusicBeatState = curState;
+		if(!FlxTransitionableState.skipNextTransIn) {
+			leState.openSubState(new CustomFadeTransition(0.6, false));
+			if(nextState == FlxG.state) {
+				CustomFadeTransition.finishCallback = function() {
+					FlxG.resetState();
+				};
+				//trace('resetted');
+			} else {
+				CustomFadeTransition.finishCallback = function() {
+					FlxG.switchState(nextState);
+				};
+				//trace('changed state');
+			}
+			return;
+		}
+		FlxTransitionableState.skipNextTransIn = false;
+		FlxG.switchState(nextState);
+	}
+
+	public static function resetState() {
+		MusicBeatState.switchState(FlxG.state);
+	}
+
+	public static function getState():MusicBeatState {
+		var curState:Dynamic = FlxG.state;
+		var leState:MusicBeatState = curState;
+		return leState;
 	}
 
 	public function stepHit():Void
@@ -214,15 +156,18 @@ class MusicBeatState extends FlxUIState
 
 	public function beatHit():Void
 	{
-		//do literally nothing dumbass
+		//trace('Beat: ' + curBeat);
 	}
-	
-	public function fancyOpenURL(schmancy:String)
+
+	public function sectionHit():Void
 	{
-		#if linux
-		Sys.command('/usr/bin/xdg-open', [schmancy, "&"]);
-		#else
-		FlxG.openURL(schmancy);
-		#end
+		//trace('Section: ' + curSection + ', Beat: ' + curBeat + ', Step: ' + curStep);
+	}
+
+	function getBeatsOnSection()
+	{
+		var val:Null<Float> = 4;
+		if(PlayState.SONG != null && PlayState.SONG.notes[curSection] != null) val = PlayState.SONG.notes[curSection].sectionBeats;
+		return val == null ? 4 : val;
 	}
 }

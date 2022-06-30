@@ -24,6 +24,7 @@ import classes.WeekData;
 import objects.Alphabet;
 import classes.Highscore;
 import editors.WeekEditor;
+import classes.WeekData;
 
 using StringTools;
 

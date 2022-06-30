@@ -1,4 +1,4 @@
-package classes;
+//package classes;
 
 import states.PlayState;
 #if sys

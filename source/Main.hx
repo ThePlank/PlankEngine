@@ -135,8 +135,10 @@ class Main extends Sprite
 		{
 			switch (stackItem)
 			{
+				case Method(classname, method):
+					completeErrorMessage += '${method} (class ${classname})\n';
 				case FilePos(s, file, line, column):
-					completeErrorMessage += file + " (line " + line + ")\n";
+					completeErrorMessage += '${file} (line ${line})\n';
 					Sys.println(file + " (line " + line + ")");
 				default:
 					Sys.println(stackItem);

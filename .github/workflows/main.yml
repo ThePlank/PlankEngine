@@ -167,9 +167,10 @@ jobs:
           haxelib list
         shell: cmd
       - name Setup Hashlink:
-        md C:/hashlink
-        git hashlink https://github.com/HaxeFoundation/hashlink C:/hashlink
-        lime setup hashlink C:/hashlink
+        run: |
+          md C:/hashlink
+          git hashlink https://github.com/HaxeFoundation/hashlink C:/hashlink
+          lime setup hashlink C:/hashlink
       - name: Create Version Tag
         run: echo "${{github.run_id}}" > VERSION
       - name: Compile

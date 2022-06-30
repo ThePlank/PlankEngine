@@ -1,7 +1,5 @@
 package classes;
 
-import objects.Note;
-import states.PlayState;
 import classes.Song.SwagSong;
 
 /**

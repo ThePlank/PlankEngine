@@ -245,6 +245,11 @@ class MainMenuState extends abstracts.MusicBeatState
 
 				trace("Freeplay Menu Selected");
 
+			case 'mods':
+				FlxG.switchState(new ModsState());
+	
+				trace("Mods Menu Selected");
+
 			case 'options':
 				FlxG.switchState(new OptionsMenu());
 		}

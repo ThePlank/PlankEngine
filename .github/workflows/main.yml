@@ -166,7 +166,7 @@ jobs:
           haxelib install actuate
           haxelib list
         shell: cmd
-      - name Setup Hashlink:
+      - name: Setup Hashlink
         run: |
           md C:/hashlink
           git hashlink https://github.com/HaxeFoundation/hashlink C:/hashlink

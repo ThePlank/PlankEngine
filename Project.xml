@@ -2,12 +2,10 @@
 <project>
 	<!-- _________________________ Application Settings _________________________ -->
 
-	<app title="Friday Night Funkin': Plank Engine" file="Plank Engine" packageName="com.plankdev.plankengine" package="com.plankdev.plankengine" main="Main" version="0.2.7.1" company="plankdev" />
+	<app title="Friday Night Funkin'" file="Funkin" packageName="com.ninjamuffin99.funkin" package="com.ninjamuffin99.funkin" main="Main" version="0.2.7.1" company="ninjamuffin99" />
 
 	<!--Switch Export with Unique ApplicationID and Icon-->
 	<set name="APP_ID" value="0x0100f6c013bbc000" />
-
-	<haxedef name="LINC_LUA_RELATIVE_DYNAMIC_LIB"/>
 
 	<!--The flixel preloader is not accurate in Chrome. You can use it regularly if you embed the swf into a html file
 		or you can set the actual size of your file manually at "FlxPreloaderBase-onUpdate-bytesTotal"-->
@@ -91,13 +89,12 @@
 	<assets path="assets/week5"    library="week5"    exclude="*.mp3" unless="web"/>
 	<assets path="assets/week6"    library="week6"    exclude="*.ogg" if="web"/>
 	<assets path="assets/week6"    library="week6"    exclude="*.mp3" unless="web"/>
-
+	
 	<assets path='example_mods' rename='mods' embed='false'/>
 	<assets path='art/readme.txt' rename='do NOT readme.txt' />
-	<assets path='LICENSE' rename='LICENSE.txt' />
 	<!-- <template path='mods' /> -->
 	
-	<!-- <assets path="CHANGELOG.md" rename='changelog.txt'/> -->
+	<assets path="CHANGELOG.md" rename='changelog.txt'/>
 
 	<!-- NOTE FOR FUTURE SELF SINCE FONTS ARE ALWAYS FUCKY 
 		TO FIX ONE OF THEM, I CONVERTED IT TO OTF. DUNNO IF YOU NEED TO
@@ -113,17 +110,12 @@
 	<!--In case you want to use the addons package-->
 	<haxelib name="flixel-addons" />
 	<haxelib name="hscript" />
-	<haxelib name="hscript-ex" />
-
-	<haxelib name="actuate" />
-	<haxelib name="hxCodec" if="cpp"/>
 
 	<!--In case you want to use the ui package-->
 	<haxelib name="flixel-ui" />
-	
-	<haxelib name="discord_rpc" if="cpp"/>
-	<haxelib name="linc_luajit"/>
-
+	<haxelib name="newgrounds"/>
+	<haxelib name="faxe" if='switch'/>
+	<haxelib name="polymod"/>
 	<!-- <haxelib name="hxcpp-debug-server" if="desktop"/> -->
 
 	<!-- <haxelib name="markdown" /> -->
@@ -136,7 +128,6 @@
 
 	<!--Enable the Flixel core recording system-->
 	<!--<haxedef name="FLX_RECORD" />-->
-
 
 	<!--Disable the right and middle mouse buttons-->
 	<!-- <haxedef name="FLX_NO_MOUSE_ADVANCED" /> -->
@@ -162,9 +153,6 @@
 	<!--Disable the Flixel core debugger. Automatically gets set whenever you compile in release mode!-->
 	<haxedef name="FLX_NO_DEBUG" unless="debug" />
 
-	<!-- Disable to stop letting memory going over 1GB -->
-	<haxedef name="HXCPP_GC_BIG_BLOCKS"/>
-
 	<!--Enable this for Nape release builds for a serious peformance improvement-->
 	<haxedef name="NAPE_RELEASE_BUILD" unless="debug" />
 
@@ -172,24 +160,13 @@
 
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
 	
-	<icon path="art/icon8.png" size='8'/>
 	<icon path="art/icon16.png" size='16'/>
 	<icon path="art/icon32.png" size='32'/>
 	<icon path="art/icon64.png" size='64'/>
-	<icon path="art/icon128.png" size='128'/>
-	<icon path="art/icon256.png" size='256'/>
-	<icon path="art/icon512.png" size='512'/>
 	<icon path="art/iconOG.png" />
 
 
 	<!-- <haxedef name="SKIP_TO_PLAYSTATE" if="debug" /> -->
+	<haxedef name="NG_LOGIN" if="newgrounds" />
 	
-	<!-- Disable if you don't want mods folder support -->
-	<haxedef name="MODS_ALLOWED"/>
-
-	<!-- Disable if you don't want psych engine's lua system -->
-	<haxedef name="PSYCH_LUA_ALLOWED" if="cpp" />
-
-	<!-- Disable if you don't want plank engine's hscript system -->
-	<haxedef name="PLANK_HSCRIPT_ALLOWED"/>
 </project>

@@ -1,1 +1,1 @@
-import classes.Paths;
+import Paths;

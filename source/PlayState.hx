@@ -91,6 +91,10 @@ class PlayState extends MusicBeatState
 	private var totalPlayed:Int = 0;
 	private var ss:Bool = false;
 
+	//custom stuff
+	private var grpNoteSplashes:FlxTypedGroup<NoteSplash>;
+	var judgementCounter:FlxText;
+
 
 	private var healthBarBG:FlxSprite;
 	private var healthBar:FlxBar;
@@ -179,6 +183,11 @@ class PlayState extends MusicBeatState
 
 		FlxG.cameras.reset(camGame);
 		FlxG.cameras.add(camHUD);
+
+		grpNoteSplashes = new FlxTypedGroup<NoteSplash>();
+		var funnyFirstNoteSplash = new NoteSplash(100, 100, 0);
+		grpNoteSplashes.add(funnyFirstNoteSplash);
+		funnyFirstNoteSplash.alpha = 0.1;
 
 		FlxCamera.defaultCameras = [camGame];
 
@@ -734,6 +743,7 @@ class PlayState extends MusicBeatState
 
 		strumLineNotes = new FlxTypedGroup<FlxSprite>();
 		add(strumLineNotes);
+		add(grpNoteSplashes);
 
 		playerStrums = new FlxTypedGroup<FlxSprite>();
 
@@ -803,6 +813,18 @@ class PlayState extends MusicBeatState
 		iconP2.y = healthBar.y - (iconP2.height / 2);
 		add(iconP2);
 
+		judgementCounter = new FlxText(20, 0, 0, "", 20);
+		judgementCounter.setFormat(Paths.font("comic.ttf"), 20, FlxColor.WHITE, FlxTextAlign.LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		judgementCounter.borderSize = 2;
+		judgementCounter.borderQuality = 2;
+		judgementCounter.scrollFactor.set();
+		judgementCounter.screenCenter(Y);
+		judgementCounter.text = "Sicks:" + sicks + "\nGoods:" + goods + "\nBads: " + bads + "\nShits: " + shits + "\nMisses: " + misses;
+		add(judgementCounter);
+
+		judgementCounter.cameras = [camHUD]; //judgement counter
+		grpNoteSplashes.cameras = [camHUD]; //notesplashes
+		
 		strumLineNotes.cameras = [camHUD];
 		notes.cameras = [camHUD];
 		healthBar.cameras = [camHUD];
@@ -1393,6 +1415,8 @@ class PlayState extends MusicBeatState
 
 		scoreTxt.text = "Score:" + songScore + " | Misses:" + misses + " | Accuracy:" + truncateFloat(accuracy, 2) + "% " + (fc ? "| FC" : misses == 0 ? "| A" : accuracy <= 75 ? "| BAD" : "");
 
+		judgementCounter.text = "Sicks:" + sicks + "\nGoods:" + goods + "\nBads: " + bads + "\nShits: " + shits + "\nMisses: " + misses;
+
 		if (FlxG.keys.justPressed.ENTER && startedCountdown && canPause)
 		{
 			persistentUpdate = false;
@@ -1817,6 +1841,8 @@ class PlayState extends MusicBeatState
 			var score:Int = 350;
 	
 			var daRating:String = "sick";
+
+			var doSplash:Bool = true;
 	
 			if (noteDiff > Conductor.safeZoneOffset * 2)
 				{
@@ -1857,6 +1883,13 @@ class PlayState extends MusicBeatState
 				totalNotesHit += 1;
 				sicks++;
 			}
+
+			if (doSplash && note != null)
+				{
+					var splash:NoteSplash = grpNoteSplashes.recycle(NoteSplash);
+					splash.setupNoteSplash(Std.int(note.x), Std.int(note.y), note.noteData);
+					grpNoteSplashes.add(splash);
+				}
 		
 	
 			if (daRating != 'shit' || daRating != 'bad')

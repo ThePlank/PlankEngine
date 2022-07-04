@@ -122,7 +122,8 @@ class ChartingState extends MusicBeatState
 				player1: 'bf',
 				player2: 'dad',
 				speed: 1,
-				validScore: false
+				validScore: false,
+				eventObjects: []
 			};
 		}
 

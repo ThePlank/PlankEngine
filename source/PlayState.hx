@@ -1826,7 +1826,7 @@ class PlayState extends MusicBeatState
 
 	var endingSong:Bool = false;
 
-	private function popUpScore(strumtime:Float):Void
+	private function popUpScore(strumtime:Float, note:Note):Void
 		{
 			var noteDiff:Float = Math.abs(strumtime - Conductor.songPosition);
 			// boyfriend.playAnim('hey');
@@ -1843,8 +1843,6 @@ class PlayState extends MusicBeatState
 			var score:Int = 350;
 	
 			var daRating:String = "sick";
-
-			var doSplash:Bool = true;
 	
 			if (noteDiff > Conductor.safeZoneOffset * 2)
 				{
@@ -1886,7 +1884,7 @@ class PlayState extends MusicBeatState
 				sicks++;
 			}
 
-			if (doSplash && note != null)
+			if (ss && note != null)
 				{
 					var splash:NoteSplash = grpNoteSplashes.recycle(NoteSplash);
 					splash.setupNoteSplash(Std.int(note.x), Std.int(note.y), note.noteData);
@@ -2423,7 +2421,7 @@ class PlayState extends MusicBeatState
 				{
 					if (!note.isSustainNote)
 					{
-						popUpScore(note.strumTime);
+						popUpScore(note.strumTime, note);
 						combo += 1;
 					}
 					else

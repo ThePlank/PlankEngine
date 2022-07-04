@@ -27,7 +27,7 @@ class NoteSplash extends FlxSprite {
         alpha = 0.6;
         animation.play("note" + noteData + "-" + FlxG.random.int(0, 1), 0);
         var curanim = animation.curAnim;
-        curanim.frameRate = curanim.frameRate + FlxG.random.int(-2, 2);
+        curanim.frameRate = curanim.frameRate + FlxG.random.int(0, 2);
         updateHitbox();
         offset.set(.3 * width, .3 * height);
     }

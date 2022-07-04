@@ -35,7 +35,11 @@ class OptionsMenu extends MusicBeatState
 			FlxG.save.data.dfjk = false;
 
 		var menuBG:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
-		controlsStrings = CoolUtil.coolStringFile((FlxG.save.data.dfjk ? 'DFJK' : 'WASD') + "\n" + (FlxG.save.data.newInput ? "New input" : "Old Input") + "\n" + (FlxG.save.data.downscroll ? 'Downscroll' : 'Upscroll') + "\nLoad replays");
+		controlsStrings = CoolUtil.coolStringFile("Controls"
+		+ "\n"
+		+ "\n" + (FlxG.save.data.newInput ? "New input" : "Old Input") 
+		+ "\n" + (FlxG.save.data.downscroll ? 'Downscroll' : 'Upscroll') 
+		+ "\nLoad replays");
 		
 		trace(controlsStrings);
 
@@ -91,23 +95,17 @@ class OptionsMenu extends MusicBeatState
 				}
 	
 
-			if (controls.ACCEPT)
-			{
-				if (curSelected != 3)
-					grpControls.remove(grpControls.members[curSelected]);
-				switch(curSelected)
-				{
-					case 0:
-						FlxG.save.data.dfjk = !FlxG.save.data.dfjk;
-						var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, (FlxG.save.data.dfjk ? 'DFJK' : 'WASD'), true, false);
-						ctrl.isMenuItem = true;
-						ctrl.targetY = curSelected;
-						grpControls.add(ctrl);
-						if (FlxG.save.data.dfjk)
-							controls.setKeyboardScheme(KeyboardScheme.Solo, true);
-						else
-							controls.setKeyboardScheme(KeyboardScheme.Duo(true), true);
-						
+				if (controls.ACCEPT)
+					{
+						grpControls.remove(grpControls.members[curSelected]);
+						switch (curSelected)
+						{
+							case 0:
+								openSubState(new KeyBindMenu());
+								var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, "controls", true, false);
+								ctrl.isMenuItem = true;
+								ctrl.targetY = curSelected;
+								grpControls.add(ctrl);
 					case 1:
 						FlxG.save.data.newInput = !FlxG.save.data.newInput;
 						var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, (FlxG.save.data.newInput ? "New input" : "Old Input"), true, false);

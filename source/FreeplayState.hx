@@ -221,6 +221,8 @@ class FreeplayState extends MusicBeatState
 
 		super.create();
 	}
+	function clean() {}
+
 
 	public function addSong(songName:String, weekNum:Int, songCharacter:String)
 	{

@@ -90,13 +90,8 @@
 	<assets path="assets/week6"    library="week6"    exclude="*.ogg" if="web"/>
 	<assets path="assets/week6"    library="week6"    exclude="*.mp3" unless="web"/>
 	
-<<<<<<< Updated upstream
 	<!-- <assets path='example_mods' rename='mods' embed='false'/> -->
-=======
-	<!--assets path='example_mods' rename='mods' embed='false'/-->
->>>>>>> Stashed changes
 	<assets path='art/readme.txt' rename='do NOT readme.txt' />
-	<!-- <template path='mods' /> -->
 	
 	<assets path="CHANGELOG.md" rename='changelog.txt'/>
 

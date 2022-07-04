@@ -1852,6 +1852,8 @@ class PlayState extends MusicBeatState
 			var score:Int = 350;
 	
 			var daRating:String = "sick";
+
+			var doSplash:Bool = true;
 	
 			if (noteDiff > Conductor.safeZoneOffset * 2)
 				{
@@ -1860,6 +1862,7 @@ class PlayState extends MusicBeatState
 					noteMiss(0);
 					score = -3000;
 					ss = false;
+					doSplash = false;
 					shits++;
 				}
 				else if (noteDiff < Conductor.safeZoneOffset * -2)
@@ -1869,6 +1872,7 @@ class PlayState extends MusicBeatState
 					noteMiss(0);
 					score = -3000;
 					ss = false;
+					doSplash = false;
 					shits++;
 				}
 				else if (noteDiff > Conductor.safeZoneOffset * 0.45)
@@ -1877,6 +1881,7 @@ class PlayState extends MusicBeatState
 					score = -1000;
 					totalNotesHit += 0.2;
 					ss = false;
+					doSplash = false;
 					bads++;
 				}
 				else if (noteDiff > Conductor.safeZoneOffset * 0.25)
@@ -1885,15 +1890,17 @@ class PlayState extends MusicBeatState
 					totalNotesHit += 0.65;
 					score = 200;
 					ss = false;
+					doSplash = false;
 					goods++;
 				}
 			if (daRating == 'sick')
 			{
 				totalNotesHit += 1;
 				sicks++;
+				doSplash = true;
 			}
 
-			if (ss && note != null)
+			if (doSplash && note != null)
 				{
 					var splash:NoteSplash = grpNoteSplashes.recycle(NoteSplash);
 					splash.setupNoteSplash(Std.int(note.x), Std.int(note.y), note.noteData);

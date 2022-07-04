@@ -1,3 +1,4 @@
+
 package;
 
 import lime.utils.Assets;
@@ -6,11 +7,11 @@ using StringTools;
 
 class CoolUtil
 {
-	public static var difficulties:Array<String> = ['EASY', "NORMAL", "HARD"];
+	public static var difficultyArray:Array<String> = ['Easy', "Normal", "Hard"];
 
-	public static function difficultyString():String
+	public static function difficultyFromInt(difficulty:Int):String
 	{
-		return difficulties[PlayState.storyDifficulty];
+		return difficultyArray[difficulty];
 	}
 
 	public static function coolTextFile(path:String):Array<String>

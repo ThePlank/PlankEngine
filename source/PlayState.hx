@@ -656,6 +656,8 @@ class PlayState extends MusicBeatState
 
 			case "spooky":
 				dad.y += 200;
+			case "tankman":
+				dad.y += 200;
 			case "monster":
 				dad.y += 100;
 			case 'monster-christmas':
@@ -719,6 +721,13 @@ class PlayState extends MusicBeatState
 				boyfriend.y += 220;
 				gf.x += 180;
 				gf.y += 300;
+				case 'tank':
+					boyfriend.x += 810;
+					boyfriend.y += 100;
+					gf.x += 200;
+					gf.y += 65;
+					dad.x += 20;
+					dad.y += 100;
 		}
 
 		add(gf);
@@ -1412,7 +1421,7 @@ class PlayState extends MusicBeatState
 					}
 				}
 				// phillyCityLights.members[curLight].alpha -= (Conductor.crochet / 1000) * FlxG.elapsed;
-		}
+			}
 
 		super.update(elapsed);
 
@@ -2558,6 +2567,26 @@ class PlayState extends MusicBeatState
 		if (FlxG.sound.music.time > Conductor.songPosition + 20 || FlxG.sound.music.time < Conductor.songPosition - 20)
 		{
 			resyncVocals();
+		}
+
+		if (curStep == 59 && curSong == 'Ugh')
+		{
+			dad.playAnim('ugh', true);
+		}
+	
+		if (curStep == 443 && curSong == 'Ugh')
+		{
+			dad.playAnim('ugh', true);
+		}
+	
+		if (curStep == 523 && curSong == 'Ugh')
+		{
+			dad.playAnim('ugh', true);
+		}
+	
+		if (curStep == 827 && curSong == 'Ugh')
+		{
+			dad.playAnim('ugh', true);
 		}
 
 		if (dad.curCharacter == 'spooky' && curStep % 4 == 2)

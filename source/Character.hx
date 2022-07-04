@@ -305,6 +305,71 @@ class Character extends FlxSprite
 
 				flipX = true;
 
+				case 'bf-and-gf':
+					var tex = Paths.getSparrowAtlas('bfAndGF', 'shared');
+					frames = tex;
+	
+					trace(tex.frames.length);
+	
+					animation.addByPrefix('idle', 'BF idle dance', 24, false);
+					animation.addByPrefix('singUP', 'BF NOTE UP0', 24, false);
+					animation.addByPrefix('singLEFT', 'BF NOTE LEFT0', 24, false);
+					animation.addByPrefix('singRIGHT', 'BF NOTE RIGHT0', 24, false);
+					animation.addByPrefix('singDOWN', 'BF NOTE DOWN0', 24, false);
+					animation.addByPrefix('singUPmiss', 'BF NOTE UP MISS', 24, false);
+					animation.addByPrefix('singLEFTmiss', 'BF NOTE LEFT MISS', 24, false);
+					animation.addByPrefix('singRIGHTmiss', 'BF NOTE RIGHT MISS', 24, false);
+					animation.addByPrefix('singDOWNmiss', 'BF NOTE DOWN MISS', 24, false);
+					addOffset('idle', 0, -5);
+					addOffset("singUP", -29, 10);
+					addOffset("singRIGHT", -41, 23);
+					addOffset("singLEFT", 12, 7);
+					addOffset("singDOWN", -10, -10);
+					addOffset("singUPmiss", -29, 10);
+					addOffset("singRIGHTmiss", 41, 33);
+					addOffset("singLEFTmiss", 12, 7);
+					addOffset("singDOWNmiss", -10, -10);
+	
+					playAnim('idle');
+	
+					flipX = true;
+
+					case 'tankman':
+						tex = Paths.getSparrowAtlas('tankmanCaptain', 'shared');
+						frames = tex;
+						animation.addByPrefix('idle', 'Tankman Idle Dance instance', 24);
+						animation.addByPrefix('singUP', 'Tankman UP note instance', 24);
+						animation.addByPrefix('singLEFT', 'Tankman Right Note instance', 24);
+						animation.addByPrefix('singDOWN', 'Tankman DOWN note instance', 24);
+						animation.addByPrefix('singRIGHT', 'Tankman Note Left instance', 24);
+						animation.addByPrefix('good', 'PRETTY GOOD tankman instance', 24);
+						animation.addByPrefix('ugh', 'TANKMAN UGH instance', 24);
+		
+						
+						addOffset('idle', 0, 0);
+						addOffset("singUP", 48, 54);
+						addOffset("singRIGHT", -21, -31);
+						addOffset("singLEFT", 84, -14);
+						addOffset("singDOWN", 76, -101);
+						addOffset("good", 1, 16); 
+						addOffset("ugh", -15, -8); 
+	
+					playAnim('idle');
+					flipX = true;
+
+					case 'bf-and-gf-but-dead':
+						frames = Paths.getSparrowAtlas('bfHoldingGF-DEAD');
+						animation.addByPrefix('firstDeath', "BF Dies with GF", 24, false);
+						animation.addByPrefix('deathLoop', "BF Dead with GF Loop", 24, true);
+						animation.addByPrefix('deathConfirm', "RETRY confirm holding gf", 24, false);
+						animation.play('firstDeath');
+		
+						addOffset('firstDeath');
+						addOffset('deathLoop', -37);
+						addOffset('deathConfirm', -37);
+						playAnim('firstDeath');
+						flipX = true;
+
 			case 'bf-christmas':
 				var tex = Paths.getSparrowAtlas('christmas/bfChristmas');
 				frames = tex;

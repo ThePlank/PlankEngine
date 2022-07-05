@@ -1,5 +1,4 @@
-
-#if linc_luajit
+package;
 
 import llua.Lua;
 import llua.LuaL;
@@ -1853,5 +1852,3 @@ class DebugLuaText extends FlxText
 		else if(disableTime < 1) alpha = disableTime;
 	}
 }
-
-#end

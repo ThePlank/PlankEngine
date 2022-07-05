@@ -12,9 +12,13 @@ class GameOverSubstate extends MusicBeatSubstate
 	var bf:Boyfriend;
 	var camFollow:FlxObject;
 
+	public var boyfriend:Boyfriend;
+
 	var stageSuffix:String = "";
 
-	public function new(x:Float, y:Float)
+	public static var instance:GameOverSubstate;
+
+	public function new(x:Float, y:Float, camX:Float, camY:Float)
 	{
 		var daStage = PlayState.curStage;
 		var daBf:String = '';
@@ -31,6 +35,18 @@ class GameOverSubstate extends MusicBeatSubstate
 		}
 
 		super();
+	
+		PlayState.instance.setOnLuas('inGameOver', true);
+
+		Conductor.songPosition = 0;
+
+		Conductor.changeBPM(100);
+		// FlxG.camera.followLerp = 1;
+		// FlxG.camera.focusOn(FlxPoint.get(FlxG.width / 2, FlxG.height / 2));
+		FlxG.camera.scroll.set();
+		FlxG.camera.target = null;
+
+		boyfriend.playAnim('firstDeath');
 
 		Conductor.songPosition = 0;
 

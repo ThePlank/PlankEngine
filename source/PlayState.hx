@@ -1,5 +1,7 @@
 package;
 
+import flixel.util.FlxSave;
+import FunkinLua;
 import Section.SwagSection;
 import Song.SwagSong;
 import WiggleEffect.WiggleEffectType;
@@ -57,6 +59,14 @@ class PlayState extends MusicBeatState
 	public var slowBacks:Map<Int,
 		Array<FlxSprite>> = [];
 
+	public var modchartTweens:Map<String, FlxTween> = new Map<String, FlxTween>();
+	public var modchartSprites:Map<String, ModchartSprite> = new Map<String, ModchartSprite>();
+	public var modchartTimers:Map<String, FlxTimer> = new Map<String, FlxTimer>();
+	public var modchartSounds:Map<String, FlxSound> = new Map<String, FlxSound>();
+	public var modchartTexts:Map<String, ModchartText> = new Map<String, ModchartText>();
+	public var modchartSaves:Map<String, FlxSave> = new Map<String, FlxSave>();
+	public var modchartObjects:Map<String, FlxSprite> = new Map<String, FlxSprite>();
+
 	public static var curStage:String = '';
 	public static var SONG:SwagSong;
 	public static var isStoryMode:Bool = false;
@@ -79,6 +89,12 @@ class PlayState extends MusicBeatState
 	private var dad:Character;
 	private var gf:Character;
 	private var boyfriend:Boyfriend;
+
+    //LUA STUFF
+	public static var instance:PlayState;
+	public var luaArray:Array<FunkinLua> = [];
+	private var luaDebugGroup:FlxTypedGroup<DebugLuaText>;
+	public var introSoundsSuffix:String = '';
 
 	private var notes:FlxTypedGroup<Note>;
 	private var unspawnNotes:Array<Note> = [];
@@ -118,8 +134,8 @@ class PlayState extends MusicBeatState
 
 	private var iconP1:HealthIcon;
 	private var iconP2:HealthIcon;
-	private var camHUD:FlxCamera;
-	private var camGame:FlxCamera;
+	public var camHUD:FlxCamera;
+	public var camGame:FlxCamera;
 
 	var dialogue:Array<String> = ['blah blah blah', 'coolswag'];
 
@@ -175,6 +191,9 @@ class PlayState extends MusicBeatState
 		bads = 0;
 		shits = 0;
 		goods = 0;
+
+		repPresses = 0;
+		repReleases = 0;
 
 		// var gameCam:FlxCamera = FlxG.camera;
 		camGame = new FlxCamera();
@@ -791,6 +810,10 @@ class PlayState extends MusicBeatState
 		healthBarBG.scrollFactor.set();
 		add(healthBarBG);
 
+		if (FlxG.save.data.downscroll)
+			healthBarBG.y = 50;
+
+
 		healthBar = new FlxBar(healthBarBG.x + 4, healthBarBG.y + 4, RIGHT_TO_LEFT, Std.int(healthBarBG.width - 8), Std.int(healthBarBG.height - 8), this,
 			'health', 0, 2);
 		healthBar.scrollFactor.set();
@@ -799,7 +822,7 @@ class PlayState extends MusicBeatState
 		add(healthBar);
 
 		// Add Kade Engine watermark
-		var kadeEngineWatermark = new FlxText(4,FlxG.height - 4,0,SONG.song + " " + (storyDifficulty == 2 ? "Hard" : storyDifficulty == 1 ? "Normal" : "Easy") + " - KE " + MainMenuState.kadeEngineVer, 16);
+		var kadeEngineWatermark = new FlxText(4,FlxG.height - 4,0,SONG.song + " " + (storyDifficulty == 2 ? "Hard" : storyDifficulty == 1 ? "Normal" : "Easy") + " - PLE " + MainMenuState.kadeEngineVer, 16);
 		kadeEngineWatermark.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE,FlxColor.BLACK);
 		kadeEngineWatermark.scrollFactor.set();
 		add(kadeEngineWatermark);
@@ -845,6 +868,8 @@ class PlayState extends MusicBeatState
 		iconP2.cameras = [camHUD];
 		scoreTxt.cameras = [camHUD];
 		doof.cameras = [camHUD];
+
+		callOnLuas('onCreatePost', []);
 
 		// if (SONG.song == 'South')
 		// FlxG.camera.alpha = 0.7;
@@ -910,6 +935,95 @@ class PlayState extends MusicBeatState
 
 		super.create();
 	}
+
+	public var isDead:Bool = false; //Don't mess with this on Lua!!!
+	function doDeathCheck(?skipHealthCheck:Bool = false) {
+		if ((health <= 0) && !isDead)
+		{
+				paused = true;
+
+				vocals.stop();
+				FlxG.sound.music.stop();
+
+				persistentUpdate = false;
+				persistentDraw = false;
+				for (tween in modchartTweens) {
+					tween.active = true;
+				}
+				for (timer in modchartTimers) {
+					timer.active = true;
+				}
+
+				// MusicBeatState.switchState(new GameOverState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
+				isDead = true;
+				return true;
+			}
+		return false;
+	}
+
+	public function callOnLuas(event:String, args:Array<Dynamic>, ignoreStops=false, ?exclusions:Array<String>):Dynamic {
+		var returnVal:Dynamic = FunkinLua.Function_Continue;
+		#if LUA_ALLOWED
+		if(exclusions == null) exclusions = [];
+		for (i in 0...luaArray.length) {
+			if(exclusions.contains(luaArray[i].scriptName)){
+				continue;
+			}
+
+			var ret:Dynamic = luaArray[i].call(event, args);
+			if(ret == FunkinLua.Function_StopLua) {
+				if(ignoreStops)
+					ret = FunkinLua.Function_Continue;
+				else
+					break;
+			}
+
+			if(ret != FunkinLua.Function_Continue) {
+				returnVal = ret;
+			}
+		}
+		#end
+		//trace(event, returnVal);
+		return returnVal;
+	}
+
+	public function setOnLuas(variable:String, arg:Dynamic) {
+		#if LUA_ALLOWED
+		for (i in 0...luaArray.length) {
+			luaArray[i].set(variable, arg);
+		}
+		#end
+	}
+
+			// "GLOBAL" SCRIPTS
+			#if LUA_ALLOWED
+			var filesPushed:Array<String> = [];
+			var foldersToCheck:Array<String> = [Paths.getPreloadPath('scripts/')];
+	
+			#if MODS_ALLOWED
+			foldersToCheck.insert(0, Paths.mods('scripts/'));
+			if(Paths.currentModDirectory != null && Paths.currentModDirectory.length > 0)
+				foldersToCheck.insert(0, Paths.mods(Paths.currentModDirectory + '/scripts/'));
+	
+			for(mod in Paths.getGlobalMods())
+				foldersToCheck.insert(0, Paths.mods(mod + '/scripts/'));
+			#end
+	
+			for (folder in foldersToCheck)
+			{
+				if(FileSystem.exists(folder))
+				{
+					for (file in FileSystem.readDirectory(folder))
+					{
+						if(file.endsWith('.lua') && !filesPushed.contains(file))
+						{
+							luaArray.push(new FunkinLua(folder + file));
+							filesPushed.push(file);
+						}
+					}
+				}
+			}
+			#end
 
 	function schoolIntro(?dialogueBox:DialogueBox):Void
 	{
@@ -1584,6 +1698,13 @@ class PlayState extends MusicBeatState
 		FlxG.watch.addQuick("beatShit", curBeat);
 		FlxG.watch.addQuick("stepShit", curStep);
 
+		if (loadRep) // rep debug
+			{
+				FlxG.watch.addQuick('rep rpesses',repPresses);
+				FlxG.watch.addQuick('rep releases',repReleases);
+				// FlxG.watch.addQuick('Queued',inputsQueued);
+			}
+
 		if (curSong == 'Fresh')
 		{
 			switch (curBeat)
@@ -1639,8 +1760,6 @@ class PlayState extends MusicBeatState
 
 			vocals.stop();
 			FlxG.sound.music.stop();
-
-			openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
 
 			// FlxG.switchState(new GameOverState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
 		}
@@ -1751,6 +1870,66 @@ class PlayState extends MusicBeatState
 		#end
 	}
 
+			// "GLOBAL" SCRIPTS
+			#if LUA_ALLOWED
+			var filesPushed:Array<String> = [];
+			var foldersToCheck:Array<String> = [Paths.getPreloadPath('scripts/')];
+	
+			#if MODS_ALLOWED
+			foldersToCheck.insert(0, Paths.mods('scripts/'));
+			if(Paths.currentModDirectory != null && Paths.currentModDirectory.length > 0)
+				foldersToCheck.insert(0, Paths.mods(Paths.currentModDirectory + '/scripts/'));
+	
+			for(mod in Paths.getGlobalMods())
+				foldersToCheck.insert(0, Paths.mods(mod + '/scripts/'));
+			#end
+	
+			for (folder in foldersToCheck)
+			{
+				if(FileSystem.exists(folder))
+				{
+					for (file in FileSystem.readDirectory(folder))
+					{
+						if(file.endsWith('.lua') && !filesPushed.contains(file))
+						{
+							luaArray.push(new FunkinLua(folder + file));
+							filesPushed.push(file);
+						}
+					}
+				}
+			}
+			#end
+
+					// SONG SPECIFIC SCRIPTS
+		#if LUA_ALLOWED
+		var filesPushed:Array<String> = [];
+		var foldersToCheck:Array<String> = [Paths.getPreloadPath('data/' + Paths.formatToSongPath(SONG.song) + '/')];
+
+		#if MODS_ALLOWED
+		foldersToCheck.insert(0, Paths.mods('data/' + Paths.formatToSongPath(SONG.song) + '/'));
+		if(Paths.currentModDirectory != null && Paths.currentModDirectory.length > 0)
+			foldersToCheck.insert(0, Paths.mods(Paths.currentModDirectory + '/data/' + Paths.formatToSongPath(SONG.song) + '/'));
+
+		for(mod in Paths.getGlobalMods())
+			foldersToCheck.insert(0, Paths.mods(mod + '/data/' + Paths.formatToSongPath(SONG.song) + '/' ));// using push instead of insert because these should run after everything else
+		#end
+
+		for (folder in foldersToCheck)
+		{
+			if(FileSystem.exists(folder))
+			{
+				for (file in FileSystem.readDirectory(folder))
+				{
+					if(file.endsWith('.lua') && !filesPushed.contains(file))
+					{
+						luaArray.push(new FunkinLua(folder + file));
+						filesPushed.push(file);
+					}
+				}
+			}
+		}
+		#end
+
 	function endSong():Void
 	{
 		if (!loadRep)
@@ -1859,46 +2038,85 @@ class PlayState extends MusicBeatState
 				{
 					daRating = 'shit';
 					totalNotesHit -= 2;
-					noteMiss(0);
-					score = -3000;
 					ss = false;
-					doSplash = false;
+					if (theFunne)
+						{
+							score = -3000;
+							combo = 0;
+							misses++;
+							health -= 0.2;
+						}
 					shits++;
-				}
-				else if (noteDiff < Conductor.safeZoneOffset * -2)
-				{
-					daRating = 'shit';
-					totalNotesHit -= 2;
-					noteMiss(0);
-					score = -3000;
-					ss = false;
 					doSplash = false;
-					shits++;
 				}
-				else if (noteDiff > Conductor.safeZoneOffset * 0.45)
-				{
-					daRating = 'bad';
-					score = -1000;
-					totalNotesHit += 0.2;
-					ss = false;
-					doSplash = false;
-					bads++;
-				}
-				else if (noteDiff > Conductor.safeZoneOffset * 0.25)
+				else if (noteDiff < Conductor.safeZoneOffset * -0.45)
+					{
+						daRating = 'bad';
+						totalNotesHit += 0.2;
+						if (theFunne)
+						{
+							score = -1000;
+							health -= 0.03;
+						}
+						else
+							score = 100;
+						ss = false;
+						bads++;
+						doSplash = false;
+					}
+					else if (noteDiff > Conductor.safeZoneOffset * 0.45)
+						{
+							daRating = 'bad';
+							totalNotesHit += 0.2;
+							if (theFunne)
+								{
+									score = -1000;
+									health -= 0.03;
+								}
+								else
+									score = 100;
+							ss = false;
+							bads++;
+							doSplash = false;
+                        }
+				else if (noteDiff < Conductor.safeZoneOffset * -0.25)
 				{
 					daRating = 'good';
 					totalNotesHit += 0.65;
-					score = 200;
-					ss = false;
 					doSplash = false;
+					if (theFunne)
+					{
+						score = 200;
+						//health -= 0.01;
+					}
+					else
+						score = 200;
+					ss = false;
 					goods++;
-				}
-			if (daRating == 'sick')
-			{
-				totalNotesHit += 1;
-				sicks++;
-				doSplash = true;
-			}
+                }
+				else if (noteDiff > Conductor.safeZoneOffset * 0.25)
+					{
+						daRating = 'good';
+						totalNotesHit += 0.65;
+						if (theFunne)
+							{
+								score = 200;
+								//health -= 0.01;
+							}
+							else
+								score = 200;
+						ss = false;
+						goods++;
+						doSplash = false;
+					}
+					if (daRating == 'sick')
+						{
+							totalNotesHit += 1;
+							if (health < 2)
+								health += 0.1;
+							sicks++;
+							doSplash = true;
+						}
 
 			if (doSplash && note != null)
 				{
@@ -1965,10 +2183,17 @@ class PlayState extends MusicBeatState
 			rating.updateHitbox();
 	
 			var seperatedScore:Array<Int> = [];
-	
-			seperatedScore.push(Math.floor(combo / 100));
-			seperatedScore.push(Math.floor((combo - (seperatedScore[0] * 100)) / 10));
-			seperatedScore.push(combo % 10);
+
+			var comboSplit:Array<String> = (combo + "").split('');
+
+			if (comboSplit.length == 2)
+				seperatedScore.push(0); // make sure theres a 0 in front or it looks weird lol!
+
+			for(i in 0...comboSplit.length)
+			{
+				var str:String = comboSplit[i];
+				seperatedScore.push(Std.parseInt(str));
+			}
 	
 			var daLoop:Int = 0;
 			for (i in seperatedScore)
@@ -2146,9 +2371,6 @@ class PlayState extends MusicBeatState
 				{
 					var daNote = possibleNotes[0];
 	
-					if (perfectMode)
-						noteCheck(true, daNote);
-	
 					// Jump notes
 					if (possibleNotes.length >= 2)
 					{
@@ -2181,10 +2403,10 @@ class PlayState extends MusicBeatState
 									trace('force note hit');
 								}
 								else
-									noteCheck(controlArray[daNote.noteData], daNote);
+									noteCheck(controlArray, daNote);
 							}
 							else
-								noteCheck(controlArray[daNote.noteData], daNote);
+								noteCheck(controlArray, daNote);
 						}
 						else
 						{
@@ -2198,10 +2420,10 @@ class PlayState extends MusicBeatState
 											trace('force note hit');
 										}
 										else
-											noteCheck(controlArray[daNote.noteData], daNote);
+											noteCheck(controlArray, daNote);
 									}
 								else
-									noteCheck(controlArray[coolNote.noteData], coolNote);
+									noteCheck(controlArray, daNote);
 							}
 						}
 					}
@@ -2215,10 +2437,10 @@ class PlayState extends MusicBeatState
 								trace('force note hit');
 							}
 							else
-								noteCheck(controlArray[daNote.noteData], daNote);
+								noteCheck(controlArray, daNote);
 						}
 						else
-							noteCheck(controlArray[daNote.noteData], daNote);
+							noteCheck(controlArray, daNote);
 					}
 					/* 
 						if (controlArray[daNote.noteData])
@@ -2352,6 +2574,8 @@ class PlayState extends MusicBeatState
 			}
 			combo = 0;
 
+			misses++;
+
 			songScore -= 10;
 
 			FlxG.sound.play(Paths.soundRandom('missnote', 1, 3), FlxG.random.float(0.1, 0.2));
@@ -2403,15 +2627,33 @@ class PlayState extends MusicBeatState
 		}
 
 
-	function noteCheck(keyP:Bool, note:Note):Void // sorry lol
+		function getKeyPresses(note:Note):Int
+			{
+				var possibleNotes:Array<Note> = []; // copypasted but you already know that
+		
+				notes.forEachAlive(function(daNote:Note)
+				{
+					if (daNote.canBeHit && daNote.mustPress && !daNote.tooLate)
+					{
+						possibleNotes.push(daNote);
+						possibleNotes.sort((a, b) -> Std.int(a.strumTime - b.strumTime));
+					}
+				});
+				return possibleNotes.length;
+			}
+		
+			var mashing:Int = 0;
+			var mashViolations:Int = 0;
+		
+			function noteCheck(controlArray:Array<Bool>, note:Note):Void // sorry lol
 		{
 			if (loadRep)
 			{
-				if (keyP)
+				if (controlArray[note.noteData])
 					goodNoteHit(note);
 				else if (!theFunne) 
 					badNoteCheck();
-				else if (rep.replay.keyPresses.length > repPresses && !keyP)
+				else if (rep.replay.keyPresses.length > repPresses && !controlArray[note.noteData])
 				{
 					if (NearlyEquals(note.strumTime,rep.replay.keyPresses[repPresses].time, 4))
 					{
@@ -2421,7 +2663,7 @@ class PlayState extends MusicBeatState
 						badNoteCheck();
 				}
 			}
-			else if (keyP)
+			else if (controlArray[note.noteData])
 				{
 				goodNoteHit(note);
 				}

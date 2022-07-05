@@ -7,6 +7,9 @@
 	<!--Switch Export with Unique ApplicationID and Icon-->
 	<set name="APP_ID" value="0x0100f6c013bbc000" />
 
+		<!-- NOTE TO SELF: DISABLE THIS IF ISSUES ARE FOUND -->
+		<haxedef name="LINC_LUA_RELATIVE_DYNAMIC_LIB"/> <!-- stable luas PUT AFTER FIRST LINE WITH APP NAME AND ETC -->
+
 	<!--The flixel preloader is not accurate in Chrome. You can use it regularly if you embed the swf into a html file
 		or you can set the actual size of your file manually at "FlxPreloaderBase-onUpdate-bytesTotal"-->
 	<!-- <app preloader="Preloader" resizable="true" /> -->
@@ -37,6 +40,8 @@
 	<set name="BUILD_DIR" value="export/debug" if="debug" />
 	<set name="BUILD_DIR" value="export/release" unless="debug" />
 	<set name="BUILD_DIR" value="export/32bit" if="32bit" />
+
+	<define name="PSYCH_LUA_ALLOWED"/>
 
 	<classpath name="source" />
 
@@ -109,6 +114,8 @@
 	<!--In case you want to use the addons package-->
 	<haxelib name="flixel-addons" />
 	<haxelib name="hscript" />
+
+	<haxelib name="linc_luajit"/> <!--lua shiz-->
 
 	<!--In case you want to use the ui package-->
 	<haxelib name="flixel-ui" />

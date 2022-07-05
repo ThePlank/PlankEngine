@@ -147,9 +147,9 @@ class SndTV {
 		return create_(parent, vartype, to, tp, duration_ms);
 	}
 	
-	public function exists(p:Snd) {
+	public function exists(pp:Snd) {
 		for (t in tlist)
-			if (t.parent == p )
+			if (t.parent == pp )
 				return true;
 		return false;
 	}

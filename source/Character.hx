@@ -358,7 +358,7 @@ class Character extends FlxSprite
 					flipX = true;
 
 					case 'bf-and-gf-but-dead':
-						frames = Paths.getSparrowAtlas('bfHoldingGF-DEAD');
+						frames = Paths.getSparrowAtlas('bfHoldingGF-DEAD', 'shared');
 						animation.addByPrefix('firstDeath', "BF Dies with GF", 24, false);
 						animation.addByPrefix('deathLoop', "BF Dead with GF Loop", 24, true);
 						animation.addByPrefix('deathConfirm', "RETRY confirm holding gf", 24, false);

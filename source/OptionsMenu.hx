@@ -35,11 +35,7 @@ class OptionsMenu extends MusicBeatState
 			FlxG.save.data.dfjk = false;
 
 		var menuBG:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
-		controlsStrings = CoolUtil.coolStringFile("Controls"
-		+ "\n"
-		+ "\n" + (FlxG.save.data.newInput ? "New input" : "Old Input") 
-		+ "\n" + (FlxG.save.data.downscroll ? 'Downscroll' : 'Upscroll') 
-		+ "\nLoad replays");
+		controlsStrings = CoolUtil.coolStringFile("Controls" + "\n" + (FlxG.save.data.newInput ? "New input" : "Old Input") + "\n" + (FlxG.save.data.downscroll ? 'Downscroll' : 'Upscroll') + "\nLoad replays");
 		
 		trace(controlsStrings);
 

@@ -9,4 +9,4 @@ while youre here check out this [epic website](https://pictureofpizza.com/)
 <br/>
 <br/>
 
-![pizza](https://pictureofpizza.com/img/piza.png)
+![pizza](https://pictureofpizza.com/img/pizza/piza.png)

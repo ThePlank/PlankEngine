@@ -1,0 +1,10 @@
+{
+    "name": "Default Mod",
+    "description": "A Deafult mod.",
+
+    "windowSettings": {
+        "windowName": "Deafult Mod Funkin'",
+        "windowIcon": "icon.png"
+    },
+    "__comment": "You do not need to set the windowSettings property if you don't want to use it."
+}

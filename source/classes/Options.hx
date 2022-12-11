@@ -21,17 +21,28 @@ class Options
 		return saveData;
 	}
 
-	public static function save(?minFileSize:Null<Int>, ?onComplete:Bool -> Void):Bool {
-		return saveData.flush((minFileSize != null ? minFileSize : 0), onComplete);
+	#if (flixel < "5.0.0") 
+	public static function save(?minFileSize:Null<Int> = 0, ?onComplete:Bool -> Void):Bool {
+		return saveData.flush(minFileSize, onComplete);
 	}
 
-	public static function destroy(?minFileSize:Null<Int>, ?onComplete:Bool -> Void):Bool {
-		return saveData.close((minFileSize != null ? minFileSize : 0), onComplete);
+	public static function destroy(?minFileSize:Null<Int> = 0, ?onComplete:Bool -> Void):Bool {
+		return saveData.close(minFileSize, onComplete);
 	}
+	#else
+	public static function save(?minFileSize:Null<Int> = 0):Bool {
+		return saveData.flush(minFileSize);
+	}
+
+	public static function destroy(?minFileSize:Null<Int> = 0):Bool {
+		return saveData.close(minFileSize);
+	}
+	#end
 
 	public static function setValue(key:String, value:Dynamic) {
 		Reflect.setField(saveData.data, key, value);
 	}
+
 
 	public static function getValue(key:String):Dynamic {
 		return Reflect.field(saveData.data, key);

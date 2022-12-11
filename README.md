@@ -1,6 +1,6 @@
 # Friday Night Funkin': Plank Engine
 
-this engine is currently a WIP and is &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; a engine
+this engine is currently a WIP and is a &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; engine
 
 expect updates
 

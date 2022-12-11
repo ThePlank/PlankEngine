@@ -4,7 +4,7 @@
 
     "windowSettings": {
         "windowName": "Deafult Mod Funkin'",
-        "windowIcon": "icon.png"
+        "windowIcon": "icon"
     },
     "__comment": "You do not need to set the windowSettings property if you don't want to use it."
 }

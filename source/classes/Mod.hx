@@ -101,7 +101,8 @@ class Mod
 
 	public function getPath(path:String):String
 	{
-		return FileSystem.absolutePath('$MOD_PATH/$modPath/$path');
+		// return FileSystem.absolutePath('$MOD_PATH/$modPath/$path');
+		return '$MOD_PATH/$modPath/$path';
 	}
 
 	public function getContent(path:String):String
@@ -111,7 +112,12 @@ class Mod
 
 	public function getImage(path:String):BitmapData
 	{
-		return BitmapData.fromFile(getPath('images/$path'));
+		return BitmapData.fromFile(getPath('images/$path.png'));
+	}
+
+	public function getXML(xml:String):String
+	{
+		return getPath('images/$xml.xml');
 	}
 
 	public function getSong(name:String):ModSongData
@@ -154,6 +160,11 @@ class Mod
 	public function getData(file:String):String
 	{
 		return getContent(getPath('data/$file'));
+	}
+
+	public function getFont(font:String):String
+	{
+		return getPath('fonts/$font');
 	}
 
 	public function getScripts(song:String):Array<PlankScript>

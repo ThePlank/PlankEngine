@@ -1,5 +1,6 @@
 package states;
 
+import haxe.Json;
 import classes.Mod;
 import states.abstr.UIBaseState;
 import classes.Options;
@@ -130,18 +131,15 @@ class TitleState extends UIBaseState
 			// music.loadStream(Paths.music('freakyMenu'));
 			// FlxG.sound.list.add(music);
 			// music.play();
-			if (isModLoaded())
-				FlxG.sound.playMusic(Mod.selectedMod.getMusic('freakyMenu'), 0);
-			else
-				FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
 
-			FlxG.sound.music.fadeIn(4, 0, 0.7);
 		}
 
-		if (isModLoaded())
-			Conductor.changeBPM(Std.parseInt(Mod.selectedMod.getData("freakyMenu.ini")));
-		else
-			Conductor.changeBPM(102);
+		FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
+
+		FlxG.sound.music.fadeIn(4, 0, 0.7);
+
+		var settings = Json.parse(Paths.getTextFromFile("data/freakyMenu.json"));
+		Conductor.changeBPM(settings.bpm);
 
 		persistentUpdate = true;
 

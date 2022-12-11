@@ -48,10 +48,7 @@ class MainMenuState extends UIBaseState
 
 		if (!FlxG.sound.music.playing)
 		{
-			if (isModLoaded())
-				FlxG.sound.playMusic(Mod.selectedMod.getMusic('freakyMenu'), 0);
-			else
-				FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
+			FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
 		}
 
 		persistentUpdate = persistentDraw = true;

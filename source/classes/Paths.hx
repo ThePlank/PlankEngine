@@ -130,6 +130,6 @@ class Paths
 			}
 		}
 
-		return
+		return null;
 	}
 }

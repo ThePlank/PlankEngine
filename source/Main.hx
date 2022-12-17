@@ -1,5 +1,15 @@
 package;
 
+import util.Console;
+import flixel.util.FlxTimer;
+import crashdumper.CrashDumper;
+import crashdumper.SessionData;
+import lime.utils.LogLevel;
+import haxe.CallStack;
+import haxe.CallStack.StackItem;
+import openfl.events.UncaughtErrorEvent;
+import haxe.PosInfos;
+import haxe.Log;
 import classes.PlayerSettings;
 import sys.FileSystem;
 import util.ZipTools;
@@ -17,10 +27,11 @@ import openfl.display.FPS;
 import openfl.display.Sprite;
 import openfl.events.Event;
 import states.TitleState;
-
 #if hl
 import hl.UI;
 #end
+
+using StringTools;
 
 class Main extends Sprite
 {
@@ -32,11 +43,17 @@ class Main extends Sprite
 	var skipSplash:Bool = true; // Whether to skip the flixel splash screen that appears in release mode.
 	var startFullscreen:Bool = false; // Whether to start the game in fullscreen on desktop targets
 
+	public final CRASH_SESSION_ID:String = SessionData.generateID("PlankEngine_");
+
+	private static var current:Main;
+	var dumper:CrashDumper;
+
 	// You can pretty much ignore everything from here on - your code should go in your states.
 
 	public static function main():Void
 	{
-		Lib.current.addChild(new Main());
+		current = new Main();
+		Lib.current.addChild(current);
 	}
 
 	public function new()
@@ -61,21 +78,33 @@ class Main extends Sprite
 		}
 
 		#if (hl && !HL_CONSOLE)
-		UI.closeConsole(); //AAAAAAAASDFDADHAJDAKSAD THIS TOOK ME SO LONG TO FIGURE OUT
+		UI.closeConsole(); // AAAAAAAASDFDADHAJDAKSAD THIS TOOK ME SO LONG TO FIGURE OUT
 		#end
 
 		Options.init();
 		Highscore.load();
+		Console.init();
+
+		dumper = new CrashDumper(CRASH_SESSION_ID #if flash , stage #end);
 
 		setupGame();
 	}
 
 	static var consoleClasses:Array<Class<Dynamic>> = [Options, System, Lib, Main, CoolUtil, ZipTools];
 
-	function registerClasses() {
+	function registerClasses()
+	{
 		for (unregisteredClass in consoleClasses)
 			FlxG.console.registerClass(unregisteredClass);
 	}
+
+
+
+	function onError(error:UncaughtErrorEvent)
+	{
+	}
+
+
 
 	private function setupGame():Void
 	{
@@ -102,5 +131,17 @@ class Main extends Sprite
 		#if !mobile
 		addChild(new PlankFPS(10, 3));
 		#end
+	}
+
+	public static function get():Main
+	{
+		if (current != null)
+			return current;
+
+		return null;
+	}
+
+	function stackOverflow(X:Int):Int {
+		return 1 + stackOverflow(X);
 	}
 }

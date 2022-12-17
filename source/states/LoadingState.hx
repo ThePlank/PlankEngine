@@ -59,7 +59,10 @@ class LoadingState extends states.abstr.MusicBeatState
 			function (lib)
 			{
 				callbacks = new MultiCallback(onLoad);
+				var fadeTime = 0.5;
+				FlxG.camera.fade(FlxG.camera.bgColor, fadeTime, true);
 				var introComplete = callbacks.add("introComplete");
+				new FlxTimer().start(fadeTime + MIN_TIME, function(_) introComplete());
 				checkLoadSong(getSongPath());
 				if (PlayState.SONG.needsVoices)
 					checkLoadSong(getVocalPath());
@@ -68,12 +71,10 @@ class LoadingState extends states.abstr.MusicBeatState
 					checkLibrary("week" + PlayState.storyWeek);
 				else
 					checkLibrary("tutorial");
-				
-				var fadeTime = 0.5;
-				FlxG.camera.fade(FlxG.camera.bgColor, fadeTime, true);
-				new FlxTimer().start(fadeTime + MIN_TIME, function(_) introComplete());
 			}
-		);
+		).onProgress((prog,prog2) -> {
+			trace(prog, prog2);
+		});
 	}
 	
 	function checkLoadSong(path:String)

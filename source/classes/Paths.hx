@@ -1,6 +1,5 @@
 package classes;
 
-import hxIni.IniManager;
 import openfl.system.System;
 import flixel.FlxG;
 import flixel.graphics.frames.FlxAtlasFrames;
@@ -104,7 +103,6 @@ class Paths
 	{
 		// if (Mod.selectedMod != null)
 
-
 		if (library != null)
 			return getLibraryPath(file, library);
 
@@ -162,11 +160,12 @@ class Paths
 		return getPath('data/$key.json', TEXT, library);
 	}
 
-	inline static public function ini(key:String, ?library:String)
-	{
-		return IniManager.loadFromFile(getPath('data/$key.ini', TEXT, library));
-	}
-
+	/*
+		inline static public function ini(key:String, ?library:String)
+		{
+			return IniManager.loadFromFile(getPath('data/$key.ini', TEXT, library));
+		}
+	 */
 	inline static public function shaderFragment(key:String, ?library:String)
 	{
 		return getPath('shaders/$key.frag', TEXT, library);
@@ -253,13 +252,18 @@ class Paths
 		return Assets.getText(getPath(key, TEXT));
 	}
 
-	inline static public function font(key:String)
+	// why the hell can't this be inline
+	static public function font(key:String)
 	{
-		var file:String = Mod.selectedMod.getFont(key);
-		if (FileSystem.exists(file))
+		if (Mod.selectedMod != null)
 		{
-			return file;
+			var file:String = Mod.selectedMod.getFont(key);
+			if (FileSystem.exists(file))
+			{
+				return file;
+			}
 		}
+
 		return 'assets/fonts/$key';
 	}
 

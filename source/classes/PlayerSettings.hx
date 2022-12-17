@@ -5,6 +5,8 @@ import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.util.FlxSignal;
 
+using StringTools;
+
 // import ui.DeviceManager;
 // import props.Player;
 class PlayerSettings

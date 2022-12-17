@@ -2,8 +2,8 @@ package;
 
 import util.Console;
 import flixel.util.FlxTimer;
-import crashdumper.CrashDumper;
-import crashdumper.SessionData;
+// import crashdumper.CrashDumper;
+// import crashdumper.SessionData;
 import lime.utils.LogLevel;
 import haxe.CallStack;
 import haxe.CallStack.StackItem;
@@ -43,10 +43,10 @@ class Main extends Sprite
 	var skipSplash:Bool = true; // Whether to skip the flixel splash screen that appears in release mode.
 	var startFullscreen:Bool = false; // Whether to start the game in fullscreen on desktop targets
 
-	public final CRASH_SESSION_ID:String = SessionData.generateID("PlankEngine_");
+	// public final CRASH_SESSION_ID:String = SessionData.generateID("PlankEngine_");
 
 	private static var current:Main;
-	var dumper:CrashDumper;
+	// var dumper:CrashDumper;
 
 	// You can pretty much ignore everything from here on - your code should go in your states.
 
@@ -85,7 +85,7 @@ class Main extends Sprite
 		Highscore.load();
 		Console.init();
 
-		dumper = new CrashDumper(CRASH_SESSION_ID #if flash , stage #end);
+		// dumper = new CrashDumper(CRASH_SESSION_ID #if flash , stage #end);
 
 		setupGame();
 	}

@@ -1,5 +1,6 @@
 package states;
 
+import classes.Options;
 import classes.Highscore;
 import states.substates.GameOverSubstate;
 import states.substates.PauseSubState;
@@ -1639,7 +1640,10 @@ class PlayState extends states.abstr.MusicBeatState
 					daNote.active = true;
 				}
 
-				daNote.y = (strumLine.y - (Conductor.songPosition - daNote.strumTime) * (0.45 * FlxMath.roundDecimal(SONG.speed, 2)));
+				if (Options.getValue("downscroll"))
+					daNote.y = (strumLine.y + (Conductor.songPosition - daNote.strumTime) * (0.45 * FlxMath.roundDecimal(SONG.speed, 2)));
+				else
+					daNote.y = (strumLine.y - (Conductor.songPosition - daNote.strumTime) * (0.45 * FlxMath.roundDecimal(SONG.speed, 2)));
 
 				// i am so fucking sorry for this if condition
 				if (daNote.isSustainNote
@@ -1985,8 +1989,8 @@ class PlayState extends states.abstr.MusicBeatState
 
 			notes.forEachAlive(function(daNote:Note)
 			{
-				if(FlxG.save.data.downscroll && daNote.y > strumLine.y ||
-					!FlxG.save.data.downscroll && daNote.y < strumLine.y)
+				if(Options.getValue("downscroll") && daNote.y > strumLine.y ||
+					!Options.getValue("downscroll") && daNote.y < strumLine.y)
 
 				if (daNote.canBeHit && daNote.mustPress && !daNote.tooLate && !daNote.wasGoodHit)
 				{
@@ -2377,7 +2381,7 @@ class PlayState extends states.abstr.MusicBeatState
 
 		if (generatedMusic)
 		{
-            notes.sort(FlxSort.byY, (FlxG.save.data.downscroll ? FlxSort.ASCENDING : FlxSort.DESCENDING));
+            notes.sort(FlxSort.byY, (Options.getValue("downscroll") ? FlxSort.ASCENDING : FlxSort.DESCENDING));
 		}
 
 		if (SONG.notes[Math.floor(curStep / 16)] != null)

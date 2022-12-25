@@ -8,7 +8,8 @@ import flixel.FlxG;
 class Options
 {
 	private static var deafultData:Map<String, Dynamic> = [
-		"Yes" => "Yes" // do NOT delete this entry!
+		"Yes" => "Yes", // do NOT delete this entry!
+		"downscroll" => false
 	];
 
 	public static var saveData:FlxSave = new FlxSave();

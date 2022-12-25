@@ -1,6 +1,5 @@
 package states;
 
-import display.objects.NoteSplash;
 import classes.Highscore;
 import states.substates.GameOverSubstate;
 import states.substates.PauseSubState;
@@ -77,7 +76,6 @@ class PlayState extends states.abstr.MusicBeatState
 	private var boyfriend:Boyfriend;
 
 	private var notes:FlxTypedGroup<Note>;
-	private var grpNoteSplashes:FlxTypedGroup<NoteSplash>;
 	private var unspawnNotes:Array<Note> = [];
 
 	private var strumLine:FlxSprite;
@@ -162,12 +160,6 @@ class PlayState extends states.abstr.MusicBeatState
 
 		FlxG.cameras.reset(camGame);
 		FlxG.cameras.add(camHUD, false);
-
-		grpNoteSplashes = new FlxTypedGroup<NoteSplash>();
-		var funnyFirstNoteSplash = new NoteSplash(100, 100, 0);
-		grpNoteSplashes.add(funnyFirstNoteSplash);
-		funnyFirstNoteSplash.alpha = 0.1;
-
 
 		persistentUpdate = true;
 		persistentDraw = true;
@@ -709,9 +701,11 @@ class PlayState extends states.abstr.MusicBeatState
 		strumLine = new FlxSprite(0, 50).makeGraphic(FlxG.width, 10);
 		strumLine.scrollFactor.set();
 
+		if (FlxG.save.data.downscroll)
+			strumLine.y = FlxG.height - 165;
+
 		strumLineNotes = new FlxTypedGroup<FlxSprite>();
 		add(strumLineNotes);
-		add(grpNoteSplashes);
 
 		playerStrums = new FlxTypedGroup<FlxSprite>();
 
@@ -743,6 +737,8 @@ class PlayState extends states.abstr.MusicBeatState
 		FlxG.fixedTimestep = false;
 
 		healthBarBG = new FlxSprite(0, FlxG.height * 0.9).loadGraphic(Paths.image('healthBar'));
+		if (FlxG.save.data.downscroll)
+			healthBarBG.y = 50;
 		healthBarBG.screenCenter(X);
 		healthBarBG.scrollFactor.set();
 		add(healthBarBG);
@@ -768,7 +764,6 @@ class PlayState extends states.abstr.MusicBeatState
 		add(iconP2);
 
 		strumLineNotes.cameras = [camHUD];
-		grpNoteSplashes.cameras = [camHUD];
 		notes.cameras = [camHUD];
 		healthBar.cameras = [camHUD];
 		healthBarBG.cameras = [camHUD];
@@ -1696,9 +1691,8 @@ class PlayState extends states.abstr.MusicBeatState
 				// WIP interpolation shit? Need to fix the pause issue
 				// daNote.y = (strumLine.y - (songTime - daNote.strumTime) * (0.45 * PlayState.SONG.speed));
 
-				if (daNote.y < -daNote.height)
+				if ((daNote.mustPress && daNote.tooLate && !FlxG.save.data.downscroll || daNote.mustPress && daNote.tooLate && FlxG.save.data.downscroll) && daNote.mustPress)
 				{
-					if (daNote.tooLate || !daNote.wasGoodHit)
 					{
 						health -= 0.0475;
 						vocals.volume = 0;
@@ -1725,6 +1719,8 @@ class PlayState extends states.abstr.MusicBeatState
 
 	function endSong():Void
 	{
+		FlxG.save.data.downscroll = false;
+
 		canPause = false;
 		FlxG.sound.music.volume = 0;
 		vocals.volume = 0;
@@ -1820,37 +1816,25 @@ class PlayState extends states.abstr.MusicBeatState
 		var rating:FlxSprite = new FlxSprite();
 		var score:Int = 350;
 
-		var doSplash:Bool = true;
-
 		var daRating:String = "sick";
 
 		if (noteDiff > Conductor.safeZoneOffset * 0.9)
 		{
 			daRating = 'shit';
-			doSplash = false;
 			score = 50;
 		}
 		else if (noteDiff > Conductor.safeZoneOffset * 0.75)
 		{
 			daRating = 'bad';
-			doSplash = false;
 			score = 100;
 		}
 		else if (noteDiff > Conductor.safeZoneOffset * 0.2)
 		{
 			daRating = 'good';
-			doSplash = false;
 			score = 200;
 		}
 
 		songScore += score;
-
-			if (doSplash && note != null)
-			{
-				var splash:NoteSplash = grpNoteSplashes.recycle(NoteSplash);
-				splash.setupNoteSplash(Std.int(note.x), Std.int(note.y), note.noteData);
-				grpNoteSplashes.add(splash);
-			}
 
 		/* if (combo > 60)
 				daRating = 'sick';
@@ -2001,6 +1985,9 @@ class PlayState extends states.abstr.MusicBeatState
 
 			notes.forEachAlive(function(daNote:Note)
 			{
+				if(FlxG.save.data.downscroll && daNote.y > strumLine.y ||
+					!FlxG.save.data.downscroll && daNote.y < strumLine.y)
+
 				if (daNote.canBeHit && daNote.mustPress && !daNote.tooLate && !daNote.wasGoodHit)
 				{
 					// the sorting probably doesn't need to be in here? who cares lol
@@ -2390,7 +2377,7 @@ class PlayState extends states.abstr.MusicBeatState
 
 		if (generatedMusic)
 		{
-			notes.sort(FlxSort.byY, FlxSort.DESCENDING);
+            notes.sort(FlxSort.byY, (FlxG.save.data.downscroll ? FlxSort.ASCENDING : FlxSort.DESCENDING));
 		}
 
 		if (SONG.notes[Math.floor(curStep / 16)] != null)

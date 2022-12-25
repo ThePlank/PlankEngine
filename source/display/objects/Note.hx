@@ -2,6 +2,7 @@ package display.objects;
 
 import states.PlayState;
 import classes.Conductor;
+import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.math.FlxMath;
@@ -116,6 +117,9 @@ class Note extends FlxSprite
 				x += swagWidth * 3;
 				animation.play('redScroll');
 		}
+
+		if (FlxG.save.data.downscroll && sustainNote) 
+			flipY = true;
 
 		// trace(prevNote);
 

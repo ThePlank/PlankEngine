@@ -476,13 +476,13 @@
 	<SubTexture name="bf pre attack0027" x="4549" y="2344" width="382" height="374" frameX="-2" frameY="0" frameWidth="386" frameHeight="374"/>
 	<SubTexture name="bf pre attack0028" x="4549" y="2344" width="382" height="374" frameX="-2" frameY="0" frameWidth="386" frameHeight="374"/>
 	<SubTexture name="bf pre attack0029" x="4549" y="2344" width="382" height="374" frameX="-2" frameY="0" frameWidth="386" frameHeight="374"/>
-	<SubTexture name="bf pre attack0030" x="4941" y="2344" width="697" height="597" frameX="0" frameY="-87" frameWidth="708" frameHeight="685"/>
-	<SubTexture name="bf pre attack0031" x="4941" y="2344" width="697" height="597" frameX="0" frameY="-87" frameWidth="708" frameHeight="685"/>
-	<SubTexture name="bf pre attack0032" x="5648" y="2344" width="603" height="660" frameX="-102" frameY="-24" frameWidth="708" frameHeight="685"/>
-	<SubTexture name="bf pre attack0033" x="5648" y="2344" width="603" height="660" frameX="-102" frameY="-24" frameWidth="708" frameHeight="685"/>
-	<SubTexture name="bf pre attack0034" x="6261" y="2344" width="444" height="684" frameX="-263" frameY="0" frameWidth="708" frameHeight="685"/>
-	<SubTexture name="bf pre attack0035" x="6261" y="2344" width="444" height="684" frameX="-263" frameY="0" frameWidth="708" frameHeight="685"/>
-	<SubTexture name="bf pre attack0036" x="6715" y="2344" width="501" height="630" frameX="-207" frameY="-55" frameWidth="708" frameHeight="685"/>
+	<SubTexture name="boyfriend attack0000" x="4941" y="2344" width="697" height="597" frameX="0" frameY="-87" frameWidth="708" frameHeight="685"/>
+	<SubTexture name="boyfriend attack0001" x="4941" y="2344" width="697" height="597" frameX="0" frameY="-87" frameWidth="708" frameHeight="685"/>
+	<SubTexture name="boyfriend attack0002" x="5648" y="2344" width="603" height="660" frameX="-102" frameY="-24" frameWidth="708" frameHeight="685"/>
+	<SubTexture name="boyfriend attack0003" x="5648" y="2344" width="603" height="660" frameX="-102" frameY="-24" frameWidth="708" frameHeight="685"/>
+	<SubTexture name="boyfriend attack0004" x="6261" y="2344" width="444" height="684" frameX="-263" frameY="0" frameWidth="708" frameHeight="685"/>
+	<SubTexture name="boyfriend attack0005" x="6261" y="2344" width="444" height="684" frameX="-263" frameY="0" frameWidth="708" frameHeight="685"/>
+	<SubTexture name="boyfriend attack0006" x="6715" y="2344" width="501" height="630" frameX="-207" frameY="-55" frameWidth="708" frameHeight="685"/>
 	<SubTexture name="boyfriend dodge0000" x="7226" y="2344" width="375" height="404" frameX="-3" frameY="0" frameWidth="380" frameHeight="404"/>
 	<SubTexture name="boyfriend dodge0001" x="7611" y="2344" width="375" height="404" frameX="-3" frameY="0" frameWidth="380" frameHeight="404"/>
 	<SubTexture name="boyfriend dodge0002" x="0" y="3038" width="380" height="403" frameX="0" frameY="-1" frameWidth="380" frameHeight="404"/>

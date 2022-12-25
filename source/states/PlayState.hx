@@ -1695,7 +1695,7 @@ class PlayState extends states.abstr.MusicBeatState
 				// WIP interpolation shit? Need to fix the pause issue
 				// daNote.y = (strumLine.y - (songTime - daNote.strumTime) * (0.45 * PlayState.SONG.speed));
 
-				if ((daNote.mustPress && daNote.tooLate && !FlxG.save.data.downscroll || daNote.mustPress && daNote.tooLate && FlxG.save.data.downscroll) && daNote.mustPress)
+				if ((daNote.mustPress && daNote.tooLate && !Options.getValue("downscroll") || daNote.mustPress && daNote.tooLate && Options.getValue("downscroll")) && daNote.mustPress)
 				{
 					{
 						health -= 0.0475;
@@ -1723,8 +1723,6 @@ class PlayState extends states.abstr.MusicBeatState
 
 	function endSong():Void
 	{
-		FlxG.save.data.downscroll = false;
-
 		canPause = false;
 		FlxG.sound.music.volume = 0;
 		vocals.volume = 0;

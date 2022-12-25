@@ -1,5 +1,6 @@
 package states;
 
+import display.objects.NoteSplash;
 import classes.Highscore;
 import states.substates.GameOverSubstate;
 import states.substates.PauseSubState;
@@ -76,6 +77,7 @@ class PlayState extends states.abstr.MusicBeatState
 	private var boyfriend:Boyfriend;
 
 	private var notes:FlxTypedGroup<Note>;
+	private var grpNoteSplashes:FlxTypedGroup<NoteSplash>;
 	private var unspawnNotes:Array<Note> = [];
 
 	private var strumLine:FlxSprite;
@@ -160,6 +162,12 @@ class PlayState extends states.abstr.MusicBeatState
 
 		FlxG.cameras.reset(camGame);
 		FlxG.cameras.add(camHUD, false);
+
+		grpNoteSplashes = new FlxTypedGroup<NoteSplash>();
+		var funnyFirstNoteSplash = new NoteSplash(100, 100, 0);
+		grpNoteSplashes.add(funnyFirstNoteSplash);
+		funnyFirstNoteSplash.alpha = 0.1;
+
 
 		persistentUpdate = true;
 		persistentDraw = true;
@@ -703,6 +711,7 @@ class PlayState extends states.abstr.MusicBeatState
 
 		strumLineNotes = new FlxTypedGroup<FlxSprite>();
 		add(strumLineNotes);
+		add(grpNoteSplashes);
 
 		playerStrums = new FlxTypedGroup<FlxSprite>();
 
@@ -759,6 +768,7 @@ class PlayState extends states.abstr.MusicBeatState
 		add(iconP2);
 
 		strumLineNotes.cameras = [camHUD];
+		grpNoteSplashes.cameras = [camHUD];
 		notes.cameras = [camHUD];
 		healthBar.cameras = [camHUD];
 		healthBarBG.cameras = [camHUD];
@@ -1794,7 +1804,7 @@ class PlayState extends states.abstr.MusicBeatState
 
 	var endingSong:Bool = false;
 
-	private function popUpScore(strumtime:Float):Void
+	private function popUpScore(strumtime:Float,note:Note):Void
 	{
 		var noteDiff:Float = Math.abs(strumtime - Conductor.songPosition);
 		// boyfriend.playAnim('hey');
@@ -1810,25 +1820,37 @@ class PlayState extends states.abstr.MusicBeatState
 		var rating:FlxSprite = new FlxSprite();
 		var score:Int = 350;
 
+		var doSplash:Bool = true;
+
 		var daRating:String = "sick";
 
 		if (noteDiff > Conductor.safeZoneOffset * 0.9)
 		{
 			daRating = 'shit';
+			doSplash = false;
 			score = 50;
 		}
 		else if (noteDiff > Conductor.safeZoneOffset * 0.75)
 		{
 			daRating = 'bad';
+			doSplash = false;
 			score = 100;
 		}
 		else if (noteDiff > Conductor.safeZoneOffset * 0.2)
 		{
 			daRating = 'good';
+			doSplash = false;
 			score = 200;
 		}
 
 		songScore += score;
+
+			if (doSplash && note != null)
+			{
+				var splash:NoteSplash = grpNoteSplashes.recycle(NoteSplash);
+				splash.setupNoteSplash(Std.int(note.x), Std.int(note.y), note.noteData);
+				grpNoteSplashes.add(splash);
+			}
 
 		/* if (combo > 60)
 				daRating = 'sick';
@@ -2216,7 +2238,7 @@ class PlayState extends states.abstr.MusicBeatState
 		{
 			if (!note.isSustainNote)
 			{
-				popUpScore(note.strumTime);
+				popUpScore(note.strumTime,note);
 				combo += 1;
 			}
 

@@ -1,2 +1,9 @@
+# Exports
 export/
+
+# Visual Studio Code specific direcories
 .vscode/
+
+
+# yes
+scrapped/

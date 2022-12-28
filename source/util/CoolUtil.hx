@@ -9,30 +9,20 @@ class CoolUtil
 {
 	public static var difficultyArray:Array<String> = ['EASY', "NORMAL", "HARD"];
 
-	public static function difficultyString():String
+	public static inline function difficultyString():String
 	{
 		return difficultyArray[PlayState.storyDifficulty];
 	}
 
-	public static function coolTextFile(path:String):Array<String>
+	public static inline function coolTextFile(path:String):Array<String>
 	{
 		var daList:Array<String> = Assets.getText(path).trim().split('\n');
 
-		for (i in 0...daList.length)
-		{
-			daList[i] = daList[i].trim();
-		}
-
-		return daList;
+		return [for (item in daList) item.trim()];
 	}
 
 	public static function numberArray(max:Int, ?min = 0):Array<Int>
 	{
-		var dumbArray:Array<Int> = [];
-		for (i in min...max)
-		{
-			dumbArray.push(i);
-		}
-		return dumbArray;
+		return [for (num in min...max) num];
 	}
 }

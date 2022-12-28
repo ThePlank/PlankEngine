@@ -1,5 +1,6 @@
 package display.objects;
 
+import flixel.util.FlxStringUtil;
 import openfl.Lib;
 import flixel.FlxG;
 import flixel.tweens.FlxEase;
@@ -81,12 +82,12 @@ class PlankFPS extends TextField
 			text += "\nstage3DDC: " + Context3DStats.contextDrawCalls(DrawCallContext.STAGE3D);
 			#end
 
-			currentMemory = Math.abs(FlxMath.roundDecimal(openfl.system.System.totalMemory / 1000000, 1));
+			currentMemory = openfl.system.System.totalMemory;
 			if (currentMemory > maxMemory)
 				maxMemory = currentMemory;
 
-            text += 'MEM: ${currentMemory}\n';
-            text += 'MEM MAX: ${maxMemory}\n';
+            text += 'MEM: ${FlxStringUtil.formatBytes(currentMemory)}\n';
+            text += 'MEM MAX: ${FlxStringUtil.formatBytes(maxMemory)}\n';
 
 			// 4000MB = 4GB, max memory usage of Windows
 			var mappedMemory = FlxMath.remapToRange(currentMemory, 0, 4000, 0, 1);

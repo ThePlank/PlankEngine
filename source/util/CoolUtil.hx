@@ -1,5 +1,7 @@
 package util;
 
+import openfl.Lib;
+import lime.ui.Window;
 import states.PlayState;
 import lime.utils.Assets;
 
@@ -24,5 +26,9 @@ class CoolUtil
 	public static function numberArray(max:Int, ?min = 0):Array<Int>
 	{
 		return [for (num in min...max) num];
+	}
+
+	public static inline function getMainWindow():Window {
+		return Lib.application.window;
 	}
 }

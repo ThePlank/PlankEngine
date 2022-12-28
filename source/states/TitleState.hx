@@ -1,5 +1,6 @@
 package states;
 
+import display.objects.Flixel;
 import haxe.Json;
 import classes.Mod;
 import states.abstr.UIBaseState;

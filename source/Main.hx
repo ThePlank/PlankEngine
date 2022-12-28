@@ -1,5 +1,6 @@
 package;
 
+import states.PlankSplash;
 import util.Console;
 import flixel.util.FlxTimer;
 // import crashdumper.CrashDumper;
@@ -35,13 +36,18 @@ using StringTools;
 
 class Main extends Sprite
 {
-	var gameWidth:Int = 1280; // Width of the game in pixels (might be less / more in actual pixels depending on your zoom).
-	var gameHeight:Int = 720; // Height of the game in pixels (might be less / more in actual pixels depending on your zoom).
-	var initialState:Class<FlxState> = TitleState; // The FlxState the game starts with.
-	var zoom:Float = -1; // If -1, zoom is automatically calculated to fit the window dimensions.
-	var framerate:Int = 60; // How many frames per second the game should run at.
-	var skipSplash:Bool = true; // Whether to skip the flixel splash screen that appears in release mode.
-	var startFullscreen:Bool = false; // Whether to start the game in fullscreen on desktop targets
+
+	// maybe add a .json file for this?///?//
+	public static var settings = {
+		gameWidth: 1280, // Width of the game in pixels (might be less / more in actual pixels depending on your zoom).
+		gameHeight: 720, // Height of the game in pixels (might be less / more in actual pixels depending on your zoom).
+		initialState: PlankSplash, // The FlxState the game starts with.
+		zoom: -1.0, // If -1, zoom is automatically calculated to fit the window dimensions.
+		framerate: 60, // How many frames per second the game should run at.
+		skipSplash: true, // Whether to skip the flixel splash screen that appears in release mode.
+		startFullscreen: false, // Whether to start the game in fullscreen on desktop targets
+	}
+
 
 	// public final CRASH_SESSION_ID:String = SessionData.generateID("PlankEngine_");
 
@@ -111,20 +117,20 @@ class Main extends Sprite
 		var stageWidth:Int = Lib.current.stage.stageWidth;
 		var stageHeight:Int = Lib.current.stage.stageHeight;
 
-		if (zoom == -1)
+		if (settings.zoom == -1.0)
 		{
-			var ratioX:Float = stageWidth / gameWidth;
-			var ratioY:Float = stageHeight / gameHeight;
-			zoom = Math.min(ratioX, ratioY);
-			gameWidth = Math.ceil(stageWidth / zoom);
-			gameHeight = Math.ceil(stageHeight / zoom);
+			var ratioX:Float = stageWidth / settings.gameWidth;
+			var ratioY:Float = stageHeight / settings.gameHeight;
+			settings.zoom = Math.min(ratioX, ratioY);
+			settings.gameWidth = Math.ceil(stageWidth / settings.zoom);
+			settings.gameHeight = Math.ceil(stageHeight / settings.zoom);
 		}
 
 		#if !debug
-		initialState = TitleState;
+		// settings.initialState = TitleState;
 		#end
 
-		addChild(new FlxGame(gameWidth, gameHeight, initialState, #if (flixel < "5.0.0") zoom, #end framerate, framerate, skipSplash, startFullscreen));
+		addChild(new FlxGame(settings.gameWidth, settings.gameHeight, settings.initialState, #if (flixel < "5.0.0") settings.zoom, #end settings.framerate, settings.framerate, settings.skipSplash, settings.startFullscreen));
 		registerClasses();
 		PlayerSettings.init();
 

@@ -1,5 +1,6 @@
 package states.substates;
 
+import states.abstr.UIBaseState;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxSubState;
@@ -38,7 +39,7 @@ class OutdatedSubState extends states.abstr.MusicBeatState
 		if (controls.BACK)
 		{
 			leftState = true;
-			FlxG.switchState(new MainMenuState());
+			UIBaseState.switchState(MainMenuState);
 		}
 		super.update(elapsed);
 	}

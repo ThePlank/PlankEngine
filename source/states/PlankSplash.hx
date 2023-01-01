@@ -1,5 +1,7 @@
 package states;
 
+import states.abstr.UIBaseState;
+import flixel.math.FlxMath;
 import flixel.util.FlxTimer;
 import motion.easing.Back;
 import openfl.filters.BitmapFilterQuality;
@@ -18,21 +20,28 @@ import display.objects.Flixel;
 import openfl.display.Bitmap;
 import flixel.FlxState;
 
-class PlankSplash extends FlxState {
+class PlankSplash extends UIBaseState {
 
     private var flixel:Flixel;
-    private var flixelGlow:GlowFilter;
     private var flixelLabel:TextField;
+    private var skipLabel:TextField;
     private var flixelSound:FlxSound;
+
+    var escapeTimer:Float = 0;
 
     override function create() {
         FlxG.autoPause = false;
         FlxG.mouse.visible = false;
         FlxG.fixedTimestep = false;
 
-		#if FLX_KEYBOARD
-		FlxG.keys.enabled = false;
-		#end
+        backgroundSettings = {
+            enabled: false,
+            bgColor: 0x00000000
+        }
+
+		// #if FLX_KEYBOARD
+		// FlxG.keys.enabled = false;
+		// #end
 
         var window = CoolUtil.getMainWindow();
 
@@ -61,8 +70,17 @@ class PlankSplash extends FlxState {
             flixelLabel.textColor = color;
         });
 
+        skipLabel = new TextField();
+		skipLabel.selectable = false;
+		skipLabel.embedFonts = true;
+		var dtfSkip = new TextFormat(Paths.font("vcr.ttf"), 32, 0xFFFFFFFF);
+		dtfSkip.align = TextFormatAlign.LEFT;
+		skipLabel.defaultTextFormat = dtf;
+		skipLabel.text = "Skipping...";
+        skipLabel.y = (window.height) - (32);
+        skipLabel.alpha = 0;
 
-
+		FlxG.stage.addChild(skipLabel);
 		FlxG.stage.addChild(flixelLabel);
 
         // after tween height is 135
@@ -82,6 +100,7 @@ class PlankSplash extends FlxState {
     private var plankSound:FlxSound;
     private var plankLabel:Bitmap;
     function plankPart() {
+
         var window = CoolUtil.getMainWindow();
 
         plankSound = FlxG.sound.load(Paths.sound("plankSplash"));
@@ -106,22 +125,50 @@ class PlankSplash extends FlxState {
     }
 
     function endPart() {
-
         var flixelTween = Actuate.tween(flixel, 2, {x: flixel.x - FlxG.width / 2, alpha: 0});
         var flixelTweenText = Actuate.tween(flixelLabel, 2, {x: flixelLabel.x - FlxG.width / 2, alpha: 0});
         flixelTween.ease(Expo.easeOut);
         flixelTweenText.ease(Expo.easeOut);
-        flixelTweenText.delay(0.05);
+        flixelTween.delay(0.05);
 
         var tween = Actuate.tween(plankLabel, 2, {x: plankLabel.x + FlxG.width / 2, alpha: 0});
         tween.ease(Expo.easeOut);
 
-        new FlxTimer().start(2, (stupid) -> {
-            #if FLX_KEYBOARD
-            FlxG.keys.enabled = true;
-            #end
+        new FlxTimer().start(2, die);
+    }
 
-            FlxG.switchState(new TitleState());
-        });
+    override function update(elapsed:Float) {
+        if (FlxG.keys.pressed.ESCAPE)
+            escapeTimer += 1;
+        else
+            escapeTimer = 0;
+
+        if (escapeTimer >= 100)
+            die();
+
+        if (skipLabel != null)
+            skipLabel.alpha = FlxMath.remapToRange(escapeTimer, 0, 100, 0, 1);
+
+        super.update(elapsed);
+    }
+
+    function die(?stupid) {
+        // #if FLX_KEYBOARD
+        // FlxG.keys.enabled = true;
+        // #end
+
+        FlxG.stage.removeChild(flixel);
+        flixel = null;
+        FlxG.stage.removeChild(flixelLabel);
+        FlxG.stage.removeChild(skipLabel);
+        flixelLabel = null;
+        skipLabel = null;
+
+        if (plankLabel != null) {
+            FlxG.stage.removeChild(plankLabel);
+            plankLabel = null;
+        }
+
+        UIBaseState.switchState(TitleState);
     }
 }

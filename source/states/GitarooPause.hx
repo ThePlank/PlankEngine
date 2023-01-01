@@ -1,5 +1,6 @@
 package states;
 
+import states.abstr.UIBaseState;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
@@ -59,11 +60,11 @@ class GitarooPause extends states.abstr.MusicBeatState
 		{
 			if (replaySelect)
 			{
-				FlxG.switchState(new PlayState());
+				UIBaseState.switchState(PlayState);
 			}
 			else
 			{
-				FlxG.switchState(new MainMenuState());
+				UIBaseState.switchState(MainMenuState);
 			}
 		}
 

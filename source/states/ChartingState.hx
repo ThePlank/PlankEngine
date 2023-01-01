@@ -1,5 +1,6 @@
 package states;
 
+import states.abstr.UIBaseState;
 import classes.Song;
 import util.CoolUtil;
 import classes.Conductor;
@@ -550,7 +551,7 @@ class ChartingState extends states.abstr.MusicBeatState
 			PlayState.SONG = _song;
 			FlxG.sound.music.stop();
 			vocals.stop();
-			FlxG.switchState(new PlayState());
+			UIBaseState.switchState(PlayState);
 		}
 
 		if (FlxG.keys.justPressed.E)

@@ -1,5 +1,7 @@
 package states.abstr;
 
+import flixel.system.FlxSound;
+import haxe.io.Path;
 import classes.Mod;
 import flixel.FlxSubState;
 import flixel.FlxState;
@@ -16,12 +18,16 @@ import classes.Controls;
 
 class MusicBeatState extends FlxUIState
 {
+	public var totalElapsed:Float = 0;
+
 	private var lastBeat:Float = 0;
 	private var lastStep:Float = 0;
 
 	private var curStep:Int = 0;
 	private var curBeat:Int = 0;
 	private var controls(get, never):Controls;
+
+	private var metronomeEnabled:Bool = false;
 
 	private var trackedObjects:Array<FlxBasic> = [];
 
@@ -50,6 +56,8 @@ class MusicBeatState extends FlxUIState
 
 	override function update(elapsed:Float)
 	{
+		totalElapsed += elapsed;
+
 		//everyStep();
 		var oldStep:Int = curStep;
 
@@ -91,7 +99,21 @@ class MusicBeatState extends FlxUIState
 
 	public function beatHit():Void
 	{
+
 		//do literally nothing dumbass
+
+
+		if (!metronomeEnabled) return;
+
+		var tick = FlxG.sound.load(Paths.sound("metronomeTick"), 1);
+
+		if (curBeat % 4 == 0)
+			tick.pitch = 1.2;
+		else
+			tick.pitch = 1;
+
+		tick.play();
+		tick.autoDestroy = true;
 	}
 
 	override function openSubState(SubState:FlxSubState) {

@@ -18,6 +18,7 @@ class ModSelectionSubstate extends MusicBeatSubstate
 	public function new()
 	{
 		mods = Mod.getAvalibleMods();
+		mods.push(null); // null = no mod
 		super(0x60000000);
 	}
 
@@ -31,7 +32,7 @@ class ModSelectionSubstate extends MusicBeatSubstate
 		var i:Int = 0;
 		for (mod in mods)
 		{
-			var modText:Alphabet = new Alphabet(0, (70 * i) + 30, mod.modName, true, false);
+			var modText:Alphabet = new Alphabet(0, (70 * i) + 30, (mod != null ? mod.modName : "No Mod"), true, false);
 			modText.isMenuItem = true;
 			modText.targetY = i++;
             modText.scrollFactor.set();
@@ -58,10 +59,20 @@ class ModSelectionSubstate extends MusicBeatSubstate
 		if (downP)
 			changeSelection(1);
 
+		// if (FlxG.keys.justPressed.T)
+			// openSubState(new PopupSubState(Ok, Text("This is a substate of a substate!")));
+
 		if (accepted) {
             selected = true;
             FlxG.camera.fade(FlxColor.BLACK, 0.4);
             FlxG.sound.music.fadeOut(0.4, 0, (bween) -> {
+				if (mods[curSelected] == null) {
+					Mod.selectedMod = null;
+					Mod.reset();
+					FlxG.resetState();
+					return; // i do not know if this does anything but just in case
+				}
+
                 Mod.selectedMod = mods[curSelected];
                 Mod.selectedMod.initMod();
                 FlxG.resetState();

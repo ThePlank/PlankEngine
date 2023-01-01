@@ -1,5 +1,6 @@
 package states.substates;
 
+import states.abstr.UIBaseState;
 import util.CoolUtil;
 import display.objects.Alphabet;
 import states.substates.abstr.MusicBeatSubstate;
@@ -111,7 +112,7 @@ class PauseSubState extends MusicBeatSubstate
 				case "Restart Song":
 					FlxG.resetState();
 				case "Exit to menu":
-					FlxG.switchState(new MainMenuState());
+					UIBaseState.switchState(MainMenuState);
 			}
 		}
 

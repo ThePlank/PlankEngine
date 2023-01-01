@@ -1,5 +1,7 @@
 package;
 
+import sys.io.FileOutput;
+import sys.io.File;
 import states.PlankSplash;
 import util.Console;
 import flixel.util.FlxTimer;
@@ -28,6 +30,7 @@ import openfl.display.FPS;
 import openfl.display.Sprite;
 import openfl.events.Event;
 import states.TitleState;
+import openfl.filesystem.File as OFLFile;
 #if hl
 import hl.UI;
 #end
@@ -93,6 +96,7 @@ class Main extends Sprite
 
 		// dumper = new CrashDumper(CRASH_SESSION_ID #if flash , stage #end);
 
+		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onError);
 		setupGame();
 	}
 
@@ -104,11 +108,71 @@ class Main extends Sprite
 			FlxG.console.registerClass(unregisteredClass);
 	}
 
+	var crashPath = "\\crashes";
+	var crashName = "\\PLECrashlog_";
 
+	// based off https://github.com/larsiusprime/crashdumper/blob/master/crashdumper/CrashDumper.hx
+	function onError(error:UncaughtErrorEvent) {
+		if (!FileSystem.exists(FileSystem.absolutePath(crashPath)))
+			FileSystem.createDirectory(FileSystem.absolutePath(crashPath));
 
-	function onError(error:UncaughtErrorEvent)
-	{
+		var stack = getStackTrace();
+
+		var name = crashName + Date.now().toString().replace("-", "_").replace(" ", "_").replace(":", "_");
+
+		var file = File.write(FileSystem.absolutePath(crashPath + name));
+		file.writeString(stack);
+		file.close();
 	}
+
+	private function getStackTrace():String
+		{
+			var stackTrace:String = "";
+			var stack:Array<StackItem> = CallStack.exceptionStack();
+			#if flash
+			stack.reverse();
+			#end
+			var item:StackItem;
+			for (item in stack)
+			{
+				stackTrace += printStackItem(item) + "\n";
+			}
+			return stackTrace;
+		}
+
+	private function printStackItem(itm:StackItem):String
+		{
+			var str:String = "";
+			switch( itm ) {
+				case CFunction:
+					str = "a C function";
+				case Module(m):
+					str = "module " + m;
+				case FilePos(itm,file,line):
+					if( itm != null ) {
+						str = printStackItem(itm) + " (";
+					}
+					str += file;
+					// if (SHOW_LINES)
+					// {
+						str += " line ";
+						str += line;
+					// }
+					if (itm != null) str += ")";
+				case Method(cname,meth):
+					str += (cname);
+					str += (".");
+					str += (meth);
+				#if (haxe_ver >= "3.1.0")
+				case LocalFunction(n):
+				#else
+				case Lambda(n):
+				#end
+					str += ("local function #");
+					str += (n);
+			}
+			return str;
+		}
 
 
 

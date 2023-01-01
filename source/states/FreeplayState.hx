@@ -1,5 +1,7 @@
 package states;
 
+import states.abstr.UIBaseState;
+import flixel.system.FlxSound;
 import classes.Song;
 import util.CoolUtil;
 import display.objects.HealthIcon;
@@ -218,7 +220,7 @@ class FreeplayState extends states.abstr.MusicBeatState
 
 		if (controls.BACK)
 		{
-			FlxG.switchState(new MainMenuState());
+			UIBaseState.switchState(MainMenuState);
 		}
 
 		if (accepted)
@@ -280,7 +282,11 @@ class FreeplayState extends states.abstr.MusicBeatState
 		// lerpScore = 0;
 		#end
 
+		// Paths.clearStoredMemory();
+		// Paths.clearUnusedMemory();
+
 		#if PRELOAD_ALL
+		// FlxG.sound.music.destroy();
 		FlxG.sound.playMusic(Paths.inst(songs[curSelected].songName), 0);
 		#end
 

@@ -127,7 +127,7 @@ class Mod
 		// 	voices: Sound.fromFile(getPath('songs/$name/Voices.${Paths.SOUND_EXT}')) // this won't error if it can't find it
 		// }
 
-        return {
+		return {
 			inst: getPath('songs/$name/Inst.${Paths.SOUND_EXT}'),
 			voices: getPath('songs/$name/Voices.${Paths.SOUND_EXT}') // this won't error if it can't find it
 		}
@@ -247,5 +247,12 @@ class Mod
 				FlxG.stage.window.setIcon(icon);
 			}
 		}
+	}
+
+	public static function reset()
+	{
+		FlxG.stage.window.title = "Friday Night Funkin': Plank Engine";
+
+		// todo: find out what icon we should use
 	}
 }

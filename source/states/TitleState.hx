@@ -83,9 +83,9 @@ class TitleState extends UIBaseState
 		}
 
 		#if FREEPLAY
-		FlxG.switchState(new FreeplayState());
+		UIBaseState.switchState(FreeplayState);
 		#elseif CHARTING
-		FlxG.switchState(new ChartingState());
+		UIBaseState.switchState(ChartingState);
 		#else
 		new FlxTimer().start(1, function(tmr:FlxTimer)
 		{
@@ -306,7 +306,7 @@ class TitleState extends UIBaseState
 				// }
 				// else
 				// {
-				FlxG.switchState(new MainMenuState());
+					UIBaseState.switchState(MainMenuState);
 				// }
 			});
 			// FlxG.sound.play(Paths.music('titleShoot'), 0.7);

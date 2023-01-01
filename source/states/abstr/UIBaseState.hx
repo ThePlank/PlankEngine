@@ -1,5 +1,12 @@
 package states.abstr;
 
+import flixel.FlxState;
+import display.objects.Alphabet;
+import flixel.group.FlxSpriteGroup;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
+import display.objects.Notification;
+// import 
 import states.substates.ModSelectionSubstate;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -14,6 +21,7 @@ typedef UIBackgroudSettings =
 	@:optional var scrollFactor:Array<Float>;
 	@:optional var bgColorGradient:Array<FlxColor>;
 	@:optional var gradientChunks:Int;
+	@:optional var gradientAngle:Int;
 	@:optional var position:Array<Int>;
 	@:optional var sizeMultiplier:Float;
 }
@@ -27,6 +35,8 @@ class UIBaseState extends MusicBeatState
 	};
 
 	var bg:FlxSprite;
+
+    public static var menus:Map<String, FlxState> = [];
 
 	private function createBackground(settings:UIBackgroudSettings):FlxSprite
 	{
@@ -47,15 +57,44 @@ class UIBaseState extends MusicBeatState
 		createdBG.antialiasing = true;
 
 		if (settings.bgColorGradient != null) {
-            FlxGradient.overlayGradientOnFlxSprite(createdBG, Std.int(createdBG.width), Std.int(createdBG.height), settings.bgColorGradient, 0, 0,
-                (settings.gradientChunks != null ? settings.gradientChunks : 0), 90, true);
+			// https://groups.google.com/g/haxeflixel/c/erHfhP1wy-s
+			var thingy = FlxGradient.createGradientFlxSprite(Std.int(createdBG.width), Std.int(createdBG.height), settings.bgColorGradient,
+			(settings.gradientChunks != null ? settings.gradientChunks : 1), (settings.gradientAngle != null ? settings.gradientAngle : 90), true);
+			thingy.blend = HARDLIGHT; // does this do anything with FlxSprite.stamp()? too lazy to test it
+			thingy.alpha = 0.5;
+
+			createdBG.stamp(thingy);
         }
 
 		return createdBG;
 	}
 
+	public static function switchState(state:Class<FlxState>, ?args:Array<Dynamic>, ?forceNew:Bool = false) {
+		if (args == null) args = [];
+
+		var name = Type.getClassName(state);
+
+		// if (menus.exists(name) && !forceNew) {
+		// 	FlxG.switchState(menus.get(name));
+		// 	return;
+		// }
+
+		var newState = Type.createInstance(state, args);
+		menus.set(name, newState);
+		FlxG.switchState(newState);
+
+	}
+
+	private function showNotification(notif:Notification) {
+		add(notif);
+
+	}
+
 	override public function create()
 	{
+		Paths.clearStoredMemory();
+		Paths.clearUnusedMemory();
+
         if (backgroundSettings.enabled == true) {
 		    this.bg = createBackground(backgroundSettings);
             insert(0, bg);
@@ -67,6 +106,12 @@ class UIBaseState extends MusicBeatState
 	override function update(elapsed:Float) {
 		if (FlxG.keys.justPressed.M)
 			openSubState(new ModSelectionSubstate());
+
+		if (FlxG.keys.justPressed.T) {
+			var stupid = new FlxSpriteGroup();
+			stupid.add(new Alphabet(0, Notification.NOTIFICATION_HEIGHT / 2, "this is a test lol", true, false));
+			showNotification(new Notification(stupid, 2.5));
+		}
 		
 		super.update(elapsed);
 	}

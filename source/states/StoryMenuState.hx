@@ -1,5 +1,6 @@
 package states;
 
+import states.abstr.UIBaseState;
 import classes.Highscore;
 import classes.Song;
 import display.objects.MenuCharacter;
@@ -286,7 +287,7 @@ class StoryMenuState extends states.abstr.MusicBeatState
 		{
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			movedBack = true;
-			FlxG.switchState(new MainMenuState());
+			UIBaseState.switchState(MainMenuState);
 		}
 
 		super.update(elapsed);

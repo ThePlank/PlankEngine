@@ -1,5 +1,6 @@
 package states;
 
+import states.abstr.UIBaseState;
 import classes.Conductor;
 import classes.Options;
 import classes.Highscore;
@@ -1405,7 +1406,7 @@ class PlayState extends states.abstr.MusicBeatState
 			if (FlxG.random.bool(0.1))
 			{
 				// gitaroo man easter egg
-				FlxG.switchState(new GitarooPause());
+				UIBaseState.switchState(GitarooPause);
 			}
 			else
 				openSubState(new PauseSubState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
@@ -1417,7 +1418,7 @@ class PlayState extends states.abstr.MusicBeatState
 
 		if (FlxG.keys.justPressed.SEVEN)
 		{
-			FlxG.switchState(new ChartingState());
+			UIBaseState.switchState(ChartingState);
 
 			#if (discord_rpc || hldiscord)
 			DiscordClient.changePresence("Chart Editor", null, null, true);
@@ -1427,11 +1428,13 @@ class PlayState extends states.abstr.MusicBeatState
 		// FlxG.watch.addQuick('VOL', vocals.amplitudeLeft);
 		// FlxG.watch.addQuick('VOLRight', vocals.amplitudeRight);
 
-		iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, 0.50)));
-		iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, 0.50)));
+		// iconP1.origin.set(0.5, 1);
+		// iconP2.origin.set(0.5, 1);
 
-		iconP1.updateHitbox();
-		iconP2.updateHitbox();
+		var funnyBeat = (Conductor.songPosition / 1000) * (Conductor.bpm / 60);
+
+		iconP1.offset.y = Math.abs(Math.sin(funnyBeat * Math.PI))  * 16 - 4;
+		iconP2.offset.y = Math.abs(Math.sin(funnyBeat * Math.PI))  * 16 - 4;
 
 		var iconOffset:Int = 26;
 
@@ -1456,7 +1459,7 @@ class PlayState extends states.abstr.MusicBeatState
 
 		#if debug
 		if (FlxG.keys.justPressed.EIGHT)
-			FlxG.switchState(new AnimationDebug(SONG.player2));
+			UIBaseState.switchState(AnimationDebug, [SONG.player2]);
 		#end
 
 		if (startingSong)
@@ -1577,16 +1580,6 @@ class PlayState extends states.abstr.MusicBeatState
 			}
 		}
 
-		if (curSong == 'Bopeebo')
-		{
-			switch (curBeat)
-			{
-				case 128, 129, 130:
-					vocals.volume = 0;
-					// FlxG.sound.music.stop();
-					// FlxG.switchState(new PlayState());
-			}
-		}
 		// better streaming of shit
 
 		// RESET = Quick Game Over Screen
@@ -1614,7 +1607,7 @@ class PlayState extends states.abstr.MusicBeatState
 			vocals.stop();
 			FlxG.sound.music.stop();
 
-			openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
+			openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y, [camHUD]));
 
 			// FlxG.switchState(new GameOverState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
 
@@ -1759,7 +1752,7 @@ class PlayState extends states.abstr.MusicBeatState
 				transIn = FlxTransitionableState.defaultTransIn;
 				transOut = FlxTransitionableState.defaultTransOut;
 
-				FlxG.switchState(new StoryMenuState());
+				UIBaseState.switchState(StoryMenuState);
 
 				// if ()
 				StoryMenuState.weekUnlocked[Std.int(Math.min(storyWeek + 1, StoryMenuState.weekUnlocked.length - 1))] = true;
@@ -1809,7 +1802,7 @@ class PlayState extends states.abstr.MusicBeatState
 		else
 		{
 			trace('WENT BACK TO FREEPLAY??');
-			FlxG.switchState(new FreeplayState());
+			UIBaseState.switchState(FreeplayState);
 		}
 	}
 
@@ -2391,11 +2384,22 @@ class PlayState extends states.abstr.MusicBeatState
 			camHUD.zoom += 0.03;
 		}
 
-		iconP1.setGraphicSize(Std.int(iconP1.width + 30));
-		iconP2.setGraphicSize(Std.int(iconP2.width + 30));
-
-		iconP1.updateHitbox();
-		iconP2.updateHitbox();
+		iconP1.scale.x = 1.3;
+		iconP1.scale.y = 0.75;
+		iconP2.scale.x = 1.3;
+		iconP2.scale.y = 0.75;
+		FlxTween.cancelTweensOf(iconP1);
+		FlxTween.cancelTweensOf(iconP2);
+		FlxTween.tween(iconP1, {"scale.x": 1, "scale.y": 1}, Conductor.crochet / 1000, {ease: FlxEase.backOut});
+		FlxTween.tween(iconP2, {"scale.x": 1, "scale.y": 1}, Conductor.crochet / 1000, {ease: FlxEase.backOut});
+		if (curBeat % 4 == 0) {
+			iconP1.offset.x = 10;
+			iconP2.offset.x = -10;
+			iconP1.angle = -15;
+			iconP2.angle = 15;
+			FlxTween.tween(iconP1, {"offset.x": 0, angle: 0}, Conductor.crochet / 1000, {ease: FlxEase.expoOut});
+			FlxTween.tween(iconP2, {"offset.x": 0, angle: 0}, Conductor.crochet / 1000, {ease: FlxEase.expoOut});
+		}
 
 		if (curBeat % gfSpeed == 0)
 		{

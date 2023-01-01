@@ -27,8 +27,8 @@ class MainMenuState extends UIBaseState
 	var menuItems:FlxTypedGroup<FlxSprite>;
 
 	#if !switch
-	// var optionShit:Array<String> = ['story mode', 'freeplay', 'donate', 'options'];
-	var optionShit:Array<String> = ['story mode', 'freeplay', 'donate'];
+	var optionShit:Array<String> = ['story mode', 'freeplay', 'donate', 'options'];
+	// var optionShit:Array<String> = ['story mode', 'freeplay', 'donate'];
 	#else
 	var optionShit:Array<String> = ['story mode', 'freeplay'];
 	#end
@@ -133,7 +133,7 @@ class MainMenuState extends UIBaseState
 
 			if (controls.BACK)
 			{
-				FlxG.switchState(new TitleState());
+				UIBaseState.switchState(TitleState);
 			}
 
 			if (controls.ACCEPT)
@@ -174,17 +174,15 @@ class MainMenuState extends UIBaseState
 								switch (daChoice)
 								{
 									case 'story mode':
-										FlxG.switchState(new StoryMenuState());
+										UIBaseState.switchState(StoryMenuState);
 										trace("Story Menu Selected");
 									case 'freeplay':
-										FlxG.switchState(new FreeplayState());
+										UIBaseState.switchState(FreeplayState);
 
 										trace("Freeplay Menu Selected");
 
-									// case 'options':
-									// 	FlxTransitionableState.skipNextTransIn = true;
-									// 	FlxTransitionableState.skipNextTransOut = true;
-									// 	FlxG.switchState(new OptionsMenu());
+									case 'options':
+										FlxG.switchState(new OptionsState());
 								}
 							});
 						}

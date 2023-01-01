@@ -1,5 +1,12 @@
 package states.substates;
 
+import flixel.FlxSprite;
+import flixel.tweens.FlxEase;
+import openfl.filters.BitmapFilterQuality;
+import openfl.filters.BlurFilter;
+import flixel.tweens.FlxTween;
+import flixel.FlxCamera;
+import states.abstr.UIBaseState;
 import classes.Conductor;
 import display.objects.Boyfriend;
 import states.substates.abstr.MusicBeatSubstate;
@@ -17,7 +24,7 @@ class GameOverSubstate extends MusicBeatSubstate
 
 	var stageSuffix:String = "";
 
-	public function new(x:Float, y:Float)
+	public function new(x:Float, y:Float, layeredHuds:Array<FlxCamera>)
 	{
 		var daStage = PlayState.curStage;
 		var daBf:String = '';
@@ -33,7 +40,23 @@ class GameOverSubstate extends MusicBeatSubstate
 				daBf = 'bf';
 		}
 
-		super();
+		super(0xFF000000);
+		
+		var extendedBG = new FlxSprite(-FlxG.width / 2, -FlxG.width / 2);
+		extendedBG.makeGraphic(FlxG.width * 2, FlxG.height * 2, FlxColor.BLACK);
+		extendedBG.scrollFactor.set();
+		add(extendedBG); // stupid
+		// todo: how to not stupid
+
+		var blur = new BlurFilter(1, 1, BitmapFilterQuality.HIGH);
+		FlxG.camera.zoom = 0.5;
+
+		FlxTween.tween(blur, {blurX: 12, blurY: 12}, 2, {ease: FlxEase.expoOut});
+		FlxTween.tween(FlxG.camera, {zoom: 1}, 1, {ease: FlxEase.expoOut});
+		for (hud in layeredHuds) {
+			hud.setFilters([blur]);
+			FlxTween.tween(hud, {zoom: 5}, 2, {ease: FlxEase.circInOut, startDelay: 0.5});
+		}
 
 		Conductor.songPosition = 0;
 
@@ -68,9 +91,9 @@ class GameOverSubstate extends MusicBeatSubstate
 			FlxG.sound.music.stop();
 
 			if (PlayState.isStoryMode)
-				FlxG.switchState(new StoryMenuState());
+				UIBaseState.switchState(StoryMenuState);
 			else
-				FlxG.switchState(new FreeplayState());
+				UIBaseState.switchState(FreeplayState);
 		}
 
 		if (bf.animation.curAnim.name == 'firstDeath' && bf.animation.curAnim.curFrame == 12)

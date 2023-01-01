@@ -9,6 +9,12 @@ import flixel.util.FlxTimer;
 
 using StringTools;
 
+enum AlphabetAlignment {
+	LEFT;
+	MIDDLE;
+	RIGHT;
+}
+
 /**
  * Loosley based on FlxTypeText lolol
  */
@@ -20,6 +26,7 @@ class Alphabet extends FlxSpriteGroup
 	// for menu shit
 	public var targetY:Float = 0;
 	public var isMenuItem:Bool = false;
+	public var alignmenrt:AlphabetAlignment = RIGHT;
 
 	public var text:String = "";
 
@@ -224,8 +231,16 @@ class Alphabet extends FlxSpriteGroup
 		{
 			var scaledY = FlxMath.remapToRange(targetY, 0, 1, 0, 1.3);
 
-			y = FlxMath.lerp(y, (scaledY * 120) + (FlxG.height * 0.48), 0.16);
-			x = FlxMath.lerp(x, (targetY * 20) + 90, 0.16);
+			switch (alignmenrt) {
+				case MIDDLE:
+					y = FlxMath.lerp(y, (scaledY * 120) + (FlxG.height * 0.48), 0.16);
+					x = FlxMath.lerp(x, (FlxG.width / 2) - (width / 2), 0.16);
+				default:
+					y = FlxMath.lerp(y, (scaledY * 120) + (FlxG.height * 0.48), 0.16);
+					x = FlxMath.lerp(x, (targetY * 20) + 90, 0.16);
+				
+			}
+			
 		}
 
 		super.update(elapsed);

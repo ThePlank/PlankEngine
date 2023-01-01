@@ -5,11 +5,27 @@ import flixel.util.FlxSave;
 import sys.thread.Thread;
 import flixel.FlxG;
 
+class Option<T> {
+	public var displayName:String; // roblox moment??/?/?/?//
+	public var description:String;
+	public var type:Class<T>;
+	public var onChange:T->Void;
+
+	public function new(displayName:String) {
+		this.displayName = displayName;
+	}
+}
+
+// lol image psych engine saving system
+
 class Options
 {
 	private static var deafultData:Map<String, Dynamic> = [
 		"Yes" => "Yes", // do NOT delete this entry!
 		"downscroll" => false
+	];
+
+	private static var optionsMap:Map<String, Map<String, Option<Any>>> = [
 	];
 
 	public static var saveData:FlxSave = new FlxSave();
@@ -53,5 +69,23 @@ class Options
 		for (entry => value in deafultData.keyValueIterator()) {
 			setValue(entry, value);
 		}
+	}
+
+	// this is the only part i'm not fond of
+
+	public static function initOptions() {
+		// GAMEPLAY
+
+		var gameplayMap:Map<String, Option<Any>> = [];
+
+		var downscroll:Option<Bool> = new Option("Downscroll");
+		downscroll.description = "insert description here";
+
+		gameplayMap.set("downscroll", downscroll);
+
+		optionsMap.set("Gameplay", gameplayMap);
+
+		
+
 	}
 }

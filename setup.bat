@@ -23,6 +23,7 @@ haxelib run lime setup flixel
 haxelib run lime setup
 haxelib install flixel-tools
 haxelib install actuate
+haxelib install byteConvert
 haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc 
 pause
 exit

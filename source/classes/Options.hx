@@ -25,7 +25,7 @@ class Options
 		"downscroll" => false
 	];
 
-	private static var optionsMap:Map<String, Map<String, Option<Any>>> = [
+	public static var optionsMap:Map<String, Map<String, Option<Any>>> = [
 	];
 
 	public static var saveData:FlxSave = new FlxSave();
@@ -34,6 +34,8 @@ class Options
 		saveData.bind("PlankEngineSettings", "PlankDev");
 		if (getValue("Yes") == null)
 			initSettings();
+
+		initOptions();
 		
 		return saveData;
 	}

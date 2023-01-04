@@ -1,13 +1,12 @@
 package states.abstr;
 
+import states.substates.ModSelectionSubstate;
 import flixel.FlxState;
 import display.objects.Alphabet;
 import flixel.group.FlxSpriteGroup;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import display.objects.Notification;
-// import 
-import states.substates.ModSelectionSubstate;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.util.FlxGradient;
@@ -99,6 +98,10 @@ class UIBaseState extends MusicBeatState
 		    this.bg = createBackground(backgroundSettings);
             insert(0, bg);
         }
+
+		for (notification in Notification.notifications) { // persistance
+			// showNotification(notification);
+		}
 
 		super.create();
 	}

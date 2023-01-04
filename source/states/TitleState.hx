@@ -1,5 +1,6 @@
 package states;
 
+import haxe.xml.Fast;
 import display.objects.Flixel;
 import haxe.Json;
 import classes.Mod;
@@ -64,7 +65,7 @@ class TitleState extends UIBaseState
 		curWacky = FlxG.random.getObject(getIntroTextShit());
 
 		// DEBUG BULLSHIT
-		trace('yes?: ${Options.getValue("Test")}');
+		trace('yes?: ${Options.getValue("Yes")}');
 
 		super.create();
 
@@ -116,10 +117,14 @@ class TitleState extends UIBaseState
 			diamond.persist = true;
 			diamond.destroyOnNoUse = false;
 
-			FlxTransitionableState.defaultTransIn = new TransitionData(FADE, FlxColor.BLACK, 1, new FlxPoint(0, -1), {asset: diamond, width: 32, height: 32},
+			FlxTransitionableState.defaultTransIn = new TransitionData(FADE, FlxColor.BLACK, 1.5, new FlxPoint(-1, 0), {asset: diamond, width: 32, height: 32},
 				new FlxRect(-200, -200, FlxG.width * 1.4, FlxG.height * 1.4));
-			FlxTransitionableState.defaultTransOut = new TransitionData(FADE, FlxColor.BLACK, 0.7, new FlxPoint(0, 1),
+
+			FlxTransitionableState.defaultTransOut = new TransitionData(FADE, FlxColor.BLACK, 0.7, new FlxPoint(1, 0),
 				{asset: diamond, width: 32, height: 32}, new FlxRect(-200, -200, FlxG.width * 1.4, FlxG.height * 1.4));
+			
+				FlxTransitionableState.defaultTransOut.tweenOptions.ease = FlxEase.circInOut;
+				FlxTransitionableState.defaultTransIn.tweenOptions.ease = FlxEase.circOut;
 
 			transIn = FlxTransitionableState.defaultTransIn;
 			transOut = FlxTransitionableState.defaultTransOut;
@@ -132,7 +137,6 @@ class TitleState extends UIBaseState
 			// music.loadStream(Paths.music('freakyMenu'));
 			// FlxG.sound.list.add(music);
 			// music.play();
-
 		}
 
 		FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
@@ -238,8 +242,8 @@ class TitleState extends UIBaseState
 
 	override function update(elapsed:Float)
 	{
-
-		if (!initialized) return;
+		if (!initialized)
+			return;
 
 		if (FlxG.sound.music != null)
 			Conductor.songPosition = FlxG.sound.music.time;
@@ -306,7 +310,7 @@ class TitleState extends UIBaseState
 				// }
 				// else
 				// {
-					UIBaseState.switchState(MainMenuState);
+				UIBaseState.switchState(MainMenuState);
 				// }
 			});
 			// FlxG.sound.play(Paths.music('titleShoot'), 0.7);
@@ -354,18 +358,17 @@ class TitleState extends UIBaseState
 	{
 		super.beatHit();
 
-
 		if (logoBl != null)
 			logoBl.animation.play('bump');
 		danceLeft = !danceLeft;
 
-		if (gfDance != null) {
+		if (gfDance != null)
+		{
 			if (danceLeft)
 				gfDance.animation.play('danceRight');
 			else
 				gfDance.animation.play('danceLeft');
 		}
-
 
 		FlxG.log.add(curBeat);
 

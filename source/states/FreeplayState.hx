@@ -225,7 +225,7 @@ class FreeplayState extends states.abstr.MusicBeatState
 
 		if (accepted)
 		{
-			var poop:String = Highscore.formatSong(songs[curSelected].songName.toLowerCase(), curDifficulty);
+			var poop:String = Highscore.formatSong(curDifficulty);
 
 			trace(poop);
 

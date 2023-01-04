@@ -1,5 +1,6 @@
 package display.objects;
 
+import flixel.math.FlxPoint;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
@@ -229,21 +230,33 @@ class Alphabet extends FlxSpriteGroup
 	{
 		if (isMenuItem)
 		{
-			var scaledY = FlxMath.remapToRange(targetY, 0, 1, 0, 1.3);
+			var point:FlxPoint = getNormalizedPosition();
 
-			switch (alignmenrt) {
-				case MIDDLE:
-					y = FlxMath.lerp(y, (scaledY * 120) + (FlxG.height * 0.48), 0.16);
-					x = FlxMath.lerp(x, (FlxG.width / 2) - (width / 2), 0.16);
-				default:
-					y = FlxMath.lerp(y, (scaledY * 120) + (FlxG.height * 0.48), 0.16);
-					x = FlxMath.lerp(x, (targetY * 20) + 90, 0.16);
-				
-			}
-			
+			x = FlxMath.lerp(x, point.x, 0.16);
+			y = FlxMath.lerp(y, point.y, 0.16);
+			point.putWeak();
 		}
 
 		super.update(elapsed);
+	}
+
+	// i don't know if i should use "normalized", but fuck it.
+	public function getNormalizedPosition() {
+		var point:FlxPoint = FlxPoint.get();
+
+		var scaledY = FlxMath.remapToRange(targetY, 0, 1, 0, 1.3);
+
+		switch (alignmenrt) {
+			case MIDDLE:
+				point.y = (scaledY * 120) + (FlxG.height * 0.48);
+				point.x = (FlxG.width / 2) - (width / 2);
+			default:
+				point.y = (scaledY * 120) + (FlxG.height * 0.48);
+				point.x = (targetY * 20) + 90;
+			
+		}
+
+		return point;
 	}
 }
 

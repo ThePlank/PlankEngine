@@ -1,0 +1,9 @@
+{
+    "displayName": "Balls",
+    "description": "Balls.",
+    "type": "bool",
+    "onChange": [
+        "import Sys;",
+        "Sys.exit(0);"
+    ]
+}

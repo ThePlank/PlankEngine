@@ -1,0 +1,6 @@
+//TODO: extension for .plstate
+
+
+function create() {
+    trace("die");
+}

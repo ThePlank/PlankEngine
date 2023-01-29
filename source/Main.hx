@@ -1,5 +1,7 @@
 package;
 
+import display.objects.StrumLine.Player;
+import classes.GarbageCompactor;
 import sys.io.FileOutput;
 import sys.io.File;
 import states.PlankSplash;
@@ -37,11 +39,21 @@ import hl.UI;
 
 using StringTools;
 
+typedef GameSettings = {
+	gameWidth:Int,
+	gameHeight:Int,
+	initialState:Class<FlxState>,
+	zoom:Float,
+	framerate:Int,
+	skipSplash:Bool,
+	startFullscreen:Bool,
+}
+
 class Main extends Sprite
 {
 
 	// maybe add a .json file for this?///?//
-	public static var settings = {
+	public static var settings:GameSettings = {
 		gameWidth: 1280, // Width of the game in pixels (might be less / more in actual pixels depending on your zoom).
 		gameHeight: 720, // Height of the game in pixels (might be less / more in actual pixels depending on your zoom).
 		initialState: PlankSplash, // The FlxState the game starts with.
@@ -100,12 +112,15 @@ class Main extends Sprite
 		setupGame();
 	}
 
-	static var consoleClasses:Array<Class<Dynamic>> = [Options, System, Lib, Main, CoolUtil, ZipTools];
+	static var consoleClasses:Array<Class<Dynamic>> = [Options, System, Lib, Main, CoolUtil, ZipTools, PlayerSettings];
+	static var consoleEnums:Array<Enum<Dynamic>> = [Player];
 
 	function registerClasses()
 	{
 		for (unregisteredClass in consoleClasses)
 			FlxG.console.registerClass(unregisteredClass);
+		for (unregisteredEnum in consoleEnums)
+			FlxG.console.registerEnum(unregisteredEnum);
 	}
 
 	var crashPath = "\\crashes";
@@ -190,13 +205,17 @@ class Main extends Sprite
 			settings.gameHeight = Math.ceil(stageHeight / settings.zoom);
 		}
 
-		#if !debug
-		// settings.initialState = TitleState;
+		#if debug
+		settings.initialState = TitleState;
 		#end
 
 		addChild(new FlxGame(settings.gameWidth, settings.gameHeight, settings.initialState, #if (flixel < "5.0.0") settings.zoom, #end settings.framerate, settings.framerate, settings.skipSplash, settings.startFullscreen));
 		registerClasses();
 		PlayerSettings.init();
+
+		FlxG.signals.preStateCreate.add((state:FlxState) -> {
+			GarbageCompactor.clearMajor();
+		});
 
 		#if !mobile
 		addChild(new PlankFPS(10, 3));

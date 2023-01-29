@@ -1,5 +1,6 @@
 package states;
 
+import states.options.OptionsState;
 import classes.Mod;
 import states.abstr.UIBaseState;
 #if (discord_rpc || hldiscord)

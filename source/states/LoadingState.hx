@@ -62,7 +62,7 @@ class LoadingState extends states.abstr.MusicBeatState
 				var fadeTime = 0.5;
 				FlxG.camera.fade(FlxG.camera.bgColor, fadeTime, true);
 				var introComplete = callbacks.add("introComplete");
-				new FlxTimer().start(fadeTime + MIN_TIME, function(_) introComplete());
+				new FlxTimer().start(fadeTime, function(_) introComplete());
 				checkLoadSong(getSongPath());
 				if (PlayState.SONG.needsVoices)
 					checkLoadSong(getVocalPath());
@@ -72,9 +72,7 @@ class LoadingState extends states.abstr.MusicBeatState
 				else
 					checkLibrary("tutorial");
 			}
-		).onProgress((prog,prog2) -> {
-			trace(prog, prog2);
-		});
+		);
 	}
 	
 	function checkLoadSong(path:String)

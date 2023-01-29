@@ -22,7 +22,11 @@ class Options
 {
 	private static var deafultData:Map<String, Dynamic> = [
 		"Yes" => "Yes", // do NOT delete this entry!
-		"downscroll" => false
+		"downscroll" => false,
+		"flashingMenu" => true,
+		"camZoom" => true,
+		"autoPause" => false,
+		"ghostTapping" => true,
 	];
 
 	public static var optionsMap:Map<String, Map<String, Option<Any>>> = [
@@ -34,8 +38,6 @@ class Options
 		saveData.bind("PlankEngineSettings", "PlankDev");
 		if (getValue("Yes") == null)
 			initSettings();
-
-		initOptions();
 		
 		return saveData;
 	}
@@ -73,21 +75,11 @@ class Options
 		}
 	}
 
-	// this is the only part i'm not fond of
-
-	public static function initOptions() {
-		// GAMEPLAY
-
-		var gameplayMap:Map<String, Option<Any>> = [];
-
-		var downscroll:Option<Bool> = new Option("Downscroll");
-		downscroll.description = "insert description here";
-
-		gameplayMap.set("downscroll", downscroll);
-
-		optionsMap.set("Gameplay", gameplayMap);
-
-		
-
+	public static function initSetting(key:String):Bool {
+		if (getValue(key) == null && deafultData.exists(key)) {
+			setValue(key, deafultData.get(key));
+			return true;
+		}
+		return false;
 	}
 }

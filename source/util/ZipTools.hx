@@ -1,133 +1,83 @@
 package util;
 
-import sys.thread.Thread;
-import haxe.PosInfos;
-import haxe.Exception;
-import sys.FileSystem;
+import sys.FileSystem as FS;
 import haxe.io.Bytes;
 import haxe.zip.*;
 
 using StringTools;
 
-/// GOODLORD THANK YOU YOSHICRAFTER29
-// anyways, i *sort of* know how this works
-
+// thanks raf
 class ZipTools
 {
-	public static function unZip(zip:Reader, destination:String, ?prefix:String, ?progress:ZipProgress):ZipProgress
+	/**
+		Zips a directory of your choice with a name. 
+		@param dir The filepath to your directory.
+		@param name The name of the zip. `output` by default.
+	**/
+	static public function zipDir(dir:String, name:String = "output")
 	{
-		FileSystem.createDirectory(destination);
-
-		var fields:List<Entry> = zip.read();
-
-		try
+		function getEntries(dir:String, entries:List<Entry> = null, inDir:Null<String> = null)
 		{
-			trace("Processing zip...");
-			if (prefix != null)
+			if (entries == null)
+				entries = new List<Entry>();
+			if (inDir == null)
+				inDir = dir;
+			for (file in FS.readDirectory(dir))
 			{
-				var fieldCopy = fields;
-				fields = new List<Entry>();
-
-				for (field in fieldCopy)
+				var path = haxe.io.Path.join([dir, file]);
+				if (FS.isDirectory(path))
 				{
-					if (field.fileName.startsWith(prefix))
-						fields.push(field);
+					getEntries(path, entries, inDir);
 				}
-			}
-
-			if (progress == null)
-				progress = new ZipProgress();
-			progress.fileCount = fields.length;
-
-			for (file => field in fields)
-			{
-				progress.curFile = file;
-				var isFolder:Bool = field.fileName.endsWith("/") && field.fileSize == 0;
-				if (isFolder)
-					FileSystem.createDirectory('${destination}/${field.fileName}');
 				else
 				{
-					var split:Array<String> = [for (e in field.fileName.split("/")) e.trim()];
-					split.pop();
-					FileSystem.createDirectory('${destination}/${split.join("/")}');
-
-					//
-					//
+					var bytes:haxe.io.Bytes = haxe.io.Bytes.ofData(sys.io.File.getBytes(path).getData());
+					var entry:Entry = {
+						fileName: StringTools.replace(path, inDir, ""),
+						fileSize: bytes.length,
+						fileTime: Date.now(),
+						compressed: false,
+						dataSize: FS.stat(path).size,
+						data: bytes,
+						crc32: haxe.crypto.Crc32.make(bytes)
+					};
+					entries.push(entry);
 				}
 			}
-
-            progress.curFile = fields.length;
-            progress.done = true;
-		} catch(e:ZipErrorExeption) {
-            progress.done = true;
-            progress.error = e;
-        }
-        return progress;
+			return entries;
+		}
+		// create the output file
+		var out = sys.io.File.write(name + ".zip", true);
+		// write the zip file
+		var zip = new Writer(out);
+		zip.write(getEntries(dir));
 	}
 
-    public static function uncompressZipThreaded(zip:Reader, destination:String, ?prefix:String, ?progress:ZipProgress):ZipProgress {
-        if (progress == null)
-            progress = new ZipProgress();
-
-        Thread.create(() -> {
-            unZip(zip, destination, prefix, progress);
-        });
-
-        return progress;
-    }
-}
-
-class ZipProgress
-{
-	public var error:ZipErrorExeption = null;
-
-	public var curFile:Int = 0;
-	public var fileCount:Int = 0;
-	public var done:Bool = false;
-	public var percentage(get, null):Float;
-
-	private function get_percentage()
+	/**
+		Unzips the file path and places it relative to the program's dir, and can be moved via whereTo.
+		Names it after zipFile.
+		@param zipFile The name of the zip you want to extract.
+		@param whereTo To place else where inside the relative dir.
+	**/
+	static function unzip(zipFile:String, whereTo:String = "")
 	{
-		return fileCount <= 0 ? 0 : curFile / fileCount;
-	}
-
-	public function new()
-	{
-	}
-}
-
-class ZipReader extends Reader {
-    public var files:List<Entry>;
-
-    public override function read():haxe.ds.List<Entry> {
-        if (files != null) return files;
-        try {
-            var files = super.read();
-            return this.files = files;
-        }
-        return new List<Entry>();
-    }
-}
-
-class ZipWriter extends Writer {
-    public function flush() {
-        o.flush();
-    }
-
-    public function writeFile(entry:Entry) {
-        writeEntryHeader(entry);
-        o.writeFullBytes(entry.data, 0, entry.data.length);
-    }
-
-    public function close() {
-        o.close();
-    }
-}
-
-class ZipErrorExeption extends Exception
-{
-	public function new(message:String = "Error while processing ZIP file", ?previous:Exception, ?native:Any)
-	{
-		super(message, previous, native);
+		var zipfileBytes = sys.io.File.getBytes(Sys.getCwd() + zipFile);
+		var bytesInput = new haxe.io.BytesInput(zipfileBytes);
+		var reader = new Reader(bytesInput);
+		var entries:List<Entry> = reader.read();
+		for (_entry in entries)
+		{
+			var data = Reader.unzip(_entry);
+			if (_entry.fileName.substring(_entry.fileName.lastIndexOf('/') + 1) == '' && _entry.data.toString() == '')
+			{
+				FS.createDirectory(Sys.getCwd() + whereTo + _entry.fileName);
+			}
+			else
+			{
+				var f = sys.io.File.write(Sys.getCwd + whereTo + _entry.fileName, true);
+				f.write(data);
+				f.close();
+			}
+		}
 	}
 }

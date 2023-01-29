@@ -141,13 +141,13 @@ class Note extends FlxSprite
 				case 0:
 					animation.play('purpleholdend');
 			}
+			offset.add(swagWidth / 2);
 
 			updateHitbox();
 
-			x -= width / 2;
 
-			if (PlayState.curStage.startsWith('school'))
-				x += 30;
+			// if (PlayState.curStage.startsWith('school'))
+				// x += 30;
 
 			if (prevNote.isSustainNote)
 			{
@@ -163,8 +163,10 @@ class Note extends FlxSprite
 						prevNote.animation.play('redhold');
 				}
 
+
 				prevNote.scale.y *= Conductor.stepCrochet / 100 * 1.5 * PlayState.SONG.speed;
 				prevNote.updateHitbox();
+				prevNote.offset.add(swagWidth / 2);
 				// prevNote.setGraphicSize();
 			}
 		}
@@ -174,8 +176,6 @@ class Note extends FlxSprite
 	{
 		super.update(elapsed);
 
-		if (mustPress)
-		{
 			// The * 0.5 is so that it's easier to hit them too late, instead of too early
 			if (strumTime > Conductor.songPosition - Conductor.safeZoneOffset
 				&& strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * 0.5))
@@ -185,14 +185,6 @@ class Note extends FlxSprite
 
 			if (strumTime < Conductor.songPosition - Conductor.safeZoneOffset && !wasGoodHit)
 				tooLate = true;
-		}
-		else
-		{
-			canBeHit = false;
-
-			if (strumTime <= Conductor.songPosition)
-				wasGoodHit = true;
-		}
 
 		if (tooLate)
 		{

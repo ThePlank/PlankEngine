@@ -70,7 +70,7 @@ class ModSelectionSubstate extends MusicBeatSubstate
 					Mod.selectedMod = null;
 					Mod.reset();
 					FlxG.resetState();
-					return; // i do not know if this does anything but just in case
+					return;
 				}
 
                 Mod.selectedMod = mods[curSelected];

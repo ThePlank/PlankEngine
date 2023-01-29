@@ -5,7 +5,6 @@ import lime.utils.LogLevel;
 
 // https://stackoverflow.com/questions/5762491/how-to-print-color-in-console-using-system-out-println
 // yes, java moment.
-
 using flixel.util.FlxStringUtil;
 
 class ConsoleColors
@@ -91,7 +90,7 @@ class Console
 		info.className = info.className.remove(".hx");
 		info.className = info.className.toUpperCase();
 
-        var mainText = '[${info.className} LINE ${info.lineNumber}]: ${stuffs}';
+		var mainText = '[${info.className} LINE ${info.lineNumber}]: ${stuffs}';
 
 		switch (level)
 		{
@@ -136,9 +135,11 @@ class Console
 		#end
 	}
 
-    public static function init() {
-        haxe.Log.trace = (stuffs:Dynamic, ?info:PosInfos) -> {
-            log(stuffs, INFO, info);
-        }
-    }
+	public static function init()
+	{
+		haxe.Log.trace = (stuffs:Dynamic, ?info:PosInfos) ->
+		{
+			log(stuffs, INFO, info);
+		}
+	}
 }

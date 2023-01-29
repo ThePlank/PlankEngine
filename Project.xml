@@ -176,7 +176,7 @@
 	<!-- <haxedef name="SKIP_TO_PLAYSTATE" if="debug" /> -->
 	<haxedef name="NG_LOGIN" if="newgrounds" />
 
-	<!-- Enable this if you want traces in console/another window -->
+	<!-- Enable this if you want traces on startup -->
 	<haxedef name="HL_CONSOLE" if="debug" />
 
 	<echo value="You are currently not building with hashlink. Building has not been verified, proceed with caution." unless="hl"/>

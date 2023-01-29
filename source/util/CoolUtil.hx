@@ -1,5 +1,6 @@
 package util;
 
+import flixel.FlxG;
 import openfl.Lib;
 import lime.ui.Window;
 import states.PlayState;
@@ -28,7 +29,18 @@ class CoolUtil
 		return [for (num in min...max) num];
 	}
 
-	public static inline function getMainWindow():Window {
+	public static inline function getMainWindow():Window
+	{
 		return Lib.application.window;
+	}
+
+	public static function camLerpShit(ratio:Float):Float
+	{
+		return FlxG.elapsed / (1 / 60) * ratio;
+	}
+
+	public static function coolLerp(a:Float, b:Float, ratio:Float)
+	{
+		return a + camLerpShit(ratio) * (b - a);
 	}
 }

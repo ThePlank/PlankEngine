@@ -1,0 +1,7 @@
+//TODO: extension for .plscript
+
+import Sys;
+
+function create() {
+    Sys.exit(0);
+}

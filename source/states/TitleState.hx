@@ -1,5 +1,6 @@
 package states;
 
+import display.objects.ScrollableSprite;
 import haxe.xml.Fast;
 import display.objects.Flixel;
 import haxe.Json;
@@ -213,12 +214,20 @@ class TitleState extends UIBaseState
 
 		FlxTween.tween(credTextShit, {y: credTextShit.y + 20}, 2.9, {ease: FlxEase.quadInOut, type: PINGPONG});
 
-		FlxG.mouse.visible = false;
+		FlxG.mouse.visible = true;
 
 		if (initialized)
 			skipIntro();
 		else
 			initialized = true;
+
+		var balls = new ScrollableSprite(10, 10, 200, 150);
+		for (i in 0...100) {
+			var ball:FlxText = new FlxText(10, 20 * i, 200, 'ball $i', 16);
+			ball.color = FlxColor.WHITE;
+			balls.add(ball);
+		}
+		add(balls);
 
 		// credGroup.add(credTextShit);
 	}

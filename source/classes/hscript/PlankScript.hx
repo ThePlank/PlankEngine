@@ -28,26 +28,30 @@ class PlankScript {
     public function new(code:String) {
         this.source = code;
         this.interp = new Interp();
+        parser.allowTypes = true;
+        parser.allowJSON = true;
+
         expression = parser.parseString(source);
         setupVariables();
+        parser.parseModule(source);
     }
 
     private function setupVariables() {
-        interp.variables.set('FlxG', FlxG);
-		interp.variables.set('FlxSprite', FlxSprite);
-		interp.variables.set('FlxCamera', FlxCamera);
-		interp.variables.set('FlxTimer', FlxTimer);
-		interp.variables.set('FlxTween', FlxTween);
-		interp.variables.set('FlxEase', FlxEase);
-		interp.variables.set('PlayState', PlayState);
-		interp.variables.set('Paths', Paths);
-		interp.variables.set('Mod', Mod);
-		interp.variables.set('Conductor', Conductor);
-		interp.variables.set('Character', Character);
-		interp.variables.set('Alphabet', Alphabet);
-		interp.variables.set('StringTools', StringTools);
+        setVariable('FlxG', FlxG);
+		setVariable('FlxSprite', FlxSprite);
+		setVariable('FlxCamera', FlxCamera);
+		setVariable('FlxTimer', FlxTimer);
+		setVariable('FlxTween', FlxTween);
+		setVariable('FlxEase', FlxEase);
+		setVariable('PlayState', PlayState);
+		setVariable('Paths', Paths);
+		setVariable('Mod', Mod);
+		setVariable('Conductor', Conductor);
+		setVariable('Character', Character);
+		setVariable('Alphabet', Alphabet);
+		setVariable('StringTools', StringTools);
 
-		interp.variables.set('sendMessage', function(value:Array<Dynamic>)
+		setVariable('sendMessage', function(value:Array<Dynamic>)
 		{
 			sendMessage(value);
 		});
@@ -68,4 +72,8 @@ class PlankScript {
 	function get_variables():Map<String, Dynamic> {
 		return interp.variables;
 	}
+
+    function setVariable(name:String, varber:Dynamic) {
+        interp.variables.set(name, varber);
+    }
 }

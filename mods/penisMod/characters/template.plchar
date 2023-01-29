@@ -1,0 +1,29 @@
+function onInit(charName) {
+    spritesheetName = "BOYFRIEND";
+    fps = 24;
+
+    flipX = true;
+    flipY = false;
+
+    addAnimation("idle", "BF idle dance");
+
+    addSingAnimation(LEFT, "BF NOTE LEFT");
+    addSingAnimation(UP, "BF NOTE UP");
+    addSingAnimation(RIGHT, "BF NOTE RIGHT");
+    addSingAnimation(DOWN, "BF NOTE DOWN");
+    addAnimation("missLeft", "BF NOTE LEFT");
+    addAnimation("missUp", "BF NOTE UP");
+    addAnimation("missRight", "BF NOTE RIGHT");
+    addAnimation("missDown", "BF NOTE DOWN");
+
+    addAnimation("attack", "bf pre attack");
+    addAnimation("dodge", "boyfriend dodge");
+    addAnimation("shake", "BF idle shaking");
+    addAnimation("hey", "BF HEY!!");
+
+    // addAnimation("death", "BF Dead Loop");
+    // addAnimation("deathConfirm", "BF Dead confirm");
+
+    loadOffsets(charName);
+    defaultAnimation = "idle";
+}

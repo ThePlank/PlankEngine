@@ -1,0 +1,11 @@
+right now this will work like this:
+
+create .json files to add stuff to the preferences page (functions can't have functions/classes. imports are ok tho)
+you can't use multilines in json so its just a array
+
+how this will work in newer versions:
+
+create a .plpage for your own page and logic (can also override pages)
+
+
+not much to say

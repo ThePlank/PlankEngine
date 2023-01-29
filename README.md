@@ -2,7 +2,7 @@
 
 this engine is currently a WIP and is a &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; engine
 
-this engine currently uses the input system from "Strawberry Engine" (we were too lazy to make our own input system or shit like that)
+this engine currently uses a really bad decompiled version of the week 7 input system
 
 expect updates
 

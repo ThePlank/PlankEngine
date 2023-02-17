@@ -1,5 +1,13 @@
 package;
 
+import classes.hscript.PlankScript;
+import openfl.display.BitmapData;
+import flixel.tweens.FlxTween;
+import flixel.FlxSprite;
+import classes.Conductor;
+import haxe.EnumFlags;
+import hl.Api;
+import classes.NorwayBanner;
 import display.objects.StrumLine.Player;
 import classes.GarbageCompactor;
 import sys.io.FileOutput;
@@ -9,6 +17,7 @@ import util.Console;
 import flixel.util.FlxTimer;
 // import crashdumper.CrashDumper;
 // import crashdumper.SessionData;
+import states.AmigaVibeState;
 import lime.utils.LogLevel;
 import haxe.CallStack;
 import haxe.CallStack.StackItem;
@@ -112,7 +121,7 @@ class Main extends Sprite
 		setupGame();
 	}
 
-	static var consoleClasses:Array<Class<Dynamic>> = [Options, System, Lib, Main, CoolUtil, ZipTools, PlayerSettings];
+	static var consoleClasses:Array<Class<Dynamic>> = [Options, System, Lib, Main, CoolUtil, ZipTools, PlayerSettings, Conductor];
 	static var consoleEnums:Array<Enum<Dynamic>> = [Player];
 
 	function registerClasses()
@@ -131,65 +140,10 @@ class Main extends Sprite
 		if (!FileSystem.exists(FileSystem.absolutePath(crashPath)))
 			FileSystem.createDirectory(FileSystem.absolutePath(crashPath));
 
-		var stack = getStackTrace();
-
 		var name = crashName + Date.now().toString().replace("-", "_").replace(" ", "_").replace(":", "_");
 
-		var file = File.write(FileSystem.absolutePath(crashPath + name));
-		file.writeString(stack);
-		file.close();
+		@:privateAccess UI._dialog("stupid!!!!!!!".bytes, "dumb".bytes, 1);
 	}
-
-	private function getStackTrace():String
-		{
-			var stackTrace:String = "";
-			var stack:Array<StackItem> = CallStack.exceptionStack();
-			#if flash
-			stack.reverse();
-			#end
-			var item:StackItem;
-			for (item in stack)
-			{
-				stackTrace += printStackItem(item) + "\n";
-			}
-			return stackTrace;
-		}
-
-	private function printStackItem(itm:StackItem):String
-		{
-			var str:String = "";
-			switch( itm ) {
-				case CFunction:
-					str = "a C function";
-				case Module(m):
-					str = "module " + m;
-				case FilePos(itm,file,line):
-					if( itm != null ) {
-						str = printStackItem(itm) + " (";
-					}
-					str += file;
-					// if (SHOW_LINES)
-					// {
-						str += " line ";
-						str += line;
-					// }
-					if (itm != null) str += ")";
-				case Method(cname,meth):
-					str += (cname);
-					str += (".");
-					str += (meth);
-				#if (haxe_ver >= "3.1.0")
-				case LocalFunction(n):
-				#else
-				case Lambda(n):
-				#end
-					str += ("local function #");
-					str += (n);
-			}
-			return str;
-		}
-
-
 
 	private function setupGame():Void
 	{
@@ -209,9 +163,22 @@ class Main extends Sprite
 		settings.initialState = TitleState;
 		#end
 
+
 		addChild(new FlxGame(settings.gameWidth, settings.gameHeight, settings.initialState, #if (flixel < "5.0.0") settings.zoom, #end settings.framerate, settings.framerate, settings.skipSplash, settings.startFullscreen));
+		stage.addEventListener(Event.ENTER_FRAME, update);
 		registerClasses();
 		PlayerSettings.init();
+		GarbageCompactor.init();
+		GarbageCompactor.enable();
+		NorwayBanner.check();
+
+		/*new PlankScript('
+		trace("Hello!");
+
+		function do() {
+			trace("test");
+		}
+		');*/
 
 		FlxG.signals.preStateCreate.add((state:FlxState) -> {
 			GarbageCompactor.clearMajor();
@@ -219,6 +186,12 @@ class Main extends Sprite
 
 		#if !mobile
 		addChild(new PlankFPS(10, 3));
+		#end
+	}
+
+	function update(event:Event) {
+		#if (haxe >= "4.3.0" && hl) // only avalible on 4.3rc+
+		hl.Api.checkReload();
 		#end
 	}
 

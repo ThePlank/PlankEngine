@@ -1,5 +1,6 @@
 package display.objects;
 
+import util.CoolUtil.FPSLerp;
 import flixel.math.FlxPoint;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -232,8 +233,8 @@ class Alphabet extends FlxSpriteGroup
 		{
 			var point:FlxPoint = getNormalizedPosition();
 
-			x = FlxMath.lerp(x, point.x, 0.16);
-			y = FlxMath.lerp(y, point.y, 0.16);
+			x = FPSLerp.lerp(x, point.x, 0.16);
+			y = FPSLerp.lerp(y, point.y, 0.16);
 			point.putWeak();
 		}
 

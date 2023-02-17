@@ -729,7 +729,6 @@ class PlayState extends states.abstr.MusicBeatState
 		playerStrums.x += 50;
 		playerStrums.x += (FlxG.width) / 2;
 		playerStrums.scrollSpeed = SONG.speed;
-		playerStrums.player = Player.CPU;
 		add(playerStrums);
 
 		dadStrums = new StrumLine(CPU, dad);
@@ -737,6 +736,7 @@ class PlayState extends states.abstr.MusicBeatState
 		dadStrums.scrollSpeed = SONG.speed;
 		add(dadStrums);
 
+		
 		// startCountdown();
 
 		generateSong(SONG.song);
@@ -1372,6 +1372,7 @@ class PlayState extends states.abstr.MusicBeatState
 		perfectMode = false;
 		#end
 
+
 		if (FlxG.keys.justPressed.NINE)
 		{
 			if (iconP1.animation.curAnim.name == 'bf-old')
@@ -1478,9 +1479,9 @@ class PlayState extends states.abstr.MusicBeatState
 		else
 		{
 			// Conductor.songPosition = FlxG.sound.music.time;
-			Conductor.songPosition += FlxG.elapsed * 1000;
+			Conductor.songPosition += (FlxG.elapsed * 1000) * FlxG.sound.music.pitch;
 
-			if (!paused)
+			/*if (!paused) useless
 			{
 				songTime += FlxG.game.ticks - previousFrameTime;
 				previousFrameTime = FlxG.game.ticks;
@@ -1493,7 +1494,7 @@ class PlayState extends states.abstr.MusicBeatState
 					// Conductor.songPosition += FlxG.elapsed * 1000;
 					// trace('MISSED FRAME');
 				}
-			}
+			}*/
 
 			// Conductor.lastSongPos = FlxG.sound.music.time;
 		}
@@ -1558,8 +1559,8 @@ class PlayState extends states.abstr.MusicBeatState
 
 		if (camZooming)
 		{
-			FlxG.camera.zoom = FlxMath.lerp(defaultCamZoom, FlxG.camera.zoom, 0.95);
-			camHUD.zoom = FlxMath.lerp(1, camHUD.zoom, 0.95);
+			FlxG.camera.zoom = FlxMath.lerp(defaultCamZoom, FlxG.camera.zoom, FPSLerp.lerpValue(0.95));
+			camHUD.zoom = FlxMath.lerp(1, camHUD.zoom, FPSLerp.lerpValue(0.95));
 		}
 
 		FlxG.watch.addQuick("beatShit", curBeat);
@@ -2338,6 +2339,7 @@ class PlayState extends states.abstr.MusicBeatState
 			playerStrums.sortNotes();
 			dadStrums.sortNotes();
 		}
+
 
 		if (SONG.notes[Math.floor(curStep / 16)] != null)
 		{

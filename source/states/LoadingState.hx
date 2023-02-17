@@ -1,5 +1,6 @@
 package states;
 
+import states.abstr.UIBaseState;
 import lime.app.Promise;
 import lime.app.Future;
 import flixel.FlxG;
@@ -16,7 +17,7 @@ import lime.utils.AssetManifest;
 
 import haxe.io.Path;
 
-class LoadingState extends states.abstr.MusicBeatState
+class LoadingState extends UIBaseState
 {
 	inline static var MIN_TIME = 1.0;
 	

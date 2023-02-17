@@ -1,9 +1,6 @@
 package classes;
 
-import haxe.io.Encoding;
 import haxe.Exception;
-import hl.BaseType.Enum;
-import hl.I64;
 import haxe.io.Bytes;
 import Type;
 import byteConvert.ByteConvert;
@@ -488,7 +485,7 @@ class FLFile
 	public var ntracks:Int;
 	public var ppqn:Int;
 
-	public var eventList:Array<Event> = []; // haxe, when array acess for lists????
+	public var eventList:Array<Event> = []; // haxe, when array access for lists????
 
 	public function new(b:Array<Int>)
 	{

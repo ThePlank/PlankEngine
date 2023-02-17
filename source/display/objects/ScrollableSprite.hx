@@ -1,8 +1,8 @@
 package display.objects;
 
+import util.CoolUtil.FPSLerp;
 import flixel.math.FlxMath;
 import flixel.FlxCamera;
-import flixel.input.FlxPointer;
 import flixel.FlxG;
 import flixel.input.mouse.FlxMouse;
 import flixel.FlxSprite;
@@ -98,8 +98,8 @@ class ScrollableSprite implements IFlxScrollable extends FlxTypedSpriteGroup<Flx
 			scrollPoint.add(0, FlxG.mouse.wheel * 4);
         }
 
-		scrollPoint.x = FlxMath.lerp(scrollPoint.x, 0, 0.05);
-		scrollPoint.y = FlxMath.lerp(scrollPoint.y, 0, 0.05);
+		scrollPoint.x = FPSLerp.lerp(scrollPoint.x, 0, 0.05);
+		scrollPoint.y = FPSLerp.lerp(scrollPoint.y, 0, 0.05);
 		updateScroll(scrollPoint);
 	}
 

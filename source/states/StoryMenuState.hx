@@ -1,5 +1,6 @@
 package states;
 
+import util.CoolUtil.FPSLerp;
 import states.abstr.UIBaseState;
 import classes.Highscore;
 import classes.Song;
@@ -24,7 +25,7 @@ import display.objects.MenuItem;
 
 using StringTools;
 
-class StoryMenuState extends states.abstr.MusicBeatState
+class StoryMenuState extends UIBaseState
 {
 	var scoreText:FlxText;
 
@@ -231,7 +232,7 @@ class StoryMenuState extends states.abstr.MusicBeatState
 	override function update(elapsed:Float)
 	{
 		// scoreText.setFormat('VCR OSD Mono', 32);
-		lerpScore = Math.floor(FlxMath.lerp(lerpScore, intendedScore, 0.5));
+		lerpScore = Math.floor(FPSLerp.lerp(lerpScore, intendedScore, 0.5));
 
 		scoreText.text = "WEEK SCORE:" + lerpScore;
 

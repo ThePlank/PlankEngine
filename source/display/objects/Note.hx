@@ -13,6 +13,7 @@ using StringTools;
 class Note extends FlxSprite
 {
 	public var strumTime:Float = 0;
+	public var distance:Float = 0;
 
 	public var mustPress:Bool = false;
 	public var noteData:Int = 0;
@@ -128,7 +129,6 @@ class Note extends FlxSprite
 			noteScore * 0.2;
 			alpha = 0.6;
 
-			x += width / 2;
 
 			switch (noteData)
 			{
@@ -141,7 +141,7 @@ class Note extends FlxSprite
 				case 0:
 					animation.play('purpleholdend');
 			}
-			offset.add(swagWidth / 2);
+			offset.add(swagWidth / 2 + width);
 
 			updateHitbox();
 
@@ -166,7 +166,7 @@ class Note extends FlxSprite
 
 				prevNote.scale.y *= Conductor.stepCrochet / 100 * 1.5 * PlayState.SONG.speed;
 				prevNote.updateHitbox();
-				prevNote.offset.add(swagWidth / 2);
+				// prevNote.offset.add(swagWidth / 2);
 				// prevNote.setGraphicSize();
 			}
 		}

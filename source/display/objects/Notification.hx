@@ -1,5 +1,6 @@
 package display.objects;
 
+import util.CoolUtil.FPSLerp;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxTimer;
@@ -66,6 +67,6 @@ class Notification extends FlxSpriteGroup {
     override function update(elapsed:Float) {
         super.update(elapsed);
 
-		y = FlxMath.lerp(y, FlxG.height - (Notification.NOTIFICATION_HEIGHT + Notification.NOTIFICATION_PADDING) * (Math.abs(notifications.indexOf(this)) + 1), 0.4);
+		y = FPSLerp.lerp(y, FlxG.height - (Notification.NOTIFICATION_HEIGHT + Notification.NOTIFICATION_PADDING) * (Math.abs(notifications.indexOf(this)) + 1), 0.4);
     }
 }

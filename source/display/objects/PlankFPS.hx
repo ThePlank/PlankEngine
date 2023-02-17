@@ -19,12 +19,8 @@ class PlankFPS extends TextField
 	**/
 	public var currentFPS(default, null):Int;
 
-	@:noCompletion private var currentMemory:Float;
-	@:noCompletion private var maxMemory:Float;
-
-	@:noCompletion private var cacheCount:Int;
-	@:noCompletion private var currentTime:Float;
-	@:noCompletion private var times:Array<Float>;
+	private var currentMemory:Float;
+	private var maxMemory:Float;
 
 	private var maxColor:FlxColor = 0xFFEC5454;
 	private var normalColor:FlxColor = 0xFFFFFFFF;
@@ -45,57 +41,32 @@ class PlankFPS extends TextField
 		width = 250;
 		text = "FPS: ";
 
-		cacheCount = 0;
-		currentTime = 0;
-		times = [];
-
-		#if flash
-		addEventListener(Event.ENTER_FRAME, function(e)
-		{
-			var time = Lib.getTimer();
-			__enterFrame(time - currentTime);
-		});
-		#end
 	}
 
 	// Event Handlers
-	@:noCompletion
-	private #if !flash override #end function __enterFrame(deltaTime:Float):Void
+	private override function __enterFrame(deltaTime:Float):Void
 	{
-		currentTime += deltaTime;
-		times.push(currentTime);
+		currentFPS = Math.floor(1 / (deltaTime / 1000));
 
-		while (times[0] < currentTime - 1000)
-		{
-			times.shift();
-		}
+		text = 'FPS: ${currentFPS}\n';
 
-		var currentCount = times.length;
-		currentFPS = Math.round((currentCount + cacheCount) / 2);
+		#if (gl_stats && !disable_cffi && (!html5 || !canvas))
+		text += "\ntotalDC: " + Context3DStats.totalDrawCalls();
+		text += "\nstageDC: " + Context3DStats.contextDrawCalls(DrawCallContext.STAGE);
+		text += "\nstage3DDC: " + Context3DStats.contextDrawCalls(DrawCallContext.STAGE3D);
+		#end
 
-		if (currentCount != cacheCount /*&& visible*/)
-		{
-			text = 'FPS: ${currentFPS}\n';
+		currentMemory = GarbageCompactor.currentMemUsage();
+		if (currentMemory > maxMemory)
+			maxMemory = currentMemory;
 
-			#if (gl_stats && !disable_cffi && (!html5 || !canvas))
-			text += "\ntotalDC: " + Context3DStats.totalDrawCalls();
-			text += "\nstageDC: " + Context3DStats.contextDrawCalls(DrawCallContext.STAGE);
-			text += "\nstage3DDC: " + Context3DStats.contextDrawCalls(DrawCallContext.STAGE3D);
-			#end
+		text += 'MEM: ${FlxStringUtil.formatBytes(currentMemory)}\n';
+		text += 'MEM MAX: ${FlxStringUtil.formatBytes(maxMemory)}\n';
 
-			currentMemory = GarbageCompactor.currentMemUsage();
-			maxMemory = GarbageCompactor.getAllocatedMem();
+		// 4000MB = 4GB, max memory usage of Windows
+		var mappedMemory = FlxMath.remapToRange(currentMemory, 0, 4000, 0, 1);
+		var mappedFPS = FlxMath.remapToRange(currentFPS, Lib.current.stage.frameRate, Lib.current.stage.frameRate / 2, 0, 1);
 
-            text += 'MEM: ${FlxStringUtil.formatBytes(currentMemory)}\n';
-            text += 'MEM MAX: ${FlxStringUtil.formatBytes(maxMemory)}\n';
-
-			// 4000MB = 4GB, max memory usage of Windows
-			var mappedMemory = FlxMath.remapToRange(currentMemory, 0, 4000, 0, 1);
-			var mappedFPS = FlxMath.remapToRange(currentFPS, Lib.current.stage.frameRate, Lib.current.stage.frameRate / 2, 0, 1);
-
-			textColor = FlxColor.interpolate(normalColor, maxColor, FlxEase.cubeIn((mappedMemory + mappedFPS) / 2));
-		}
-
-		cacheCount = currentCount;
+		textColor = FlxColor.interpolate(normalColor, maxColor, FlxEase.cubeIn((mappedMemory + mappedFPS) / 2));
 	}
 }

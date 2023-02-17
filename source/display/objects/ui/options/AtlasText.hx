@@ -1,212 +1,258 @@
 package display.objects.ui.options;
 
 import flixel.FlxSprite;
-import flixel.util.FlxStringUtil;
-import haxe.ds.EnumValueMap;
+import flixel.group.FlxSpriteGroup;
 import flixel.graphics.frames.FlxAtlasFrames;
-import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
+import flixel.util.FlxStringUtil;
 
-class AtlasText extends FlxTypedSpriteGroup<AtlasChar>
+@:forward
+abstract BoldText(AtlasText) from AtlasText to AtlasText
 {
-	public static var fonts:EnumValueMap<AtlasFont, AtlasFontData> = new EnumValueMap<AtlasFont, AtlasFontData>();
-
-	public var text(default, set):String = '';
-	public var font:AtlasFontData;
-
-	override public function new(?x:Float = 0, ?y:Float = 0, text:String, ?fontType:AtlasFont = Default)
+	inline public function new (x = 0.0, y = 0.0, text:String)
 	{
-		if (!fonts.exists(fontType))
-		{
-			fonts.set(fontType, new AtlasFontData(fontType));
-		}
-		font = fonts.get(fontType);
-		super(x, y);
-		this.text = text;
-	}
-
-	function set_text(text:String = '')
-	{
-		var casedTextNew:String = restrictCase(text);
-		var casedText:String = restrictCase(this.text);
-		this.text = text;
-		if (casedTextNew == casedText)
-		{
-			return text;
-		}
-		if (casedTextNew.indexOf(casedText) == 0)
-		{
-			appendTextCased(casedTextNew.substr(casedText.length));
-			return this.text;
-		}
-		group.kill();
-		if (casedTextNew == '')
-		{
-			return this.text;
-		}
-		appendTextCased(casedTextNew);
-		return this.text;
-	}
-
-	public function restrictCase(text:String)
-	{
-		switch (font.caseAllowed)
-		{
-			case Both:
-				return text;
-			case Upper:
-				return text.toUpperCase();
-			case Lower:
-				return text.toLowerCase(); 
-		}
-	}
-
-	public function appendTextCased(text:String)
-	{
-		var length:Int = group.countLiving();
-		var nextX:Float = 0;
-		var nextY:Float = 0;
-		if (length == -1)
-		{
-			length = 0;
-		}
-		else if (length > 0)
-		{
-			var member:AtlasChar = group.members[length - 1];
-			nextX = member.x + member.width - x;
-			nextY = member.y + member.height - font.maxHeight - y;
-		}
-		var split:Array<String> = text.split('');
-		var spr:AtlasChar;
-		for (char in split)
-		{
-			switch (char)
-			{
-				case '\n':
-					nextX = 0;
-					nextY += font.maxHeight;
-				case ' ':
-					nextX += 40;
-				default:
-					if (length >= group.members.length)
-					{
-						spr = new AtlasChar(null, null, font.atlas, char);
-					}
-					else
-					{
-						spr = group.members[length];
-						spr.revive();
-						spr.char = char;
-						spr.alpha = 1;
-					}
-					spr.x = nextX;
-					spr.y = nextY + font.maxHeight - spr.height;
-					add(spr);
-					nextX += spr.width;
-					length++;
-			}
-		}
-	}
-
-	override public function toString()
-	{
-		var x:LabelValuePair = LabelValuePair.weak('x', this.x);
-		var y:LabelValuePair = LabelValuePair.weak('y', this.y);
-		var text:LabelValuePair = LabelValuePair.weak('text', this.text);
-		return "InputItem, " + FlxStringUtil.getDebugString([x, y, text]);
+		this = new AtlasText(x, y, text, Bold);
 	}
 }
 
-class AtlasFontData
+/**
+ * Alphabet.hx has a ton of bugs and does a bunch of stuff I don't need, fuck that class
+ */
+class AtlasText extends FlxTypedSpriteGroup<AtlasChar>
 {
-	public static var upperChar:EReg = new EReg("^[A-Z]\\d+$","");
-	public static var lowerChar:EReg = new EReg("^[a-z]\\d+$","");
-
-	public var atlas:FlxAtlasFrames;
-	public var maxHeight:Float = 0;
-	public var caseAllowed:Case = Both;
+	static var fonts = new Map<AtlasFont, AtlasFontData>();
+	static var casesAllowed = new Map<AtlasFont, Case>();
+	public var text(default, set):String = "";
 	
-	public function new(font:AtlasFont)
+	var font:AtlasFontData;
+	
+	public var atlas(get, never):FlxAtlasFrames;
+	inline function get_atlas() return font.atlas;
+	public var caseAllowed(get, never):Case;
+	inline function get_caseAllowed() return font.caseAllowed;
+	public var maxHeight(get, never):Float;
+	inline function get_maxHeight() return font.maxHeight;
+	
+	public function new (x = 0.0, y = 0.0, text:String, fontName:AtlasFont = Default)
 	{
-		var path = 'fonts/' + font.getName().toLowerCase();
-		atlas = Paths.getSparrowAtlas(path);
-		atlas.parent.destroyOnNoUse = false;
-		atlas.parent.persist = true;
-
-		var hasUpper:Bool = false;
-		var hasLower:Bool = false;
-		for (framedata in atlas.frames)
+		if (!fonts.exists(fontName))
+			fonts[fontName] = new AtlasFontData(fontName);
+		font = fonts[fontName];
+		
+		super(x, y);
+		
+		this.text = text;
+	}
+	
+	function set_text(value:String)
+	{
+		if (value == null)
+			value = "";
+		
+		var caseValue = restrictCase(value);
+		var caseText = restrictCase(this.text);
+		
+		this.text = value;
+		if (caseText == caseValue)
+			return value; // cancel redraw
+		
+		if (caseValue.indexOf(caseText) == 0)
 		{
-			maxHeight = Math.max(maxHeight, framedata.frame.height);
-			if (!hasUpper)
+			// new text is just old text with additions at the end, append the difference
+			appendTextCased(caseValue.substr(caseText.length));
+			return this.text;
+		}
+		
+		value = caseValue;
+		
+		group.kill();
+		
+		if (value == "")
+			return this.text;
+		
+		appendTextCased(caseValue);
+		return this.text;
+	}
+	
+	/**
+	 * Adds new characters, without needing to redraw the previous characters
+	 * @param text The text to add.
+	 * @throws String if `text` is null.
+	 */
+	public function appendText(text:String)
+	{
+		if (text == null)
+			throw "cannot append null";
+		
+		if (text == "")
+			return;
+		
+		this.text = this.text + text;
+	}
+	
+	/**
+	 * Converts all characters to fit the font's `allowedCase`.
+	 * @param text 
+	 */
+	function restrictCase(text:String)
+	{
+		return switch(caseAllowed)
+		{
+			case Both: text;
+			case Upper: text.toUpperCase();
+			case Lower: text.toLowerCase();
+		}
+	}
+	
+	/**
+	 * Adds new text on top of the existing text. Helper for other methods; DOESN'T CHANGE `this.text`.
+	 * @param text The text to add, assumed to match the font's `caseAllowed`.
+	 */
+	function appendTextCased(text:String)
+	{
+		var charCount = group.countLiving();
+		var xPos:Float = 0;
+		var yPos:Float = 0;
+		// `countLiving` returns -1 if group is empty
+		if (charCount == -1)
+			charCount = 0;
+		else if (charCount > 0)
+		{
+			var lastChar = group.members[charCount - 1];
+			xPos = lastChar.x + lastChar.width - x;
+			yPos = lastChar.y + lastChar.height - maxHeight - y;
+		}
+		
+		var splitValues = text.split("");
+		for (i in 0...splitValues.length)
+		{
+			switch(splitValues[i])
 			{
-				hasUpper = upperChar.match(framedata.name);
-			}
-			if (!hasLower)
-			{
-				hasLower = lowerChar.match(framedata.name);
+				case " ":
+				{
+					xPos += 40;
+				}
+				case "\n":
+				{
+					xPos = 0;
+					yPos += maxHeight;
+				}
+				case char:
+				{
+					var charSprite:AtlasChar;
+					if (group.members.length <= charCount)
+						charSprite = new AtlasChar(atlas, char);
+					else
+					{
+						charSprite = group.members[charCount];
+						charSprite.revive();
+						charSprite.char = char;
+						charSprite.alpha = 1;//gets multiplied when added
+					}
+					charSprite.x = xPos;
+					charSprite.y = yPos + maxHeight - charSprite.height;
+					add(charSprite);
+					
+					xPos += charSprite.width;
+					charCount++;
+				}
 			}
 		}
-		if (hasUpper != hasLower)
-		{
-			caseAllowed = hasUpper ? Upper : Lower;
-		}
+	}
+	
+	override function toString()
+	{
+		return "InputItem, " + FlxStringUtil.getDebugString(
+			[ LabelValuePair.weak("x", x)
+			, LabelValuePair.weak("y", y)
+			, LabelValuePair.weak("text", text)
+			]
+		);
 	}
 }
 
 class AtlasChar extends FlxSprite
 {
 	public var char(default, set):String;
-
-	override public function new(?x:Float = 0, ?y:Float = 0, atlas:FlxAtlasFrames, char:String)
+	public function new(x = 0.0, y = 0.0, atlas:FlxAtlasFrames, char:String)
 	{
 		super(x, y);
 		frames = atlas;
 		this.char = char;
 		antialiasing = true;
 	}
-
-	function set_char(char:String):String
+	
+	function set_char(value:String)
 	{
-		if (this.char != char)
+		if (this.char != value)
 		{
-			var prefix:String = getAnimPrefix(char);
-			animation.addByPrefix('anim', prefix, 24);
-			animation.play('anim');
+			var prefix = getAnimPrefix(value);
+			animation.addByPrefix("anim", prefix, 24);
+			animation.play("anim");
 			updateHitbox();
 		}
-		return this.char = char;
+		
+		return this.char = value;
 	}
-
-	public function getAnimPrefix(char:String):String
+	
+	function getAnimPrefix(char:String)
 	{
-		switch (char)
+		return switch (char)
 		{
-			case "!":
-				return "-exclamation point-";
-			case "'":
-				return "-apostraphie-";
-			case "*":
-				return "-multiply x-";
-			case ",":
-				return "-comma-";
-			case "-":
-				return "-dash-";
-			case ".":
-				return "-period-";
-			case "/":
-				return "-forward slash-";
-			case "?":
-				return "-question mark-";
-			case "\\":
-				return "-back slash-";
-			case "“":
-				return "-start quote-";
-			case "”":
-				return "-end quote-";
-			default:
-				return char;
+			case '-': '-dash-';
+			case '.': '-period-';
+			case ",": '-comma-';
+			case "'": '-apostraphie-';
+			case "?": '-question mark-';
+			case "!": '-exclamation point-';
+			case "\\": '-back slash-';
+			case "/": '-forward slash-';
+			case "*": '-multiply x-';
+			case "“": '-start quote-';
+			case "”": '-end quote-';
+			default: char;
 		}
 	}
+}
+
+private class AtlasFontData
+{
+	static public var upperChar = ~/^[A-Z]\d+$/;
+	static public var lowerChar = ~/^[a-z]\d+$/;
+	
+	public var atlas:FlxAtlasFrames;
+	public var maxHeight:Float = 0.0;
+	public var caseAllowed:Case = Both;
+	
+	public function new (name:AtlasFont)
+	{
+		atlas = Paths.getSparrowAtlas("fonts/" + name.getName().toLowerCase());
+		atlas.parent.destroyOnNoUse = false;
+		atlas.parent.persist = true;
+		
+		var containsUpper = false;
+		var containsLower = false;
+		
+		for (frame in atlas.frames)
+		{
+			maxHeight = Math.max(maxHeight, frame.frame.height);
+			
+			if (!containsUpper)
+				containsUpper = upperChar.match(frame.name);
+			
+			if (!containsLower)
+				containsLower = lowerChar.match(frame.name);
+		}
+		
+		if (containsUpper != containsLower)
+			caseAllowed = containsUpper ? Upper : Lower;
+	}
+}
+
+enum Case
+{
+	Both;
+	Upper;
+	Lower;
 }
 
 enum AtlasFont

@@ -1,159 +1,176 @@
 package states.substates.ui.options;
 
-import util.CoolUtil;
-import classes.Options;
+import display.objects.ui.options.AtlasText.AtlasFont;
 import display.objects.ui.options.Checkbox;
-import display.objects.ui.options.AtlasText;
 import display.objects.ui.options.TextMenuList;
-import display.objects.ui.options.Page;
-import flixel.util.FlxColor;
-import openfl.Lib;
-import Type.ValueType;
-import flixel.FlxG;
+import states.options.OptionsState.Page;
 import flixel.FlxCamera;
+import flixel.FlxG;
 import flixel.FlxObject;
-import haxe.ds.Map;
+import flixel.FlxSprite;
+import flixel.group.FlxGroup;
+import flixel.util.FlxColor;
+import classes.Options;
 
 class PreferencesMenu extends Page
 {
-	var checkboxes:Array<Checkbox> = [];
-	var textBoxes:Array<AtlasText> = [];
-	var menuCamera:FlxCamera;
 	var items:TextMenuList;
+
+	var checkboxes:Array<Checkbox> = [];
+	var menuCamera:FlxCamera;
 	var camFollow:FlxObject;
 
 	public function new()
 	{
 		super();
+
 		menuCamera = new FlxCamera();
 		FlxG.cameras.add(menuCamera, false);
-		menuCamera.bgColor.alpha = 0;
+		menuCamera.bgColor = 0x0;
 		camera = menuCamera;
-		items = new TextMenuList();
-		items.camera = menuCamera;
-		add(items);
-		createPrefItem("Downscroll", "downscroll");
-		createPrefItem("Ghost Tapping", "ghostTapping");
-		createPrefItem("flashing menu", "flashingMenu");
-		createPrefItem("Camera Zooming on Beat", "camZoom");
-		createPrefItem("Auto Pause", "autoPause");
+
+		add(items = new TextMenuList());
+
+		createPrefItem('naughtyness', 'censor-naughty', true);
+		createPrefItem('downscroll', 'downscroll', false);
+		createPrefItem('flashing menu', 'flashing-menu', true);
+		createPrefItem('Camera Zooming on Beat', 'camera-zoom', true);
+		createPrefItem('FPS Counter', 'fps-counter', true);
+		createPrefItem('Auto Pause', 'auto-pause', false);
+
 		camFollow = new FlxObject(FlxG.width / 2, 0, 140, 70);
 		if (items != null)
-			camFollow.y = items.members[items.selectedIndex].y;
-		menuCamera.follow(camFollow, LOCKON, 0.06);
-		menuCamera.deadzone.x = -100;
-		menuCamera.deadzone.y = 160;
-		menuCamera.deadzone.width = menuCamera.width;
-		menuCamera.deadzone.height = 40;
+			camFollow.y = items.selectedItem.y;
+
+		menuCamera.follow(camFollow, null, 0.06);
+		var margin = 160;
+		menuCamera.deadzone.set(0, margin, menuCamera.width, 40);
 		menuCamera.minScrollY = 0;
-		items.onChange.add(function(item)
+
+		items.onChange.add(function(selected)
 		{
-			camFollow.y = item.y;
-			// trace(camFollow.y);
-		});
-		onExit.add(() -> {
-			Options.save();
+			camFollow.y = selected.y;
 		});
 	}
 
-	static public function preferenceCheck(name:String)
+	public static function getPref(pref:String):Dynamic
 	{
-		if (Options.initSetting(name))
-		{
-			trace("set preference! " + Std.string(Options.getValue(name)));
-		}
+		return Options.getValue(pref);
 	}
 
-	function createPrefItem(name:String, internalName:String)
+	// easy shorthand?
+	public static function setPref(pref:String, value:Dynamic):Void
 	{
-        preferenceCheck(internalName);
-		var type:ValueType = Type.typeof(Options.getValue(internalName));
-		items.createItem(130, 120 * items.length + 30, name, Bold, function()
+		Options.setValue(pref, value);
+		
+	}
+
+	public static function initPrefs():Void
+	{
+		preferenceCheck('censor-naughty', true);
+		preferenceCheck('downscroll', false);
+		preferenceCheck('flashing-menu', true);
+		preferenceCheck('camera-zoom', true);
+		preferenceCheck('fps-counter', true);
+		preferenceCheck('auto-pause', false);
+		preferenceCheck('master-volume', 1);
+
+		#if muted
+		setPref('master-volume', 0);
+		FlxG.sound.muted = true;
+		#end
+
+		// if (!getPref('fps-counter'))
+			// FlxG.stage.removeChild(Main.fpsCounter);
+
+		FlxG.autoPause = getPref('auto-pause');
+	}
+
+	private function createPrefItem(prefName:String, prefString:String, prefValue:Dynamic):Void
+	{
+		items.createItem(120, (120 * items.length) + 30, prefName, AtlasFont.Bold, function()
 		{
-			switch (type.getName())
+			preferenceCheck(prefString, prefValue);
+
+			switch (Type.typeof(prefValue).getName())
 			{
-				case "TBool":
-					prefToggle(internalName);
-				case "TInt":
-				// FlxG.state.openSubState();
+				case 'TBool':
+					prefToggle(prefString);
+
 				default:
-					trace("swag");
+					trace('swag');
 			}
-		}, true);
+		});
 
-		switch (type.getName())
+		switch (Type.typeof(prefValue).getName())
 		{
-			case "TBool":
-				createCheckbox(internalName);
-			case "TInt":
-				createTextbox(internalName);
+			case 'TBool':
+				createCheckbox(prefString);
+
 			default:
-				trace("swag");
+				trace('swag');
 		}
 
-		trace(type.getName());
+		trace(Type.typeof(prefValue).getName());
 	}
 
-	// function openValueChanger(value:)
-
-	function prefToggle(name:String)
+	function createCheckbox(prefString:String)
 	{
-		if (!Type.typeof(Options.getValue(name)).equals(TBool))
-			return;
+		var checkbox:Checkbox = new Checkbox(0, 120 * (items.length - 1), Options.getValue(prefString));
+		checkboxes.push(checkbox);
+		add(checkbox);
+	}
 
-		menuCamera.zoom += 0.15;
+	/**
+	 * Assumes that the preference has already been checked/set?
+	 */
+	private function prefToggle(prefName:String)
+	{
+		var daSwap:Bool = Options.getValue(prefName);
+		daSwap = !daSwap;
+		Options.setValue(prefName, daSwap);
+		checkboxes[items.selectedIndex].daValue = daSwap;
+		trace('toggled? ' + daSwap);
 
-		// how to evade typechecking:
-		var daBool:Bool = cast Options.getValue(name);
-
-		Options.setValue(name, !daBool);
-		checkboxes[items.selectedIndex].daValue = daBool;
-		trace("toggled? " + Std.string(daBool));
-
-		switch (name)
+		switch (prefName)
 		{
-			case "autoPause":
-				FlxG.autoPause = Options.getValue("autoPause");
-			case "fps-counter":
-				// Main.instance.fpsCounter.visible = getPref("fps-counter");
+			case 'fps-counter':
+				// if (getPref('fps-counter'))
+					// FlxG.stage.addChild(Main.fpsCounter);
+				// else
+					// FlxG.stage.removeChild(Main.fpsCounter);
+			case 'auto-pause':
+				FlxG.autoPause = getPref('auto-pause');
 		}
-	}
 
-	function createCheckbox(name:String)
-	{
-		var check = new Checkbox(10, 120 * (this.items.length - 1), Options.getValue(name));
-		checkboxes.push(check);
-		check.camera = menuCamera;
-		add(check);
-	}
-
-	function createTextbox(name:String)
-	{
-		var text = new AtlasText(20, 125 * (this.items.length - 1), Std.string(Options.getValue(name)), Default);
-		textBoxes.push(text);
-		text.camera = menuCamera;
-		add(text);
-	}
-
-	static public function getPref(name:String):Any
-	{
-		return Options.getValue(name);
-	}
-
-	static public function setPref(name:String, value:Any)
-	{
-		return Options.setValue(name, value);
+		if (prefName == 'fps-counter') {}
 	}
 
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
-		menuCamera.followLerp = CoolUtil.camLerpShit(0.1);
 
-		menuCamera.zoom = CoolUtil.coolLerp(menuCamera.zoom, 1, 0.055);
-		items.forEach(function(item)
+		// menuCamera.followLerp = CoolUtil.camLerpShit(0.05);
+
+		items.forEach(function(daItem:TextMenuItem)
 		{
-			items.members[items.selectedIndex] == item ? item.x = 150 : item.x = 130;
+			if (items.selectedItem == daItem)
+				daItem.x = 150;
+			else
+				daItem.x = 120;
 		});
+	}
+
+	private static function preferenceCheck(prefString:String, prefValue:Dynamic):Void
+	{
+		if (Options.getValue(prefString) == null)
+		{
+			Options.initSetting(prefString);
+			trace('set preference!');
+		}
+		else
+		{
+			trace('found preference: ' + Options.getValue(prefString));
+		}
 	}
 }

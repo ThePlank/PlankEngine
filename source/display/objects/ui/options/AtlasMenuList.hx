@@ -1,15 +1,81 @@
 package display.objects.ui.options;
 
-import display.objects.ui.options.AtlasMenuItem;
+
+import display.objects.ui.options.MenuList.MenuTypedList;
 import flixel.graphics.frames.FlxAtlasFrames;
-import haxe.io.Path;
 
-class AtlasMenuList<T:AtlasMenuItem> extends MenuTypedList<T> {
+typedef AtlasAsset = flixel.util.typeLimit.OneOfTwo<String, FlxAtlasFrames>;
 
-    public var atlas:FlxAtlasFrames;
+class AtlasMenuList extends MenuTypedList<AtlasMenuItem>
+{
+	public var atlas:FlxAtlasFrames;
+	
+	public function new (atlas, navControls:NavControls = Vertical, ?wrapMode)
+	{
+		super(navControls, wrapMode);
+		
+		if (Std.is(atlas, String))
+			this.atlas = Paths.getSparrowAtlas(cast atlas);
+		else
+			this.atlas = cast atlas;
+	}
+	
+	public function createItem(x = 0.0, y = 0.0, name, callback, fireInstantly = false)
+	{
+		var item = new AtlasMenuItem(x, y, name, atlas, callback);
+		item.fireInstantly = fireInstantly;
+		return addItem(name, item);
+	}
+	
+	override function destroy()
+	{
+		super.destroy();
+		atlas = null;
+	}
+}
 
-    public function new(atlas:String, nav:NavControls = Vertical, wrap:WrapMode) {
-        super(nav, wrap);
-        this.atlas = Paths.getSparrowAtlas(atlas);
-    }
+class AtlasMenuItem extends MenuItem
+{	
+	var atlas:FlxAtlasFrames;
+	public function new (x = 0.0, y = 0.0, name:String, atlas:FlxAtlasFrames, callback)
+	{
+		this.atlas = atlas;
+		super(x, y, name, callback);
+	}
+	
+	override function setData(name:String, ?callback:Void->Void)
+	{
+		frames = atlas;
+		animation.addByPrefix('idle', '$name idle', 24);
+		animation.addByPrefix('selected', '$name selected', 24);
+		
+		super.setData(name, callback);
+	}
+	
+	function changeAnim(animName:String)
+	{
+		animation.play(animName);
+		updateHitbox();
+	}
+	
+	override function idle()
+	{
+		changeAnim('idle');
+	}
+	
+	override function select()
+	{
+		changeAnim('selected');
+	}
+	
+	override function get_selected()
+	{
+		return animation.curAnim != null && animation.curAnim.name == "selected";
+	}
+	
+	override function destroy()
+	{
+		super.destroy();
+		atlas = null;
+	}
 }

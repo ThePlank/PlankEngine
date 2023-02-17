@@ -1,5 +1,8 @@
 package states.abstr;
 
+import openfl.display.BitmapData;
+import sys.io.File;
+import hl.Bytes;
 import states.substates.ModSelectionSubstate;
 import flixel.FlxState;
 import display.objects.Alphabet;
@@ -17,10 +20,12 @@ typedef UIBackgroudSettings =
 {
 	var enabled:Bool;
 	var bgColor:FlxColor;
+	@:optional var imageFile:String;
 	@:optional var scrollFactor:Array<Float>;
 	@:optional var bgColorGradient:Array<FlxColor>;
 	@:optional var gradientChunks:Int;
 	@:optional var gradientAngle:Int;
+	@:optional var gradientMix:Float;
 	@:optional var position:Array<Int>;
 	@:optional var sizeMultiplier:Float;
 }
@@ -29,6 +34,7 @@ class UIBaseState extends MusicBeatState
 {
 	var backgroundSettings:UIBackgroudSettings = {
 		enabled: true,
+		imageFile: "menuDesat",
 		bgColor: 0xFFFDE871,
 		scrollFactor: [0.5, 0.5]
 	};
@@ -39,8 +45,14 @@ class UIBaseState extends MusicBeatState
 
 	private function createBackground(settings:UIBackgroudSettings):FlxSprite
 	{
-		var createdBG:FlxSprite = new FlxSprite(0, 0, Paths.image("menuDesat"));
-		createdBG.color = settings.bgColor;
+		var createdBG:FlxSprite;
+		if (settings.imageFile != "") {
+			createdBG = new FlxSprite(0, 0, Paths.image("menuDesat"));
+			createdBG.color = settings.bgColor;
+		} else {
+			createdBG = new FlxSprite(0, 0);
+			createdBG.makeGraphic(FlxG.width, FlxG.height, settings.bgColor);
+		}
 
 		if (settings.scrollFactor != null)
 			createdBG.scrollFactor.set(settings.scrollFactor[0], settings.scrollFactor[1]);
@@ -58,9 +70,9 @@ class UIBaseState extends MusicBeatState
 		if (settings.bgColorGradient != null) {
 			// https://groups.google.com/g/haxeflixel/c/erHfhP1wy-s
 			var thingy = FlxGradient.createGradientFlxSprite(Std.int(createdBG.width), Std.int(createdBG.height), settings.bgColorGradient,
-			(settings.gradientChunks != null ? settings.gradientChunks : 1), (settings.gradientAngle != null ? settings.gradientAngle : 90), true);
+			(settings.gradientChunks == null ? 1 : settings.gradientChunks), (settings.gradientAngle != null ? settings.gradientAngle : 90), true);
 			thingy.blend = HARDLIGHT; // does this do anything with FlxSprite.stamp()? too lazy to test it
-			thingy.alpha = 0.5;
+			thingy.alpha = (settings.gradientMix == null ? 0.5 : settings.gradientMix);
 
 			createdBG.stamp(thingy);
         }
@@ -94,7 +106,7 @@ class UIBaseState extends MusicBeatState
 		Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
 
-        if (backgroundSettings.enabled == true) {
+        if (backgroundSettings.enabled) {
 		    this.bg = createBackground(backgroundSettings);
             insert(0, bg);
         }
@@ -102,6 +114,7 @@ class UIBaseState extends MusicBeatState
 		for (notification in Notification.notifications) { // persistance
 			// showNotification(notification);
 		}
+
 
 		super.create();
 	}

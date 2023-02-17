@@ -31,6 +31,7 @@ class Paths
 	public static var dumpExclusions:Array<String> = [
 		'assets/music/freakyMenu.$SOUND_EXT',
 		'assets/shared/music/breakfast.$SOUND_EXT',
+		'assets/images/square.png',
 	];
 
 	/// haya I love you for the base cache dump I took to the max
@@ -70,8 +71,7 @@ class Paths
 			var obj = FlxG.bitmap._cache.get(key);
 			if (obj != null && !currentTrackedAssets.exists(key))
 			{
-				openfl.Assets.cache.removeBitmapData(key);
-				FlxG.bitmap._cache.remove(key);
+				@:privateAccess FlxG.bitmap.removeKey(key);
 				obj.destroy();
 			}
 		}
@@ -346,14 +346,15 @@ class Paths
 		{
 			if (!currentTrackedAssets.exists(path))
 			{
-				var newGraphic:FlxGraphic = FlxG.bitmap.add(path, false, path);
+				trace('$path is getting created...');
+				var newGraphic:FlxGraphic = FlxG.bitmap.add(path, true, path);
 				newGraphic.persist = true;
 				currentTrackedAssets.set(path, newGraphic);
 			}
 			localTrackedAssets.push(path);
 			return currentTrackedAssets.get(path);
 		}
-		trace('oh no its returning null NOOOO');
+		FlxG.log.warn('$key not found!!!');
 		return null;
 	}
 

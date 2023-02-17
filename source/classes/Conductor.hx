@@ -1,5 +1,6 @@
 package classes;
 
+import haxe.macro.Compiler.IncludePosition;
 import classes.Song.SwagSong;
 
 /**
@@ -27,6 +28,9 @@ class Conductor
 	public static var safeZoneOffset:Float = (safeFrames / 60) * 1000; // is calculated in create(), is safeFrames in milliseconds
 
 	public static var bpmChangeMap:Array<BPMChangeEvent> = [];
+
+	public static var timeNumerator:Int = 4;
+	public static var timeDenominator:Int = 4;
 
 	public function new()
 	{

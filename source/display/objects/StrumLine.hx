@@ -50,6 +50,7 @@ class StrumLine extends FlxSpriteGroup
 
 		strumLineNotes = generateStaticArrows(tweenStrums);
 		add(strumLineNotes);
+		// strumLineNotes.angularAcceleration = 5;
 
 		strumLine.makeGraphic(Std.int(strumLineNotes.width), 10);
 
@@ -130,11 +131,9 @@ class StrumLine extends FlxSpriteGroup
 		{
 			case NONE:
 			case CPU:
-			// do ceepeeyou >:(
 				checkNoteHit();
 			case PLAYER1:
 				keyShit();
-				// port keyShit here
 		}
 	}
 
@@ -145,175 +144,164 @@ class StrumLine extends FlxSpriteGroup
 
 	private function keyShit():Void
 	{
-		// HOLDING
-		var up = PlayerSettings.player1.controls.UP;
-		var right = PlayerSettings.player1.controls.RIGHT;
-		var down = PlayerSettings.player1.controls.DOWN;
-		var left = PlayerSettings.player1.controls.LEFT;
+		// control arrays, order L D R U
+		var holdArray:Array<Bool> = [
+			PlayerSettings.player1.controls.LEFT,
+			PlayerSettings.player1.controls.DOWN,
+			PlayerSettings.player1.controls.UP,
+			PlayerSettings.player1.controls.RIGHT
+		];
+		var pressArray:Array<Bool> = [
+			PlayerSettings.player1.controls.LEFT_P,
+			PlayerSettings.player1.controls.DOWN_P,
+			PlayerSettings.player1.controls.UP_P,
+			PlayerSettings.player1.controls.RIGHT_P
+		];
+		var releaseArray:Array<Bool> = [
+			PlayerSettings.player1.controls.LEFT_R,
+			PlayerSettings.player1.controls.DOWN_R,
+			PlayerSettings.player1.controls.UP_R,
+			PlayerSettings.player1.controls.RIGHT_R
+		];
 
-		var upP = PlayerSettings.player1.controls.UP_P;
-		var rightP = PlayerSettings.player1.controls.RIGHT_P;
-		var downP = PlayerSettings.player1.controls.DOWN_P;
-		var leftP = PlayerSettings.player1.controls.LEFT_P;
-
-		var controlArray:Array<Bool> = [leftP, downP, upP, rightP];
-		var controlArrayHold:Array<Bool> = [left, down, up, right];
-
-		notes.forEachAlive(function(note)
+		// HOLDS, check for sustain notes
+		if (holdArray.contains(true) /*!boyfriend.stunned && */)
 		{
-			if (note.isSustainNote && note.canBeHit && controlArrayHold[note.noteData])
-				goodNoteHit(note);
-		});
+			notes.forEachAlive(function(daNote:Note)
+			{
+				if (daNote.isSustainNote && daNote.canBeHit && holdArray[daNote.noteData])
+					goodNoteHit(daNote);
+			});
+		}
 
-		if (controlArray.indexOf(true) != -1)
+		// PRESSES, check for note hits
+		if (pressArray.contains(true) /*!boyfriend.stunned && */)
 		{
 			char.holdTimer = 0;
-			var HitNotes = [];
-			var BadNotes = [];
-			var DeleteNotes = [];
-			notes.forEachAlive(function(note)
+
+			var possibleNotes:Array<Note> = []; // notes that can be hit
+			var directionList:Array<Int> = []; // directions that can be hit
+			var dumbNotes:Array<Note> = []; // notes to kill later
+
+			notes.forEachAlive(function(daNote:Note)
 			{
-				if (note.canBeHit && !note.tooLate && !note.wasGoodHit)
+				if (daNote.canBeHit && !daNote.tooLate && !daNote.wasGoodHit)
 				{
-					if (BadNotes.indexOf(note.noteData) != -1)
+					if (directionList.contains(daNote.noteData))
 					{
-						for (i in HitNotes.length...0)
+						for (coolNote in possibleNotes)
 						{
-							var daNote:Note = HitNotes[i];
-							if (daNote.noteData == note.noteData && Math.abs(daNote.strumTime - note.strumTime) < 1)
-							{
-								DeleteNotes.push(note);
-								// break;
+							if (coolNote.noteData == daNote.noteData && Math.abs(daNote.strumTime - coolNote.strumTime) < 10)
+							{ // if it's the same note twice at < 10ms distance, just delete it
+								// EXCEPT u cant delete it in this loop cuz it fucks with the collection lol
+								dumbNotes.push(daNote);
+								break;
 							}
-							else if (daNote.noteData == note.noteData && daNote.strumTime > note.strumTime)
-							{
-								HitNotes.remove(daNote);
-								HitNotes.push(note);
-								// break;
+							else if (coolNote.noteData == daNote.noteData && daNote.strumTime < coolNote.strumTime)
+							{ // if daNote is earlier than existing note (coolNote), replace
+								possibleNotes.remove(coolNote);
+								possibleNotes.push(daNote);
+								break;
 							}
 						}
 					}
 					else
 					{
-						HitNotes.push(note);
-						BadNotes.push(note.noteData);
+						possibleNotes.push(daNote);
+						directionList.push(daNote.noteData);
 					}
 				}
-
-				var deletedNotes = 0;
-				for (noteToDelete in 0...DeleteNotes.length)
-				{
-					var c:Note = DeleteNotes[noteToDelete];
-					++deletedNotes;
-					c.kill();
-					notes.remove(c, true);
-					c.destroy();
-				}
-
-				HitNotes.sort(function(a, b)
-				{
-					var notetypecompare:Int = Std.int(a.noteData - b.noteData);
-
-					if (notetypecompare == 0)
-					{
-						return Std.int(a.strumTime - b.strumTime);
-					}
-					return notetypecompare;
-				});
-
-				/*if (perfectMode)
-						goodNoteHit(HitNotes[0]);
-					else */
-				if (HitNotes.length > 0)
-				{
-					for (deletedNote in deletedNotes...controlArray.length)
-					{
-						if (controlArray[deletedNote] && BadNotes.indexOf(deletedNote) == -1)
-							badNoteHit();
-					}
-
-					for (note in 0...HitNotes.length)
-					{
-						var DaNote = HitNotes[note];
-						if (controlArray[DaNote.noteData])
-							goodNoteHit(DaNote);
-					}
-				}
-				else if (!Options.getValue("ghostTapping"))
-					badNoteHit(false);
 			});
+
+			for (note in dumbNotes)
+			{
+				FlxG.log.add("killing dumb ass note at " + note.strumTime);
+				note.kill();
+				notes.remove(note, true);
+				note.destroy();
+			}
+
+			possibleNotes.sort((a, b) -> Std.int(a.strumTime - b.strumTime));
+
+			/*if (perfectMode)
+					goodNoteHit(possibleNotes[0]);
+				else */
+			if (possibleNotes.length > 0)
+			{
+				for (shit in 0...pressArray.length)
+				{ // if a direction is hit that shouldn't be
+					if (pressArray[shit] && !directionList.contains(shit))
+						noteMiss(shit);
+				}
+				for (coolNote in possibleNotes)
+				{
+					if (pressArray[coolNote.noteData])
+						goodNoteHit(coolNote);
+				}
+			}
+			else
+			{
+				// for (shit in 0...pressArray.length)
+					// if (pressArray[shit])
+						// noteMiss(shit);
+			}
 		}
 
-		if (char.holdTimer > Conductor.stepCrochet * 4 * 0.001
-			&& controlArrayHold.indexOf(true) == -1
-			&& char.animation.curAnim.name.startsWith("sing")
-			&& !char.animation.curAnim.name.endsWith("miss"))
-			char.playAnim("idle");
-
-		strumLineNotes.forEach(function(spr)
+		if (char.holdTimer > Conductor.stepCrochet * 4 * 0.001 && !holdArray.contains(true))
 		{
-			if (controlArray[spr.ID] && spr.animation.curAnim.name != "confirm")
+			if (char.animation.curAnim.name.startsWith('sing') && !char.animation.curAnim.name.endsWith('miss'))
 			{
-				spr.animation.play("pressed", true);
+				char.playAnim('idle');
 			}
-			if (!controlArrayHold[spr.ID])
+		}
+
+		strumLineNotes.forEach(function(spr:FlxSprite)
+		{
+			if (pressArray[spr.ID] && spr.animation.curAnim.name != 'confirm')
+				spr.animation.play('pressed');
+			if (!holdArray[spr.ID])
+				spr.animation.play('static');
+
+			if (spr.animation.curAnim.name == 'confirm')
 			{
-				spr.animation.play("static");
-				spr.color = FlxColor.WHITE;
-			}
-			if (spr.animation.curAnim.name == "confirm") {
 				spr.centerOffsets();
 				spr.offset.x -= 13;
 				spr.offset.y -= 13;
-			} else
+			}
+			else
 				spr.centerOffsets();
-
 		});
 	}
 
-	function noteMiss(direction:Int = 1, playSound:Bool = true):Void
+	function noteMiss(direction:Int = 1):Void
 	{
-		// if (!char.stunned)
-		// {
-		FlxG.sound.play(Paths.soundRandom("missnote", 1, 3), FlxG.random.float(0.1, 0.2));
+		// whole function used to be encased in if (!boyfriend.stunned)
+		health -= 0.04;
+		combo = 0;
+
+		// if (!practiceMode)
+		//	songScore -= 10;
+
+		// vocals.volume = 0;
+		FlxG.sound.play(Paths.soundRandom('missnote', 1, 3), FlxG.random.float(0.1, 0.2));
+
+		/* boyfriend.stunned = true;
+			// get stunned for 5 seconds
+			new FlxTimer().start(5 / 60, function(tmr:FlxTimer)
+			{
+				boyfriend.stunned = false;
+		});*/
+
 		switch (direction)
 		{
 			case 0:
-				char.playAnim("singLEFTmiss", true);
+				char.playAnim('singLEFTmiss', true);
 			case 1:
-				char.playAnim("singDOWNmiss", true);
+				char.playAnim('singDOWNmiss', true);
 			case 2:
-				char.playAnim("singUPmiss", true);
+				char.playAnim('singUPmiss', true);
 			case 3:
-				char.playAnim("singRIGHTmiss", true);
-		}
-		// }
-	}
-
-	function badNoteHit(playSound:Bool = true)
-	{
-		var daTapping = Options.getValue("ghostTapping");
-
-		if (!daTapping)
-			return;
-
-		if (PlayerSettings.player1.controls.LEFT_P)
-			noteMiss(0, playSound);
-		if (PlayerSettings.player1.controls.DOWN_P)
-			noteMiss(1, playSound);
-		if (PlayerSettings.player1.controls.UP_P)
-			noteMiss(2, playSound);
-		if (PlayerSettings.player1.controls.RIGHT_P)
-			noteMiss(3, playSound);
-	}
-
-	function noteCheck(keyP:Bool, note:Note):Void
-	{
-		if (keyP)
-			goodNoteHit(note);
-		else
-		{
-			badNoteHit();
+				char.playAnim('singRIGHTmiss', true);
 		}
 	}
 
@@ -323,8 +311,14 @@ class StrumLine extends FlxSpriteGroup
 		{
 			if (!note.isSustainNote)
 			{
-				popUpScore(note.strumTime, note);
+				combo += 1;
+				popUpScore(note, note.strumTime);
 			}
+
+			if (note.noteData >= 0)
+				health += 0.023;
+			else
+				health += 0.004;
 
 			switch (note.noteData)
 			{
@@ -343,11 +337,11 @@ class StrumLine extends FlxSpriteGroup
 				if (Math.abs(note.noteData) == spr.ID)
 				{
 					spr.animation.play('confirm', true);
-					spr.centerOffsets();
 				}
 			});
 
 			note.wasGoodHit = true;
+			// vocals.volume = 1;
 
 			if (!note.isSustainNote)
 			{
@@ -362,20 +356,14 @@ class StrumLine extends FlxSpriteGroup
 	{
 		notes.forEachAlive((note:Note) ->
 		{
-
-			if (note.y > FlxG.height)
-			{
-				note.active = false;
-				note.visible = false;
-			}
-			else
-			{
-				note.visible = true;
-				note.active = true;
-			}
-
-			note.x = strumLineNotes.members[Std.int(Math.abs(note.noteData))].x;
-			note.y = (strumLine.y - (Conductor.songPosition - note.strumTime) * (0.45 * FlxMath.roundDecimal(scrollSpeed, 2)));
+			note.distance = ((Conductor.songPosition - note.strumTime) * (0.45 * FlxMath.roundDecimal(scrollSpeed, 2)));
+			var strum:FlxSprite = strumLineNotes.members[Std.int(Math.abs(note.noteData))];
+			// var direction:Float = strum.angle * Math.PI / 180;
+			// note.x = strum.x + Math.cos(direction);
+			// note.y = strum.y + Math.sin(strum.angle * Math.PI / 180) * note.distance;
+			// note.angle = strum.angle;
+			note.x = strum.x;
+			note.y = strum.y - note.distance;
 
 			// i am so fucking sorry for this if condition
 			if (note.isSustainNote
@@ -393,6 +381,7 @@ class StrumLine extends FlxSpriteGroup
 			{
 				note.active = false;
 				note.visible = false;
+				noteMiss(note.noteData);
 
 				note.kill();
 				notes.remove(note, true);
@@ -401,13 +390,14 @@ class StrumLine extends FlxSpriteGroup
 		});
 	}
 
-	private function popUpScore(strumtime:Float, note:Note):Void
+	// turns out that you cant only have note because that makes the inputs tighter????///?/??/?/?/??/
+	private function popUpScore(note:Note, ?strumTime:Float):Void
 	{
-		var noteDiff:Float = Math.abs(strumtime - Conductor.songPosition);
+		var noteDiff:Float = Math.abs((strumTime != null ? strumTime : note.strumTime) - Conductor.songPosition);
 
 		var coolText:FlxText = new FlxText(0, 0, 0, "", 32);
-		coolText.screenCenter();
-		coolText.x = FlxG.width * 0.55;
+		coolText.x = width / 2;
+		coolText.y = width / 2;
 		//
 
 		var rating:FlxSprite = new FlxSprite();
@@ -433,30 +423,20 @@ class StrumLine extends FlxSpriteGroup
 
 		score += score;
 
-		/* if (combo > 60)
-				daRating = 'sick';
-			else if (combo > 12)
-				daRating = 'good'
-			else if (combo > 4)
-				daRating = 'bad';
-		 */
-
-		var pixelShitPart1:String = "";
-		var pixelShitPart2:String = '';
-
 		rating.loadGraphic(Paths.image(daRating));
-		rating.screenCenter();
 		rating.x = coolText.x - 40;
-		rating.y -= 60;
+		rating.y = coolText.y - 60;
 		rating.acceleration.y = 550;
 		rating.velocity.y -= FlxG.random.int(140, 175);
 		rating.velocity.x -= FlxG.random.int(0, 10);
+		rating.angularAcceleration = FlxG.random.int(-45, 45);
 
 		var comboSpr:FlxSprite = new FlxSprite().loadGraphic(Paths.image('combo'));
-		comboSpr.screenCenter();
 		comboSpr.x = coolText.x;
+		comboSpr.y = coolText.y;
 		comboSpr.acceleration.y = 600;
 		comboSpr.velocity.y -= 150;
+		comboSpr.angularAcceleration = FlxG.random.int(-45, 45);
 
 		comboSpr.velocity.x += FlxG.random.int(1, 10);
 		add(rating);
@@ -478,16 +458,17 @@ class StrumLine extends FlxSpriteGroup
 		var daLoop:Int = 0;
 		for (i in seperatedScore)
 		{
-			var numScore:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'num' + Std.int(i) + pixelShitPart2));
+			var numScore:FlxSprite = new FlxSprite().loadGraphic(Paths.image('num' + Std.int(i)));
 			numScore.screenCenter();
 			numScore.x = coolText.x + (43 * daLoop) - 90;
-			numScore.y += 80;
+			numScore.y = coolText.y + 80;
 
 			numScore.antialiasing = true;
 			numScore.setGraphicSize(Std.int(numScore.width * 0.5));
 			numScore.updateHitbox();
 
 			numScore.acceleration.y = FlxG.random.int(200, 300);
+			numScore.angularAcceleration = FlxG.random.int(-45, 45);
 			numScore.velocity.y -= FlxG.random.int(140, 160);
 			numScore.velocity.x = FlxG.random.float(-5, 5);
 
@@ -528,37 +509,52 @@ class StrumLine extends FlxSpriteGroup
 		});
 	}
 
-	public function checkNoteHit() {
-		notes.forEachAlive((note:Note) -> {
+	public function checkNoteHit()
+	{
+		notes.forEachAlive((note:Note) ->
+		{
+			if (note.y > FlxG.height)
+			{
+				note.active = false;
+				note.visible = false;
+			}
+			else
+			{
+				note.visible = true;
+				note.active = true;
+			}
+
 			if (note.strumTime <= Conductor.songPosition)
 				note.wasGoodHit = true;
 
 			if (note.wasGoodHit)
+			{
+				if (!note.isSustainNote)
+					popUpScore(note, note.strumTime);
+				// noteHit.dispatch(Math.abs(note.noteData));
+				var altAnim:String = "";
+
+				// if (note.altAnim)
+				// altAnim = '-alt';
+
+				switch (Math.abs(note.noteData))
 				{
-					// noteHit.dispatch(Math.abs(note.noteData));
-					var altAnim:String = "";
-	
-					// if (note.altAnim)
-					// altAnim = '-alt';
-	
-					switch (Math.abs(note.noteData))
-					{
-						case 0:
-							char.playAnim('singLEFT' + altAnim, true);
-						case 1:
-							char.playAnim('singDOWN' + altAnim, true);
-						case 2:
-							char.playAnim('singUP' + altAnim, true);
-						case 3:
-							char.playAnim('singRIGHT' + altAnim, true);
-					}
-	
-					char.holdTimer = 0;
-	
-					note.kill();
-					notes.remove(note, true);
-					note.destroy();
+					case 0:
+						char.playAnim('singLEFT' + altAnim, true);
+					case 1:
+						char.playAnim('singDOWN' + altAnim, true);
+					case 2:
+						char.playAnim('singUP' + altAnim, true);
+					case 3:
+						char.playAnim('singRIGHT' + altAnim, true);
 				}
+
+				char.holdTimer = 0;
+
+				note.kill();
+				notes.remove(note, true);
+				note.destroy();
+			}
 		});
 	}
 

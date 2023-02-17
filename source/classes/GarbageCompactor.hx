@@ -1,5 +1,6 @@
 package classes;
 
+import haxe.EnumFlags;
 #if cpp
 import cpp.vm.Gc;
 #elseif hl
@@ -29,7 +30,12 @@ class GarbageCompactor {
 			enable();
 	}
 
-	public static function init() {}
+	public static function init() {
+		var flags:EnumFlags<GcFlag> = Gc.flags;
+		flags.unset(NoThreads);
+		// flags.set(ForceMajor); tip: do not flag this
+		Gc.flags = flags;
+	}
 	
 	public static function clearMinor() {
 		#if (cpp || java || neko)
@@ -63,16 +69,8 @@ class GarbageCompactor {
 	public static inline function currentMemUsage() {
 		#if cpp
 		return Gc.memInfo64(Gc.MEM_INFO_USAGE);
-		#elseif sys
-		return cast(cast(System.totalMemory, UInt), Float);
-		#else
-		return 0;
-		#end
-	}
-
-    public static inline function getAllocatedMem() {
-		#if cpp
-		return Gc.memInfo64(Gc.MEM_INFO_RESERVED);
+		#elseif hl
+		return Gc.stats().currentMemory;
 		#elseif sys
 		return cast(cast(System.totalMemory, UInt), Float);
 		#else

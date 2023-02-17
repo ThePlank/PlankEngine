@@ -1,7 +1,7 @@
 right now this will work like this:
 
-create .json files to add stuff to the preferences page (functions can't have functions/classes. imports are ok tho)
-you can't use multilines in json so its just a array
+create .json files to add stuff to the preferences page
+.ploption is a hscript file for callback
 
 how this will work in newer versions:
 

@@ -7,3 +7,4 @@ class Debug extends Sprite {
         super();
     }
 }
+

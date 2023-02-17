@@ -1,5 +1,6 @@
 package states;
 
+import display.objects.ScrollableSprite;
 import states.abstr.UIBaseState;
 import flixel.system.FlxSound;
 import classes.Song;
@@ -22,7 +23,7 @@ import classes.Highscore;
 
 using StringTools;
 
-class FreeplayState extends states.abstr.MusicBeatState
+class FreeplayState extends UIBaseState
 {
 	var songs:Array<SongMetadata> = [];
 
@@ -40,23 +41,16 @@ class FreeplayState extends states.abstr.MusicBeatState
 
 	private var iconArray:Array<HealthIcon> = [];
 
-
 	override function create()
 	{
+		super.create();
+
 		var initSonglist = CoolUtil.coolTextFile(Paths.txt('freeplaySonglist'));
 
 		for (i in 0...initSonglist.length)
 		{
 			songs.push(new SongMetadata(initSonglist[i], 1, 'gf'));
 		}
-
-		/* 
-			if (FlxG.sound.music != null)
-			{
-				if (!FlxG.sound.music.playing)
-					FlxG.sound.playMusic(Paths.music('freakyMenu'));
-			}
-		 */
 
 		#if (discord_rpc || hldiscord)
 		// Updating Discord Rich Presence
@@ -86,13 +80,6 @@ class FreeplayState extends states.abstr.MusicBeatState
 
 		if (StoryMenuState.weekUnlocked[6] || isDebug)
 			addWeek(['Senpai', 'Roses', 'Thorns'], 6, ['senpai', 'senpai', 'spirit']);
-
-		// LOAD MUSIC
-
-		// LOAD CHARACTERS
-
-		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuBGBlue'));
-		add(bg);
 
 		grpSongs = new FlxTypedGroup<Alphabet>();
 		add(grpSongs);
@@ -146,7 +133,6 @@ class FreeplayState extends states.abstr.MusicBeatState
 
 		// JUST DOIN THIS SHIT FOR TESTING!!!
 		/* 
-			var md:String = Markdown.markdownToHtml(Assets.getText('CHANGELOG.md'));
 
 			var texFel:TextField = new TextField();
 			texFel.width = FlxG.width;
@@ -161,7 +147,6 @@ class FreeplayState extends states.abstr.MusicBeatState
 			trace(md);
 		 */
 
-		super.create();
 	}
 
 	public function addSong(songName:String, weekNum:Int, songCharacter:String)
@@ -193,7 +178,7 @@ class FreeplayState extends states.abstr.MusicBeatState
 			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;
 		}
 
-		lerpScore = Math.floor(FlxMath.lerp(lerpScore, intendedScore, 0.4));
+		lerpScore = Math.floor(FPSLerp.lerp(lerpScore, intendedScore, 0.4));
 
 		if (Math.abs(lerpScore - intendedScore) <= 10)
 			lerpScore = intendedScore;
@@ -265,7 +250,6 @@ class FreeplayState extends states.abstr.MusicBeatState
 
 	function changeSelection(change:Int = 0)
 	{
-
 		FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 
 		curSelected += change;

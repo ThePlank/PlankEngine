@@ -33,14 +33,17 @@ class CoolUtil
 	{
 		return Lib.application.window;
 	}
+}
 
-	public static function camLerpShit(ratio:Float):Float
+class FPSLerp
+{
+	public static function lerpValue(ratio:Float):Float
 	{
 		return FlxG.elapsed / (1 / 60) * ratio;
 	}
 
-	public static function coolLerp(a:Float, b:Float, ratio:Float)
+	public static function lerp(a:Float, b:Float, ratio:Float)
 	{
-		return a + camLerpShit(ratio) * (b - a);
+		return a + lerpValue(ratio) * (b - a);
 	}
 }

@@ -1,5 +1,8 @@
 package states;
 
+import flixel.addons.display.FlxBackdrop;
+import openfl.display.BitmapData;
+import flixel.addons.transition.FlxTransitionSprite.GraphicTransTileSquare;
 import display.objects.ScrollableSprite;
 import haxe.xml.Fast;
 import display.objects.Flixel;
@@ -53,14 +56,16 @@ class TitleState extends UIBaseState
 
 	var curWacky:Array<String> = [];
 
-	var wackyImage:FlxSprite;
-
 	override public function create():Void
 	{
 		backgroundSettings = {
-			enabled: false,
-			bgColor: 0x00000000,
-			scrollFactor: [0, 0]
+			enabled: true,
+			bgColor: 0xFF000000,
+			imageFile: "",
+			scrollFactor: [0, 0],
+			bgColorGradient: [0xFF3B0651, 0xFF110810],
+			gradientMix: 1,
+			gradientAngle: -90
 		}
 
 		curWacky = FlxG.random.getObject(getIntroTextShit());
@@ -109,22 +114,23 @@ class TitleState extends UIBaseState
 	var gfDance:FlxSprite;
 	var danceLeft:Bool = false;
 	var titleText:FlxSprite;
+	var backdrop:FlxBackdrop;
 
 	function startIntro()
 	{
 		if (!initialized)
 		{
-			var diamond:FlxGraphic = FlxGraphic.fromClass(GraphicTransTileDiamond);
+			var diamond:FlxGraphic = Paths.image("square");
 			diamond.persist = true;
 			diamond.destroyOnNoUse = false;
 
-			FlxTransitionableState.defaultTransIn = new TransitionData(FADE, FlxColor.BLACK, 1.5, new FlxPoint(-1, 0), {asset: diamond, width: 32, height: 32},
+			FlxTransitionableState.defaultTransIn = new TransitionData(TILES, FlxColor.BLACK, 0.7, new FlxPoint(-1, 0), {asset: diamond, width: 32, height: 32},
 				new FlxRect(-200, -200, FlxG.width * 1.4, FlxG.height * 1.4));
 
-			FlxTransitionableState.defaultTransOut = new TransitionData(FADE, FlxColor.BLACK, 0.7, new FlxPoint(1, 0),
+			FlxTransitionableState.defaultTransOut = new TransitionData(TILES, FlxColor.BLACK, 0.7, new FlxPoint(1, 0),
 				{asset: diamond, width: 32, height: 32}, new FlxRect(-200, -200, FlxG.width * 1.4, FlxG.height * 1.4));
 			
-				FlxTransitionableState.defaultTransOut.tweenOptions.ease = FlxEase.circInOut;
+				FlxTransitionableState.defaultTransOut.tweenOptions.ease = FlxEase.quartOut;
 				FlxTransitionableState.defaultTransIn.tweenOptions.ease = FlxEase.circOut;
 
 			transIn = FlxTransitionableState.defaultTransIn;
@@ -149,11 +155,13 @@ class TitleState extends UIBaseState
 
 		persistentUpdate = true;
 
-		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
-		// bg.antialiasing = true;
-		// bg.setGraphicSize(Std.int(bg.width * 0.6));
-		// bg.updateHitbox();
-		add(bg);
+		var grid:BitmapData = FlxGridOverlay.createGrid(Std.int(512 / 8), Std.int(512 / 8), 512, 512, true, 0xFFFFFFFF, 0x00000000);
+
+		backdrop = new FlxBackdrop(grid);
+		backdrop.blend = SCREEN;
+		backdrop.alpha = 0.25;
+		backdrop.velocity.x = -100;
+		add(backdrop);
 
 		logoBl = new FlxSprite(-150, -100);
 		logoBl.frames = Paths.getSparrowAtlas('logoBumpin');
@@ -221,13 +229,14 @@ class TitleState extends UIBaseState
 		else
 			initialized = true;
 
-		var balls = new ScrollableSprite(10, 10, 200, 150);
-		for (i in 0...100) {
-			var ball:FlxText = new FlxText(10, 20 * i, 200, 'ball $i', 16);
-			ball.color = FlxColor.WHITE;
-			balls.add(ball);
-		}
-		add(balls);
+		// var md:String = Markdown.markdownToHtml(Assets.getText('CHANGELOG.md'));
+		// var text:FlxText = new FlxText(0,0, FlxG.width, "", 16, true);
+		// text.textField.htmlText = md;
+		// text.screenCenter(Y);
+		// text.alignment = CENTER;
+		// var scroll:ScrollableSprite = new ScrollableSprite(0, 0, FlxG.width, FlxG.height);
+		// scroll.add(text);
+		// add(scroll);
 
 		// credGroup.add(credTextShit);
 	}
@@ -256,6 +265,10 @@ class TitleState extends UIBaseState
 
 		if (FlxG.sound.music != null)
 			Conductor.songPosition = FlxG.sound.music.time;
+
+		if (backdrop != null)
+			backdrop.y = Math.abs(Math.sin((Conductor.songPosition / 1000) * (Conductor.bpm / 60) * Math.PI) * 20);
+		
 		// FlxG.watch.addQuick('amp', FlxG.sound.music.amplitude);
 
 		if (FlxG.keys.justPressed.F)

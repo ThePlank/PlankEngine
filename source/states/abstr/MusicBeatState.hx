@@ -27,7 +27,7 @@ class MusicBeatState extends FlxUIState
 	private var curBeat:Int = 0;
 	private var controls(get, never):Controls;
 
-	private var metronomeEnabled:Bool = false;
+	private var metronomeEnabled:Bool = true;
 
 	private var trackedObjects:Array<FlxBasic> = [];
 
@@ -58,7 +58,6 @@ class MusicBeatState extends FlxUIState
 	{
 		totalElapsed += elapsed;
 
-		//everyStep();
 		var oldStep:Int = curStep;
 
 		updateCurStep();
@@ -72,7 +71,7 @@ class MusicBeatState extends FlxUIState
 
 	private function updateBeat():Void
 	{
-		curBeat = Math.floor(curStep / 4);
+		curBeat = Math.floor(curStep / Conductor.timeNumerator);
 	}
 
 	private function updateCurStep():Void
@@ -93,7 +92,7 @@ class MusicBeatState extends FlxUIState
 
 	public function stepHit():Void
 	{
-		if (curStep % 4 == 0)
+		if (curStep % Conductor.timeDenominator == 0)
 			beatHit();
 	}
 
@@ -105,15 +104,10 @@ class MusicBeatState extends FlxUIState
 
 		if (!metronomeEnabled) return;
 
-		var tick = FlxG.sound.load(Paths.sound("metronomeTick"), 1);
+		var stupid:FlxSound = FlxG.sound.play(Paths.sound("metronomeTick"), 1);
 
-		if (curBeat % 4 == 0)
-			tick.pitch = 1.2;
-		else
-			tick.pitch = 1;
-
-		tick.play();
-		tick.autoDestroy = true;
+		if (curBeat % Conductor.timeNumerator == 0)
+			stupid.pitch = 1.2;
 	}
 
 	override function openSubState(SubState:FlxSubState) {

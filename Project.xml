@@ -92,6 +92,7 @@
 
 	<assets path='mods' embed='false' />
 	<assets path='art/readme.txt' rename='please DO readme.txt' />
+	<assets path='changelog.md' rename='CHANGELOG.md' embed='true' />
 	<!-- <template path='mods' /> -->
 
 	<assets path="CHANGELOG.md" rename='changelog.txt' />
@@ -111,6 +112,9 @@
 	<haxelib name="flixel-addons" />
 	<haxelib name="hscript" />
 	<haxelib name="actuate" />
+	<haxelib name="away3d" />
+	<haxelib name="flixel3D" />
+	<haxelib name="markdown" />
 	<haxelib name="byteConvert" />
 	<!-- <haxelib name="crashdumper" /> -->
 

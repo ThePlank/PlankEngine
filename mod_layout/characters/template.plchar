@@ -1,3 +1,6 @@
+// ardo/overflow/ardabeygaming/ardonotfound/ardafound made this mockup
+// prob the best mockup he made
+
 function onInit(charName) {
     spritesheetName = "BOYFRIEND";
     fps = 24;

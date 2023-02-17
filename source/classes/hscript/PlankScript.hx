@@ -1,5 +1,7 @@
 package classes.hscript;
 
+import flixel.util.FlxDestroyUtil.IFlxDestroyable;
+import util.Console;
 import display.objects.Alphabet;
 import display.objects.Character;
 import states.PlayState;
@@ -15,7 +17,7 @@ import hscript.Parser;
 import hscript.Interp;
 
 // TODO: make this class
-class PlankScript {
+class PlankScript implements IFlxDestroyable {
     public static var parser:Parser = new Parser();
     public static var scripts:Array<PlankScript> = [];
 
@@ -34,6 +36,8 @@ class PlankScript {
         expression = parser.parseString(source);
         setupVariables();
         parser.parseModule(source);
+
+        scripts.push(this);
     }
 
     private function setupVariables() {
@@ -50,6 +54,9 @@ class PlankScript {
 		setVariable('Character', Character);
 		setVariable('Alphabet', Alphabet);
 		setVariable('StringTools', StringTools);
+		setVariable('trace', function(value:Array<Dynamic>) {
+            Console.log('HScript: ${Std.string(value)}', VERBOSE);
+        });
 
 		setVariable('sendMessage', function(value:Array<Dynamic>)
 		{
@@ -75,5 +82,9 @@ class PlankScript {
 
     function setVariable(name:String, varber:Dynamic) {
         interp.variables.set(name, varber);
+    }
+
+	public function destroy() {
+        scripts.remove(this);
     }
 }

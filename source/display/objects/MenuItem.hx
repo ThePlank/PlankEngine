@@ -1,5 +1,6 @@
 package display.objects;
 
+import util.CoolUtil.FPSLerp;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
@@ -36,7 +37,7 @@ class MenuItem extends FlxSpriteGroup
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
-		y = FlxMath.lerp(y, (targetY * 120) + 480, 0.17);
+		y = FPSLerp.lerp(y, (targetY * 120) + 480, 0.17);
 
 		if (isFlashing)
 			flashingInt += 1;

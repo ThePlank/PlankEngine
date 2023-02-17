@@ -129,7 +129,7 @@ class Mod
 
 		return {
 			inst: getPath('songs/$name/Inst.${Paths.SOUND_EXT}'),
-			voices: getPath('songs/$name/Voices.${Paths.SOUND_EXT}') // this won't error if it can't find it
+			voices: getPath('songs/$name/Voices.${Paths.SOUND_EXT}')
 		}
 	}
 

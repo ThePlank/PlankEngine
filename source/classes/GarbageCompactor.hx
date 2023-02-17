@@ -31,10 +31,12 @@ class GarbageCompactor {
 	}
 
 	public static function init() {
+		#if hl
 		var flags:EnumFlags<GcFlag> = Gc.flags;
 		flags.unset(NoThreads);
 		// flags.set(ForceMajor); tip: do not flag this
 		Gc.flags = flags;
+		#end
 	}
 	
 	public static function clearMinor() {

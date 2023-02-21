@@ -1,0 +1,65 @@
+name: CI
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+         - name: Windows Hashlink
+           os: windows-latest
+           platform: hl
+           build_type: debug
+    name: Build for ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+        with:
+          repository: ThePlank/PlankEngine
+          ref: master
+      - name: Cache
+        uses: actions/cache@v2.1.4
+        with:
+          path: |
+            ./export/${{ matrix.build_type }}/${{ matrix.platform }}/haxe
+            ./export/${{ matrix.build_type }}/${{ matrix.platform }}/obj
+            ~/.hxccp_config.xml
+            ~/.lime
+            ~/.haxelib
+          key: ${{ matrix.name }}-funkinCache-${{ hashFiles('./Project.xml') }}
+      - name: Install & Setup Haxe
+        uses: krdlab/setup-haxe@v1.1.5
+        with:
+          haxe-version: latest
+      - name: Install Haxe Extensions
+        run: |
+          haxelib --quiet install lime
+          haxelib --quiet install openfl
+          haxelib --quiet install flixel
+          haxelib --quiet install flixel-addons
+          haxelib --quiet install flixel-ui
+          haxelib --quiet install flixel-tools
+          haxelib --quiet install hscript
+          haxelib --quiet install actuate
+          haxelib --quiet install away3d
+          haxelib --quiet install byteConvert
+          haxelib --quiet git flixel3D https://github.com/ThePlank/3D-HaxeFlixel.git
+          haxelib --quiet git discord_rpc https://github.com/Aidan63/linc_discord-rpc
+      - name: Setup Lime
+        run: haxelib --quiet run lime setup
+      - name: Install git
+        if: ${{ matrix.os == 'windows-latest' }}
+        run: choco install git -y
+      - name: Build using Lime
+        run: haxelib run lime build ${{ matrix.platform }} -${{ matrix.build_type }}
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2.2.2
+        with:
+          name: |
+            Funkin' for ${{ matrix.name }}
+          path: export/${{ matrix.build_type }}/${{ matrix.platform }}/bin

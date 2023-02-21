@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<project>
+<project xmlns="http://lime.openfl.org/project/1.0.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://lime.openfl.org/project/1.0.4 http://lime.openfl.org/xsd/project-1.0.4.xsd">
 	<!-- _________________________ Application Settings _________________________ -->
 
 	<app title="Friday Night Funkin'" file="Funkin" packageName="com.ninjamuffin99.funkin" package="com.ninjamuffin99.funkin" main="Main" version="0.2.7.1" company="ninjamuffin99" />
@@ -18,7 +19,7 @@
 	<!-- ____________________________ Window Settings ___________________________ -->
 
 	<!--These window settings apply to all targets-->
-	<window width="1280" height="720" fps="" background="#000000" hardware="true" vsync="false" />
+	<window width="1280" height="720" fps="00" background="#000000" hardware="true" vsync="false" />
 
 	<!--HTML5-specific-->
 	<window if="html5" resizable="true" />
@@ -38,7 +39,7 @@
 	<set name="BUILD_DIR" value="export/release" unless="debug" />
 	<set name="BUILD_DIR" value="export/32bit" if="32bit" />
 
-	<classpath name="source" />
+	<classpath path="source" />
 
 	<assets path="assets/preload" rename="assets" exclude="*.ogg" if="web" />
 	<assets path="assets/preload" rename="assets" exclude="*.mp3" unless="web" />
@@ -106,7 +107,7 @@
 	<!-- _______________________________ Libraries ______________________________ -->
 
 	<haxelib name="flixel" />
-	<haxedev set='webgl' />
+	<!-- <haxedev set='webgl' /> -->
 
 	<!--In case you want to use the addons package-->
 	<haxelib name="flixel-addons" />
@@ -116,6 +117,7 @@
 	<haxelib name="flixel3D" />
 	<haxelib name="markdown" />
 	<haxelib name="byteConvert" />
+	<!-- <haxelib name="hxmidilib" /> so turns out that this library is too old and unfinnished to even use :skull: -->
 	<!-- <haxelib name="crashdumper" /> -->
 
 	<!--In case you want to use the ui package-->
@@ -164,6 +166,7 @@
 	<!--Enable this for Nape release builds for a serious peformance improvement-->
 	<haxedef name="NAPE_RELEASE_BUILD" unless="debug" />
 
+	<haxedef name="openfl_disable_handle_error" />
 	<haxedef name="HXCPP_STACK_LINE" /> <!--if you want line numbers-->
 	<haxedef name="HXCPP_STACK_TRACE" /> <!--if you want stack traces-->
 

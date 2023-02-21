@@ -46,6 +46,7 @@ jobs:
           haxelib --quiet install flixel-tools
           haxelib --quiet install hscript
           haxelib --quiet install actuate
+          haxelib --quiet install markdown
           haxelib --quiet install away3d
           haxelib --quiet install byteConvert
           haxelib --quiet git flixel3D https://github.com/ThePlank/3D-HaxeFlixel.git

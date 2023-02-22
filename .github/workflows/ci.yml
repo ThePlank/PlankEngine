@@ -1,7 +1,5 @@
 name: CI
 on:
-  push:
-  pull_request:
   workflow_dispatch:
 jobs:
   build:
@@ -21,7 +19,7 @@ jobs:
           repository: ThePlank/PlankEngine
           ref: main
       - name: Cache
-        uses: actions/cache@v2.1.4
+        uses: actions/cache@v3.2.6
         with:
           path: |
             ./export/${{ matrix.build_type }}/${{ matrix.platform }}/haxe

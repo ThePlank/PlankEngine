@@ -1,6 +1,7 @@
 <center>
 
 ![logo](logoAnimated.gif)
+[![forthebadge](discord.svg)](https://discord.gg/VwXk2Pdamb)
 # Plank Engine
 ## A HL-optimized engine
 <br/>

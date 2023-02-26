@@ -1,6 +1,7 @@
-<center>
+<div align="center">
 
 ![logo](logoAnimated.gif)
+</br>
 [![forthebadge](discord.svg)](https://discord.gg/VwXk2Pdamb)
 # Plank Engine
 ## A HL-optimized engine
@@ -16,4 +17,4 @@ Currently i have only been building in hashlink. To build, you have to have hash
 - Shadow Mario - Path system
 - Yoshicrafter29 - Garbage Collector
 - Raltyro - ZCameraFix
-</center>
+</div>

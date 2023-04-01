@@ -1,12 +1,6 @@
 package classes;
 
-import haxe.macro.Compiler.IncludePosition;
 import classes.Song.SwagSong;
-
-/**
- * ...
- * @author
- */
 
 typedef BPMChangeEvent =
 {
@@ -17,7 +11,7 @@ typedef BPMChangeEvent =
 
 class Conductor
 {
-	public static var bpm:Int = 100;
+	public static var bpm(default, set):Int = 100;
 	public static var crochet:Float = ((60 / bpm) * 1000); // beats in milliseconds
 	public static var stepCrochet:Float = crochet / 4; // steps in milliseconds
 	public static var songPosition:Float;
@@ -29,11 +23,8 @@ class Conductor
 
 	public static var bpmChangeMap:Array<BPMChangeEvent> = [];
 
-	public static var timeNumerator:Int = 4;
-	public static var timeDenominator:Int = 4;
-
-	public function new()
-	{
+	public function new() {
+		// a
 	}
 
 	public static function mapBPMChanges(song:SwagSong)
@@ -45,7 +36,7 @@ class Conductor
 		var totalPos:Float = 0;
 		for (i in 0...song.notes.length)
 		{
-			if(song.notes[i].changeBPM && song.notes[i].bpm != curBPM)
+			if (song.notes[i].changeBPM && song.notes[i].bpm != curBPM)
 			{
 				curBPM = song.notes[i].bpm;
 				var event:BPMChangeEvent = {
@@ -63,11 +54,16 @@ class Conductor
 		trace("new BPM map BUDDY " + bpmChangeMap);
 	}
 
+	@:deprecated("Deprecated, you can now directly set bpm")
 	public static function changeBPM(newBpm:Int)
 	{
 		bpm = newBpm;
+	}
 
-		crochet = ((60 / bpm) * 1000);
+	static function set_bpm(value:Int):Int
+	{
+		crochet = ((60 / value) * 1000);
 		stepCrochet = crochet / 4;
+		return bpm = value;
 	}
 }

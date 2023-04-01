@@ -1,5 +1,10 @@
 package states;
 
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
+import flixel.addons.transition.FlxTransitionableState;
+import openfl.filters.ShaderFilter;
+import display.shaders.ShutterEffect;
 import display.objects.ScrollableSprite;
 import states.abstr.UIBaseState;
 import flixel.system.FlxSound;
@@ -45,6 +50,7 @@ class FreeplayState extends UIBaseState
 	{
 		super.create();
 
+		// if (PlayState.SONG == null) Paths.clearUnusedMemory();
 		var initSonglist = CoolUtil.coolTextFile(Paths.txt('freeplaySonglist'));
 
 		for (i in 0...initSonglist.length)
@@ -146,6 +152,15 @@ class FreeplayState extends UIBaseState
 
 			trace(md);
 		 */
+
+		 var stupid:ShutterEffect = new ShutterEffect();
+		 stupid.shutterTargetMode = ShutterEffect.SHUTTER_TARGET_FLXCAMERA;
+
+		 FlxG.camera.setFilters([new ShaderFilter(stupid.shader)]);
+
+		 FlxTween.tween(stupid, {radius: 1500}, 0.75, {ease: FlxEase.expoInOut, onComplete: (ass) -> {
+			FlxG.camera.setFilters([]);
+		 }});
 
 	}
 
@@ -267,7 +282,6 @@ class FreeplayState extends UIBaseState
 		#end
 
 		// Paths.clearStoredMemory();
-		// Paths.clearUnusedMemory();
 
 		#if PRELOAD_ALL
 		// FlxG.sound.music.destroy();

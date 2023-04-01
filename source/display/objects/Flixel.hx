@@ -44,7 +44,8 @@ class Flixel extends Sprite
 
 	function drawGreen():Void
 	{
-		graphics.beginFill(0x00b922);
+		graphics.beginFill(0x71cd82);
+		// graphics.beginFill(0x00b922); //https://cdn.discordapp.com/attachments/1083070583245373564/1086191612780097616/speed.gif
 		graphics.moveTo(0, -37);
 		graphics.lineTo(1, -37);
 		graphics.lineTo(37, 0);
@@ -59,7 +60,8 @@ class Flixel extends Sprite
 
 	function drawYellow():Void
 	{
-		graphics.beginFill(0xffc132);
+		graphics.beginFill(0xe8cb86);
+		// graphics.beginFill(0xffc132);
 		graphics.moveTo(-50, -50);
 		graphics.lineTo(-25, -50);
 		graphics.lineTo(0, -37);
@@ -71,7 +73,8 @@ class Flixel extends Sprite
 
 	function drawRed():Void
 	{
-		graphics.beginFill(0xf5274e);
+		graphics.beginFill(0xee536f);
+		// graphics.beginFill(0xf5274e);
 		graphics.moveTo(50, -50);
 		graphics.lineTo(25, -50);
 		graphics.lineTo(1, -37);
@@ -83,7 +86,8 @@ class Flixel extends Sprite
 
 	function drawBlue():Void
 	{
-		graphics.beginFill(0x3641ff);
+		graphics.beginFill(0x797ee5);
+		// graphics.beginFill(0x3641ff);
 		graphics.moveTo(-50, 50);
 		graphics.lineTo(-25, 50);
 		graphics.lineTo(0, 37);
@@ -95,7 +99,8 @@ class Flixel extends Sprite
 
 	function drawLightBlue():Void
 	{
-		graphics.beginFill(0x04cdfb);
+		graphics.beginFill(0x89d9eb);
+		// graphics.beginFill(0x04cdfb);
 		graphics.moveTo(50, 50);
 		graphics.lineTo(25, 50);
 		graphics.lineTo(1, 37);

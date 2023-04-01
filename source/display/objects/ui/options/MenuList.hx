@@ -168,13 +168,10 @@ class MenuTypedList<T:MenuItem> extends FlxTypedGroup<T>
 			selected.callback();
 		else
 		{
-			busy = true;
+			// don't hang when selecting something
 			FlxG.sound.play(Paths.sound('confirmMenu'));
-			FlxFlicker.flicker(selected, 1, 0.06, true, false, function(_)
-			{
-				busy = false;
 				selected.callback();
-			});
+			FlxFlicker.flicker(selected, 1, 0.06, true, false);
 		}
 	}
 	

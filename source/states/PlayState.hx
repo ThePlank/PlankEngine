@@ -94,6 +94,7 @@ class PlayState extends states.abstr.MusicBeatState
 	private var playerStrums:StrumLine;
 	private var dadStrums:StrumLine;
 
+	// someone remind me to do this
 	private var camZooming:Bool = false;
 	private var curSong:String = "";
 
@@ -148,6 +149,7 @@ class PlayState extends states.abstr.MusicBeatState
 	public static var campaignScore:Int = 0;
 
 	var defaultCamZoom:Float = 1.05;
+	var defaultHudZoom:Float = 1;
 
 	// how big to stretch the pixel art assets
 	public static var daPixelZoom:Float = 6;
@@ -166,7 +168,8 @@ class PlayState extends states.abstr.MusicBeatState
 	override public function create()
 	{
 		super.create();
-
+		Paths.clearUnusedMemory();
+		
 		if (FlxG.sound.music != null)
 			FlxG.sound.music.stop();
 
@@ -185,7 +188,7 @@ class PlayState extends states.abstr.MusicBeatState
 			SONG = Song.loadFromJson('normal', 'tutorial');
 
 		Conductor.mapBPMChanges(SONG);
-		Conductor.changeBPM(SONG.bpm);
+		Conductor.bpm = SONG.bpm;
 
 		switch (SONG.song.toLowerCase())
 		{
@@ -617,6 +620,7 @@ class PlayState extends states.abstr.MusicBeatState
 
 		gf = new Character(400, 130, gfVersion);
 		gf.scrollFactor.set(0.95, 0.95);
+		
 
 		dad = new Character(100, 100, SONG.player2);
 
@@ -1085,7 +1089,7 @@ class PlayState extends states.abstr.MusicBeatState
 		// FlxG.log.add(ChartParser.parse());
 
 		var songData = SONG;
-		Conductor.changeBPM(songData.bpm);
+		Conductor.bpm = songData.bpm;
 
 		curSong = songData.song;
 
@@ -1372,6 +1376,8 @@ class PlayState extends states.abstr.MusicBeatState
 		perfectMode = false;
 		#end
 
+		camHUD.zoom =  FlxMath.lerp(defaultHudZoom, camHUD.zoom,  FPSLerp.lerpValue(0.95));
+		camGame.zoom = FlxMath.lerp(defaultCamZoom, camGame.zoom, FPSLerp.lerpValue(0.95));
 
 		if (FlxG.keys.justPressed.NINE)
 		{
@@ -1557,12 +1563,6 @@ class PlayState extends states.abstr.MusicBeatState
 			}
 		}
 
-		if (camZooming)
-		{
-			FlxG.camera.zoom = FlxMath.lerp(defaultCamZoom, FlxG.camera.zoom, FPSLerp.lerpValue(0.95));
-			camHUD.zoom = FlxMath.lerp(1, camHUD.zoom, FPSLerp.lerpValue(0.95));
-		}
-
 		FlxG.watch.addQuick("beatShit", curBeat);
 		FlxG.watch.addQuick("stepShit", curStep);
 
@@ -1638,98 +1638,6 @@ class PlayState extends states.abstr.MusicBeatState
 				unspawnNotes.splice(index, 1);
 			}
 		}
-
-		/*if (generatedMusic)
-		{
-			notes.forEachAlive(function(daNote:Note)
-			{
-				if (daNote.y > FlxG.height)
-				{
-					daNote.active = false;
-					daNote.visible = false;
-				}
-				else
-				{
-					daNote.visible = true;
-					daNote.active = true;
-				}
-
-				if (Options.getValue("downscroll"))
-					daNote.y = (strumLine.y + (Conductor.songPosition - daNote.strumTime) * (0.45 * FlxMath.roundDecimal(SONG.speed, 2)));
-				else
-					daNote.y = (strumLine.y - (Conductor.songPosition - daNote.strumTime) * (0.45 * FlxMath.roundDecimal(SONG.speed, 2)));
-
-				// i am so fucking sorry for this if condition
-				if (daNote.isSustainNote
-					&& daNote.y + daNote.offset.y <= strumLine.y + Note.swagWidth / 2
-					&& (!daNote.mustPress || (daNote.wasGoodHit || (daNote.prevNote.wasGoodHit && !daNote.canBeHit))))
-				{
-					var swagRect = new FlxRect(0, strumLine.y + Note.swagWidth / 2 - daNote.y, daNote.width * 2, daNote.height * 2);
-					swagRect.y /= daNote.scale.y;
-					swagRect.height -= swagRect.y;
-
-					daNote.clipRect = swagRect;
-				}
-
-				if (!daNote.mustPress && daNote.wasGoodHit)
-				{
-					if (SONG.song != 'Tutorial')
-						camZooming = true;
-
-					var altAnim:String = "";
-
-					if (SONG.notes[Math.floor(curStep / 16)] != null)
-					{
-						if (SONG.notes[Math.floor(curStep / 16)].altAnim)
-							altAnim = '-alt';
-					}
-
-					switch (Math.abs(daNote.noteData))
-					{
-						case 0:
-							dad.playAnim('singLEFT' + altAnim, true);
-						case 1:
-							dad.playAnim('singDOWN' + altAnim, true);
-						case 2:
-							dad.playAnim('singUP' + altAnim, true);
-						case 3:
-							dad.playAnim('singRIGHT' + altAnim, true);
-					}
-
-					dad.holdTimer = 0;
-
-					if (SONG.needsVoices)
-						vocals.volume = 1;
-
-					daNote.kill();
-					notes.remove(daNote, true);
-					daNote.destroy();
-				}
-
-				// WIP interpolation shit? Need to fix the pause issue
-				// daNote.y = (strumLine.y - (songTime - daNote.strumTime) * (0.45 * PlayState.SONG.speed));
-
-				if ((daNote.mustPress && daNote.tooLate && !Options.getValue("downscroll") || daNote.mustPress && daNote.tooLate
-					&& Options.getValue("downscroll"))
-					&& daNote.mustPress)
-				{
-					{
-						health -= 0.0475;
-						vocals.volume = 0;
-					}
-
-					daNote.active = false;
-					daNote.visible = false;
-
-					daNote.kill();
-					notes.remove(daNote, true);
-					daNote.destroy();
-				}
-			});
-		}*/
-
-		// if (!inCutscene)
-			// keyShit();
 
 		#if debug
 		if (FlxG.keys.justPressed.ONE)
@@ -2345,11 +2253,11 @@ class PlayState extends states.abstr.MusicBeatState
 		{
 			if (SONG.notes[Math.floor(curStep / 16)].changeBPM)
 			{
-				Conductor.changeBPM(SONG.notes[Math.floor(curStep / 16)].bpm);
+				Conductor.bpm = SONG.notes[Math.floor(curStep / 16)].bpm;
 				FlxG.log.add('CHANGED BPM!');
 			}
 			// else
-			// Conductor.changeBPM(SONG.bpm);
+			// Conductor.bpm = SONG.bpm;
 
 			// Dad doesnt interupt his own notes
 			if (SONG.notes[Math.floor(curStep / 16)].mustHitSection)
@@ -2359,13 +2267,13 @@ class PlayState extends states.abstr.MusicBeatState
 		wiggleShit.update(Conductor.crochet);
 
 		// HARDCODING FOR MILF ZOOMS!
-		if (curSong.toLowerCase() == 'milf' && curBeat >= 168 && curBeat < 200 && camZooming && FlxG.camera.zoom < 1.35)
+		if (curSong.toLowerCase() == 'milf' && curBeat >= 168 && curBeat < 200 && camZooming)
 		{
 			FlxG.camera.zoom += 0.015;
 			camHUD.zoom += 0.03;
 		}
 
-		if (camZooming && FlxG.camera.zoom < 1.35 && curBeat % 4 == 0)
+		if (camZooming && curBeat % 4 == 0)
 		{
 			FlxG.camera.zoom += 0.015;
 			camHUD.zoom += 0.03;

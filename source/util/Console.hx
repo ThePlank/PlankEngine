@@ -90,23 +90,28 @@ class Console
 		info.className = info.className.remove(".hx");
 		info.className = info.className.toUpperCase();
 
-		var mainText = '[${info.className} LINE ${info.lineNumber}]: ${stuffs}';
+		var mainText = '';
 
 		switch (level)
 		{
 			case INFO:
-				println(ConsoleColors.BLUE + mainText + ConsoleColors.RESET);
+				mainText = ConsoleColors.BLUE;
 			case DEBUG:
-				println(ConsoleColors.GREEN + mainText + ConsoleColors.RESET);
+				mainText = ConsoleColors.GREEN;
 			case ERROR:
-				println(ConsoleColors.RED_BOLD + mainText + ConsoleColors.RESET);
+				mainText = ConsoleColors.RED_BOLD;
 			case WARN:
-				println(ConsoleColors.YELLOW_BOLD + mainText + ConsoleColors.RESET);
+				mainText = ConsoleColors.YELLOW_BOLD;
 			case NONE:
-				println(mainText);
 			case VERBOSE:
-				println(ConsoleColors.PURPLE + mainText + ConsoleColors.RESET);
+				mainText = ConsoleColors.PURPLE;
 		}
+
+		mainText += '[${info.className} LINE ${info.lineNumber}]:';
+		mainText +=  '${ConsoleColors.RESET} ';
+		mainText +=  '${stuffs}';
+
+		println(mainText);
 	}
 
 	private static inline function print(message:Dynamic):Void

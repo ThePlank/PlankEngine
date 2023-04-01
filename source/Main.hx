@@ -1,15 +1,23 @@
 package;
 
+import classes.ChartParser;
+import haxe.io.Bytes;
+import byteConvert.ByteConvert;
+import classes.FL.FLFile;
+import states.UnexpectedCrashState;
+import haxe.Exception;
+import openfl.display.Loader;
+import openfl.display.LoaderInfo;
+import openfl.display.Stage;
+import haxe.Timer;
 import classes.hscript.PlankScript;
 import openfl.display.BitmapData;
 import flixel.tweens.FlxTween;
 import flixel.FlxSprite;
 import classes.Conductor;
 import haxe.EnumFlags;
-import hl.Api;
 import classes.NorwayBanner;
 import display.objects.StrumLine.Player;
-import classes.GarbageCompactor;
 import sys.io.FileOutput;
 import sys.io.File;
 import states.PlankSplash;
@@ -29,7 +37,7 @@ import sys.FileSystem;
 import util.ZipTools;
 import util.CoolUtil;
 import openfl.system.System;
-import display.objects.PlankFPS;
+import display.objects.FPS;
 import flixel.FlxG;
 import classes.Highscore;
 import classes.Options;
@@ -41,7 +49,6 @@ import openfl.display.FPS;
 import openfl.display.Sprite;
 import openfl.events.Event;
 import states.TitleState;
-import openfl.filesystem.File as OFLFile;
 #if hl
 import hl.UI;
 #end
@@ -66,7 +73,7 @@ class Main extends Sprite
 		gameWidth: 1280, // Width of the game in pixels (might be less / more in actual pixels depending on your zoom).
 		gameHeight: 720, // Height of the game in pixels (might be less / more in actual pixels depending on your zoom).
 		initialState: PlankSplash, // The FlxState the game starts with.
-		zoom: -1.0, // If -1, zoom is automatically calculated to fit the window dimensions.
+		zoom: 1.0, // If -1, zoom is automatically calculated to fit the window dimensions.
 		framerate: 60, // How many frames per second the game should run at.
 		skipSplash: true, // Whether to skip the flixel splash screen that appears in release mode.
 		startFullscreen: false, // Whether to start the game in fullscreen on desktop targets
@@ -76,6 +83,7 @@ class Main extends Sprite
 	// public final CRASH_SESSION_ID:String = SessionData.generateID("PlankEngine_");
 
 	private static var current:Main;
+	public var game:FlxGame;
 	// var dumper:CrashDumper;
 
 	// You can pretty much ignore everything from here on - your code should go in your states.
@@ -116,12 +124,17 @@ class Main extends Sprite
 		Console.init();
 
 		// dumper = new CrashDumper(CRASH_SESSION_ID #if flash , stage #end);
-
-		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onError);
+		stage.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, (error:UncaughtErrorEvent) -> {
+			error.preventDefault();
+			error.stopImmediatePropagation();
+		});
+		#if hl
+		hl.Api.setErrorHandler(onError);
+		#end
 		setupGame();
 	}
 
-	static var consoleClasses:Array<Class<Dynamic>> = [Options, System, Lib, Main, CoolUtil, ZipTools, PlayerSettings, Conductor];
+	static var consoleClasses:Array<Class<Dynamic>> = [Options, System, Lib, Main, CoolUtil, ZipTools, PlayerSettings, Conductor, Paths];
 	static var consoleEnums:Array<Enum<Dynamic>> = [Player];
 
 	function registerClasses()
@@ -133,17 +146,36 @@ class Main extends Sprite
 	}
 
 	var crashPath = "\\crashes";
-	var crashName = "\\PLECrashlog_";
+	var crashName = "\\PLECrashlog";
 
-	// based off https://github.com/larsiusprime/crashdumper/blob/master/crashdumper/CrashDumper.hx
-	function onError(error:UncaughtErrorEvent) {
-		if (!FileSystem.exists(FileSystem.absolutePath(crashPath)))
+	#if hl
+	function onError(error:Dynamic) {
+		var callstack:String = try Std.string(error) catch(_:Exception) "Unknown";
+		callstack += '\n';
+		callstack += CallStack.toString(CallStack.exceptionStack(true));
+
+		Console.log(callstack, ERROR);
+
+		var params:EnumFlags<DialogFlags> = new EnumFlags<DialogFlags>();
+		params.set(IsError);
+
+		if (!FileSystem.isDirectory(FileSystem.absolutePath(crashPath))) {
 			FileSystem.createDirectory(FileSystem.absolutePath(crashPath));
+		}
 
-		var name = crashName + Date.now().toString().replace("-", "_").replace(" ", "_").replace(":", "_");
+		var timeString:String = DateTools.format(Date.now(), '%F_%T').replace(':', "-");
 
-		@:privateAccess UI._dialog("stupid!!!!!!!".bytes, "dumb".bytes, 1);
+		File.saveContent('${FileSystem.absolutePath(crashPath)}\\${crashName}_${timeString}.txt', callstack);
+		
+		// if (game == null)
+			UI.dialog("Plank Engine Crash Dialog", callstack, params);
+		// else {
+			// FlxG.switchState(new UnexpectedCrashState());
+		// }
+
+		return;
 	}
+	#end
 
 	private function setupGame():Void
 	{
@@ -159,18 +191,24 @@ class Main extends Sprite
 			settings.gameHeight = Math.ceil(stageHeight / settings.zoom);
 		}
 
-		#if debug
+		#if (debug)
 		settings.initialState = TitleState;
 		#end
 
-
-		addChild(new FlxGame(settings.gameWidth, settings.gameHeight, settings.initialState, #if (flixel < "5.0.0") settings.zoom, #end settings.framerate, settings.framerate, settings.skipSplash, settings.startFullscreen));
+		game = new FlxGame(settings.gameWidth, settings.gameHeight, settings.initialState, #if (flixel < "5.0.0") settings.zoom, #end settings.framerate, settings.framerate, settings.skipSplash, settings.startFullscreen);
+		addChild(game);
 		stage.addEventListener(Event.ENTER_FRAME, update);
 		registerClasses();
 		PlayerSettings.init();
-		GarbageCompactor.init();
-		GarbageCompactor.enable();
-		NorwayBanner.check();
+		// NorwayBanner.check();
+
+
+		// var file = new FLFile(CoolUtil.BytestoIntArray(File.getBytes(Paths.getPath('data/reddit.fsc', BINARY))));
+		// trace(ChartParser.fromFSC(ChartParser.fscToNotes(file)).notes[0]);
+
+		var sucess:Bool = FlxG.save.bind("PlankEngine", "PlankDev");
+
+		// markAssetsForDeletion();
 
 		/*new PlankScript('
 		trace("Hello!");
@@ -179,10 +217,6 @@ class Main extends Sprite
 			trace("test");
 		}
 		');*/
-
-		FlxG.signals.preStateCreate.add((state:FlxState) -> {
-			GarbageCompactor.clearMajor();
-		});
 
 		#if !mobile
 		addChild(new PlankFPS(10, 3));
@@ -201,9 +235,5 @@ class Main extends Sprite
 			return current;
 
 		return null;
-	}
-
-	function stackOverflow(X:Int):Int {
-		return 1 + stackOverflow(X);
 	}
 }

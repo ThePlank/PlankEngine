@@ -17,6 +17,7 @@ import hscript.Parser;
 import hscript.Interp;
 
 // TODO: make this class
+@:access(hscript.Interp)
 class PlankScript implements IFlxDestroyable {
     public static var parser:Parser = new Parser();
     public static var scripts:Array<PlankScript> = [];
@@ -70,7 +71,6 @@ class PlankScript implements IFlxDestroyable {
     }
 
     public function callFunction(functionName:String, arguments:Array<Dynamic>) {
-        @:privateAccess
         var callReturn:Dynamic = interp.fcall(expression, functionName, arguments);
         
         return callReturn;

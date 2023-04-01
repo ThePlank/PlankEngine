@@ -2,7 +2,6 @@ package states.abstr;
 
 import openfl.display.BitmapData;
 import sys.io.File;
-import hl.Bytes;
 import states.substates.ModSelectionSubstate;
 import flixel.FlxState;
 import display.objects.Alphabet;

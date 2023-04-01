@@ -1,10 +1,11 @@
 package classes;
 
-import classes.Controls.KeyboardScheme;
-import haxe.Json;
-import lime.tools.Keystore;
+import classes.Controls;
+
 import flixel.FlxCamera;
 import flixel.FlxG;
+import flixel.input.actions.FlxActionInput;
+import flixel.input.gamepad.FlxGamepad;
 import flixel.util.FlxSignal;
 
 // import ui.DeviceManager;
@@ -16,123 +17,135 @@ class PlayerSettings
 	static public var player1(default, null):PlayerSettings;
 	static public var player2(default, null):PlayerSettings;
 
-	#if (haxe >= "4.0.0")
-	static public final onAvatarAdd = new FlxTypedSignal<PlayerSettings->Void>();
-	static public final onAvatarRemove = new FlxTypedSignal<PlayerSettings->Void>();
-	#else
-	static public var onAvatarAdd = new FlxTypedSignal<PlayerSettings->Void>();
-	static public var onAvatarRemove = new FlxTypedSignal<PlayerSettings->Void>();
-	#end
+	static public var onAvatarAdd(default, null) = new FlxTypedSignal<PlayerSettings->Void>();
+	static public var onAvatarRemove(default, null) = new FlxTypedSignal<PlayerSettings->Void>();
 
 	public var id(default, null):Int;
 
-	#if (haxe >= "4.0.0")
-	public final controls:Controls;
-	#else
-	public var controls:Controls;
-	#end
+	public var controls(default, null):Controls;
 
 	// public var avatar:Player;
 	// public var camera(get, never):PlayCamera;
 
-	function new(id:Int, scheme:KeyboardScheme)
+	function new(id)
 	{
 		this.id = id;
 		this.controls = new Controls('player$id', None);
-
-		var useDefault:Bool = true;
-		var controlSave = FlxG.save.data.controls;
 		
-		if (controlSave != null) {
-			var keysToUse = null;
-			if (id == 0 && controlSave.p1 != null && controlSave.p1.keys != null)
-				keysToUse = controlSave.p1.keys;
-			else if (id == 1 && controlSave.p2 != null && controlSave.p2.keys != null)
-				keysToUse = controlSave.p2.keys;
-			if (keysToUse != null) 
+		#if CLEAR_INPUT_SAVE
+		FlxG.save.data.controls = null;
+		FlxG.save.flush();
+		#end
+		
+		var useDefault = true;
+		var controlData = FlxG.save.data.controls;
+		if (controlData != null)
+		{
+			var keyData:Dynamic = null;
+			if (id == 0 && controlData.p1 != null && controlData.p1.keys != null)
+				keyData = controlData.p1.keys;
+			else if (id == 1 && controlData.p2 != null && controlData.p2.keys != null)
+				keyData = controlData.p2.keys;
+			
+			if (keyData != null)
+			{
 				useDefault = false;
-			trace("loaded key data: " + Json.stringify(keysToUse));
-			trace("Use default?: " + useDefault);
-
-			controls.fromSaveData(keysToUse, Keys);	
+				trace("loaded key data: " + haxe.Json.stringify(keyData));
+				controls.fromSaveData(keyData, Keys);
+			}
 		}
-
+		
 		if (useDefault)
-			setKeyboardScheme(Solo);
+			controls.setKeyboardScheme(Solo);
 	}
-
-	public function setKeyboardScheme(scheme)
+	
+	function addGamepad(gamepad:FlxGamepad)
 	{
-		controls.setKeyboardScheme(scheme);
+		var useDefault = true;
+		var controlData = FlxG.save.data.controls;
+		if (controlData != null)
+		{
+			var padData:Dynamic = null;
+			if (id == 0 && controlData.p1 != null && controlData.p1.pad != null)
+				padData = controlData.p1.pad;
+			else if (id == 1 && controlData.p2 != null && controlData.p2.pad != null)
+				padData = controlData.p2.pad;
+			
+			if (padData != null)
+			{
+				useDefault = false;
+				trace("loaded pad data: " + haxe.Json.stringify(padData));
+				controls.addGamepadWithSaveData(gamepad.id, padData);
+			}
+		}
+		
+		if (useDefault)
+			controls.addDefaultGamepad(gamepad.id);
 	}
-
+	
+	public function saveControls()
+	{
+		if (FlxG.save.data.controls == null)
+			FlxG.save.data.controls = {};
+		
+		var playerData:{ ?keys:Dynamic, ?pad:Dynamic }
+		if (id == 0)
+		{
+			if (FlxG.save.data.controls.p1 == null)
+				FlxG.save.data.controls.p1 = {};
+			playerData = FlxG.save.data.controls.p1;
+		}
+		else
+		{
+			if (FlxG.save.data.controls.p2 == null)
+				FlxG.save.data.controls.p2 = {};
+			playerData = FlxG.save.data.controls.p2;
+		}
+		
+		var keyData = controls.createSaveData(Keys);
+		if (keyData != null)
+		{
+			playerData.keys = keyData;
+			trace("saving key data: " + haxe.Json.stringify(keyData));
+		}
+		
+		if (controls.gamepadsAdded.length > 0)
+		{
+			var padData = controls.createSaveData(Gamepad(controls.gamepadsAdded[0]));
+			if (padData != null)
+			{
+				trace("saving pad data: " + haxe.Json.stringify(padData));
+				playerData.pad = padData;
+			}
+		}
+		
+		FlxG.save.flush();
+	}
+	
 	static public function init():Void
 	{
 		if (player1 == null)
 		{
-			player1 = new PlayerSettings(0, Solo);
+			player1 = new PlayerSettings(0);
 			++numPlayers;
 		}
-
-		FlxG.gamepads.deviceConnected.add(onGamepadAdded);
-	}
-
-	static function onGamepadAdded(gpad) {
-		player1.addGamepad(gpad);
-	}
-
-	public function addGamepad(pad) {
-		var useDefault:Bool = true;
-		var controlSave = FlxG.save.data.controls;
 		
-		if (controlSave != null) {
-			var keysToUse = null;
-			if (id == 0 && controlSave.p1 != null && controlSave.p1.pad != null)
-				keysToUse = controlSave.p1.pad;
-			else if (id == 1 && controlSave.p2 != null && controlSave.p2.pad != null)
-				keysToUse = controlSave.p2.pad;
-			if (keysToUse != null) 
-				useDefault = true;
-			trace("loaded pad data: " + Json.stringify(keysToUse));
+		FlxG.gamepads.deviceConnected.add(onGamepadAdded);
 
-			controls.addGamepadWithSaveData(pad.id, keysToUse);	
+		var numGamepads = FlxG.gamepads.numActiveGamepads;
+		for (i in 0...numGamepads)
+		{
+			var gamepad = FlxG.gamepads.getByID(i);
+			if (gamepad != null)
+				onGamepadAdded(gamepad);
 		}
-
-		if (useDefault)
-			controls.addDefaultGamepad(pad.id);
 	}
-
-	public function saveControls() {
-		var playerOneControls = null;
-		if (FlxG.save.data.controls == null)
-			FlxG.save.data.controls = {};
-
-		if (id == 0) {
-			if (FlxG.save.data.controls.p1 == null)
-				FlxG.save.data.controls.p1 = {};
-			playerOneControls = FlxG.save.data.controls.p1;
-		} else {
-			if (FlxG.save.data.controls.p2 == null)
-				FlxG.save.data.controls.p2 = {};
-		}
-
-		var controlsSaveKeys = controls.createSaveData(Keys);
-		if (controlsSaveKeys != null) {
-			playerOneControls.keys = controlsSaveKeys;
-			FlxG.save.data.controls.p1 = playerOneControls;
-			trace("saving key data: " + Json.stringify(controlsSaveKeys));
-		}
-
-		if (controls.gamepadsAdded.length > 0) {
-			controlsSaveKeys = controls.createSaveData(Gamepad(controls.gamepadsAdded[0]));
-			if (controlsSaveKeys != null) {
-				trace("saving pad data: " + Json.stringify(controlsSaveKeys));
-				playerOneControls.pad = controlsSaveKeys;
-				FlxG.save.data.controls.pad = controlsSaveKeys;
-			}
-		}
-		FlxG.save.flush();
+	
+	static function onGamepadAdded(gamepad:FlxGamepad)
+	{
+		player1.addGamepad(gamepad);
 	}
+	
 
 	static public function reset()
 	{

@@ -80,6 +80,8 @@ class StoryMenuState extends UIBaseState
 
 	override function create()
 	{
+		super.create();
+		
 		transIn = FlxTransitionableState.defaultTransIn;
 		transOut = FlxTransitionableState.defaultTransOut;
 
@@ -226,7 +228,6 @@ class StoryMenuState extends UIBaseState
 
 		trace("Line 165");
 
-		super.create();
 	}
 
 	override function update(elapsed:Float)

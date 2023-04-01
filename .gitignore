@@ -4,6 +4,19 @@ export/
 # Visual Studio Code specific direcories
 .vscode/
 
-
 # yes
 scrapped/
+
+.DS_Strore
+desktop.ini
+
+# vegas pro shit dignhwvfuhgevofhgrsfhouh
+*.sfk
+
+
+# my sublime proect
+*.sublime-project
+*.sublime-workspace
+
+# fl scores (for sniff becauoifhdco9uihgqwuo9dhgiwhdoui hji)
+*.fsc

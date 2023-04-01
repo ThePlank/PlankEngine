@@ -1,5 +1,7 @@
 package states;
 
+import openfl.filters.ShaderFilter;
+import display.shaders.ShutterEffect;
 import states.options.OptionsState;
 import classes.Mod;
 import states.abstr.UIBaseState;
@@ -170,21 +172,33 @@ class MainMenuState extends UIBaseState
 						{
 							FlxFlicker.flicker(spr, 1, 0.06, false, false, function(flick:FlxFlicker)
 							{
-								var daChoice:String = optionShit[curSelected];
+								var stupid:ShutterEffect = new ShutterEffect();
+								stupid.shutterTargetMode = ShutterEffect.SHUTTER_TARGET_FLXCAMERA;
+								stupid.radius = 1500;
 
-								switch (daChoice)
-								{
-									case 'story mode':
-										UIBaseState.switchState(StoryMenuState);
-										trace("Story Menu Selected");
-									case 'freeplay':
-										UIBaseState.switchState(FreeplayState);
+								FlxG.camera.setFilters([new ShaderFilter(stupid.shader)]);
+								FlxTransitionableState.skipNextTransIn = true;
+								FlxTransitionableState.skipNextTransOut = true;
 
-										trace("Freeplay Menu Selected");
+								FlxTween.tween(stupid, {radius: 0}, 0.75, {ease: FlxEase.expoOut, onComplete: (ass) -> {
+									var daChoice:String = optionShit[curSelected];
 
-									case 'options':
-										FlxG.switchState(new OptionsState());
-								}
+									switch (daChoice)
+									{
+										case 'story mode':
+											UIBaseState.switchState(StoryMenuState);
+											trace("Story Menu Selected");
+										case 'freeplay':
+											UIBaseState.switchState(FreeplayState);
+	
+											trace("Freeplay Menu Selected");
+	
+										case 'options':
+											FlxG.switchState(new OptionsState());
+									}
+								}});
+
+
 							});
 						}
 					});

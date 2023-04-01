@@ -1,5 +1,14 @@
 package states;
 
+import openfl.Lib;
+import display.objects.HashlinkVideo.Video;
+import flixel.util.FlxGradient;
+import sys.FileSystem;
+import flixel.group.FlxSpriteGroup;
+import display.objects.Notification;
+import flixel.ui.FlxButton;
+import openfl.filters.ShaderFilter;
+import display.shaders.ColorSwap;
 import flixel.addons.display.FlxBackdrop;
 import openfl.display.BitmapData;
 import flixel.addons.transition.FlxTransitionSprite.GraphicTransTileSquare;
@@ -94,10 +103,7 @@ class TitleState extends UIBaseState
 		#elseif CHARTING
 		UIBaseState.switchState(ChartingState);
 		#else
-		new FlxTimer().start(1, function(tmr:FlxTimer)
-		{
-			startIntro();
-		});
+		startIntro();
 		#end
 
 		#if (discord_rpc || hldiscord)
@@ -112,6 +118,8 @@ class TitleState extends UIBaseState
 
 	var logoBl:FlxSprite;
 	var gfDance:FlxSprite;
+	var stupid:ColorSwap;
+	var thingy:FlxSprite;
 	var danceLeft:Bool = false;
 	var titleText:FlxSprite;
 	var backdrop:FlxBackdrop;
@@ -124,34 +132,26 @@ class TitleState extends UIBaseState
 			diamond.persist = true;
 			diamond.destroyOnNoUse = false;
 
-			FlxTransitionableState.defaultTransIn = new TransitionData(TILES, FlxColor.BLACK, 0.7, new FlxPoint(-1, 0), {asset: diamond, width: 32, height: 32},
-				new FlxRect(-200, -200, FlxG.width * 1.4, FlxG.height * 1.4));
+			// FlxTransitionableState.defaultTransIn = new TransitionData(TILES, FlxColor.BLACK, 0.7, new FlxPoint(-1, 0), {asset: diamond, width: 32, height: 32},
+				// new FlxRect(-200, -200, FlxG.width * 1.4, FlxG.height * 1.4));
 
-			FlxTransitionableState.defaultTransOut = new TransitionData(TILES, FlxColor.BLACK, 0.7, new FlxPoint(1, 0),
-				{asset: diamond, width: 32, height: 32}, new FlxRect(-200, -200, FlxG.width * 1.4, FlxG.height * 1.4));
+			// FlxTransitionableState.defaultTransOut = new TransitionData(TILES, FlxColor.BLACK, 0.7, new FlxPoint(1, 0),
+				// {asset: diamond, width: 32, height: 32}, new FlxRect(-200, -200, FlxG.width * 1.4, FlxG.height * 1.4));
 			
-				FlxTransitionableState.defaultTransOut.tweenOptions.ease = FlxEase.quartOut;
-				FlxTransitionableState.defaultTransIn.tweenOptions.ease = FlxEase.circOut;
+				// FlxTransitionableState.defaultTransOut.tweenOptions.ease = FlxEase.quartOut;
+				// FlxTransitionableState.defaultTransIn.tweenOptions.ease = FlxEase.circOut;
 
-			transIn = FlxTransitionableState.defaultTransIn;
-			transOut = FlxTransitionableState.defaultTransOut;
-
-			// HAD TO MODIFY SOME BACKEND SHIT
-			// IF THIS PR IS HERE IF ITS ACCEPTED UR GOOD TO GO
-			// https://github.com/HaxeFlixel/flixel-addons/pull/348
-
-			// var music:FlxSound = new FlxSound();
-			// music.loadStream(Paths.music('freakyMenu'));
-			// FlxG.sound.list.add(music);
-			// music.play();
+			// transIn = FlxTransitionableState.defaultTransIn;
+			// transOut = FlxTransitionableState.defaultTransOut;
 		}
 
-		FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
+		
+		FlxG.sound.playMusic(Paths.music('freakyMenu'), true);
 
 		FlxG.sound.music.fadeIn(4, 0, 0.7);
 
 		var settings = Json.parse(Paths.getTextFromFile("data/freakyMenu.json"));
-		Conductor.changeBPM(settings.bpm);
+		Conductor.bpm = settings.bpm;
 
 		persistentUpdate = true;
 
@@ -179,6 +179,11 @@ class TitleState extends UIBaseState
 		gfDance.antialiasing = true;
 		add(gfDance);
 		add(logoBl);
+		
+		stupid = new ColorSwap();
+		var filter:ShaderFilter = new ShaderFilter(stupid.shader);
+		filter.blendMode = NORMAL; // this is stupid, i've made a fix for this just now https://github.com/openfl/openfl/pull/2619
+		FlxG.camera.setFilters([filter]);
 
 		titleText = new FlxSprite(100, FlxG.height * 0.8);
 		titleText.frames = Paths.getSparrowAtlas('titleEnter');
@@ -222,12 +227,24 @@ class TitleState extends UIBaseState
 
 		FlxTween.tween(credTextShit, {y: credTextShit.y + 20}, 2.9, {ease: FlxEase.quadInOut, type: PINGPONG});
 
+		thingy = FlxGradient.createGradientFlxSprite(Std.int(bg.width), Std.int(bg.height), [0xFFFFFFFF, 0x00FFFFFF], 0, 90, true);
+		// thingy.blend = OVERLAY;
+		// thingy.alpha = 0.75;
+		add(thingy);
+
 		FlxG.mouse.visible = true;
 
 		if (initialized)
 			skipIntro();
 		else
 			initialized = true;
+
+		var video = new Video();
+		video.loadPath("D:/Documents/hlvideotest/res/Untitledav1.mkv");
+		video.scale.x = (FlxG.width / 256);
+		video.scale.y = (FlxG.height / 144);
+		video.updateHitbox();
+		add(video);
 
 		// var md:String = Markdown.markdownToHtml(Assets.getText('CHANGELOG.md'));
 		// var text:FlxText = new FlxText(0,0, FlxG.width, "", 16, true);
@@ -263,11 +280,20 @@ class TitleState extends UIBaseState
 		if (!initialized)
 			return;
 
-		if (FlxG.sound.music != null)
+
+		if (FlxG.keys.pressed.LEFT)
+			stupid.update(-elapsed * 0.15);
+
+		if (FlxG.keys.pressed.RIGHT)
+			stupid.update(elapsed * 0.15);
+
+		if (FlxG.sound.music != null) {
 			Conductor.songPosition = FlxG.sound.music.time;
+		}
 
 		if (backdrop != null)
 			backdrop.y = Math.abs(Math.sin((Conductor.songPosition / 1000) * (Conductor.bpm / 60) * Math.PI) * 20);
+
 		
 		// FlxG.watch.addQuick('amp', FlxG.sound.music.amplitude);
 

@@ -1,5 +1,7 @@
 package states.abstr;
 
+import flixel.util.FlxStringUtil;
+import lime.system.System;
 import flixel.system.FlxSound;
 import haxe.io.Path;
 import classes.Mod;
@@ -27,7 +29,7 @@ class MusicBeatState extends FlxUIState
 	private var curBeat:Int = 0;
 	private var controls(get, never):Controls;
 
-	private var metronomeEnabled:Bool = true;
+	private var metronomeEnabled:Bool = false;
 
 	private var trackedObjects:Array<FlxBasic> = [];
 
@@ -37,9 +39,6 @@ class MusicBeatState extends FlxUIState
 	}
 
 	override function switchTo(nextState:FlxState):Bool {
-		for (basic in trackedObjects) {
-			remove(basic);
-		}
 		return super.switchTo(nextState);
 	}
 
@@ -50,7 +49,6 @@ class MusicBeatState extends FlxUIState
 	{
 		if (transIn != null)
 			trace('reg ' + transIn.region);
-
 		super.create();
 	}
 
@@ -71,7 +69,7 @@ class MusicBeatState extends FlxUIState
 
 	private function updateBeat():Void
 	{
-		curBeat = Math.floor(curStep / Conductor.timeNumerator);
+		curBeat = Math.floor(curStep / 4);
 	}
 
 	private function updateCurStep():Void
@@ -92,7 +90,7 @@ class MusicBeatState extends FlxUIState
 
 	public function stepHit():Void
 	{
-		if (curStep % Conductor.timeDenominator == 0)
+		if (curStep % 4 == 0)
 			beatHit();
 	}
 
@@ -106,7 +104,7 @@ class MusicBeatState extends FlxUIState
 
 		var stupid:FlxSound = FlxG.sound.play(Paths.sound("metronomeTick"), 1);
 
-		if (curBeat % Conductor.timeNumerator == 0)
+		if (curBeat % 4 == 0)
 			stupid.pitch = 1.2;
 	}
 

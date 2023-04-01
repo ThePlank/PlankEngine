@@ -1,5 +1,7 @@
 package util;
 
+import sys.thread.Thread;
+import lime.app.Promise;
 import sys.FileSystem as FS;
 import haxe.io.Bytes;
 import haxe.zip.*;
@@ -58,26 +60,34 @@ class ZipTools
 		Names it after zipFile.
 		@param zipFile The name of the zip you want to extract.
 		@param whereTo To place else where inside the relative dir.
+		@return Promise with the path of the unzipped directory
 	**/
-	static function unzip(zipFile:String, whereTo:String = "")
+	static function unzip(zipFile:String, whereTo:String = ""):Promise<String>
 	{
 		var zipfileBytes = sys.io.File.getBytes(Sys.getCwd() + zipFile);
 		var bytesInput = new haxe.io.BytesInput(zipfileBytes);
 		var reader = new Reader(bytesInput);
 		var entries:List<Entry> = reader.read();
-		for (_entry in entries)
+		var promise:Promise<String> = new Promise<String>();
+		Thread.create(() ->
 		{
-			var data = Reader.unzip(_entry);
-			if (_entry.fileName.substring(_entry.fileName.lastIndexOf('/') + 1) == '' && _entry.data.toString() == '')
+			for (_entryIndex => _entry in entries.keyValueIterator())
 			{
-				FS.createDirectory(Sys.getCwd() + whereTo + _entry.fileName);
+				var data = Reader.unzip(_entry);
+				if (_entry.fileName.substring(_entry.fileName.lastIndexOf('/') + 1) == '' && _entry.data.toString() == '')
+				{
+					FS.createDirectory(Sys.getCwd() + whereTo + _entry.fileName);
+				}
+				else
+				{
+					var f = sys.io.File.write(Sys.getCwd + whereTo + _entry.fileName, true);
+					f.write(data);
+					f.close();
+				}
+				promise.progress(_entryIndex, entries.length);
 			}
-			else
-			{
-				var f = sys.io.File.write(Sys.getCwd + whereTo + _entry.fileName, true);
-				f.write(data);
-				f.close();
-			}
-		}
+			promise.complete(Sys.getCwd() + whereTo);
+		});
+		return promise;
 	}
 }

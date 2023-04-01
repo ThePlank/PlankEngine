@@ -38,7 +38,7 @@ enum ImagePositions
 	Custom(x:Int, y:Int);
 }
 
-enum PopupTypes
+enum PopupContentTypes
 {
 	Text(text:String);
 	TextWithImage(text:String, image:String, imagePosition:ImagePositions);
@@ -50,6 +50,12 @@ enum ButtonPressed
 	Right;
 }
 
+enum PopupType
+{
+	Error;
+	Regular;
+}
+
 class PopupSubState extends FlxSubState
 {
 	// public static var closedSignal:FlxSignal = new FlxSignal(); what was the point of this?
@@ -59,16 +65,18 @@ class PopupSubState extends FlxSubState
 	public static var infoBarHeight:Int = 100;
 
 	var popupButtons:PopupButtons;
-	var popupType:PopupTypes;
+	var popupContentType:PopupContentTypes;
+	var popupType:PopupType;
 	var callback:Void->ButtonPressed;
 
 	var popupGroup:FlxSpriteGroup;
 
-	public function new(popupButtons:PopupButtons, PopupType:PopupTypes, ?callback:Void->ButtonPressed)
+	public function new(popupButtons:PopupButtons, PopupType:PopupType, PopupContentType:PopupContentTypes, ?callback:Void->ButtonPressed)
 	{
 		super(0xBB000000);
 		this.popupButtons = popupButtons;
 		this.popupType = PopupType;
+		this.popupContentType = PopupContentType;
 		this.callback = callback;
 	}
 
@@ -78,7 +86,17 @@ class PopupSubState extends FlxSubState
 		popupGroup = new FlxSpriteGroup();
 		add(popupGroup);
 
-		var outline = new FlxSprite(-10, 0).makeGraphic(popupWidth + 20, popupHeight + infoBarHeight + 20, 0xFF9900FF);
+		var color:FlxColor = 0xFF9900FF;
+		var sound:String = 	"popup";
+		if (popupType == Error) {
+			color = 0xFFEB614F;
+			sound = "error";
+			FlxG.camera.shake(0.015, 0.25, null, false, X);
+		}
+
+		FlxG.sound.play(Paths.sound(sound), 1);
+
+		var outline = new FlxSprite(-10, 0).makeGraphic(popupWidth + 20, popupHeight + infoBarHeight + 20, color);
 		popupGroup.add(outline);
 
 		var infoBar = new FlxSprite(0, 10).makeGraphic(popupWidth, infoBarHeight, 0xFF1F1F21);
@@ -88,7 +106,7 @@ class PopupSubState extends FlxSubState
 		popupBackground.pixels = ImageUtils.drawInsideBorder(popupBackground.pixels, 10, 0xFF1F1F21);
 		popupGroup.add(popupBackground);
 
-		switch (popupType)
+		switch (popupContentType)
 		{
 			case Text(text):
 				var daText = new FlxText(popupBackground.x + 5, popupBackground.y + 5, popupBackground.width - 5, text, 16);
@@ -102,7 +120,7 @@ class PopupSubState extends FlxSubState
 		{
 			case Ok:
 				var okButt = new FlxButton(popupBackground.x, popupBackground.y + popupBackground.height - 100, "Ok", () -> {
-					FlxG.mouse.visible = false;
+					// FlxG.mouse.visible = false;
 					close();
 					if (callback != null)
 						callback();
@@ -112,7 +130,8 @@ class PopupSubState extends FlxSubState
 				okButt.label.setFormat(Paths.font("defaultSans.ttf"), 32, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 				okButt.label.y = 1000;
 				okButt.labelAlphas = [1, 1, 1];
-				okButt.labelOffsets = [new FlxPoint(0, 1), new FlxPoint(0, 1), new FlxPoint(0, 1.2)];
+				var stupid = new FlxPoint(0, okButt.height / 2);
+				okButt.labelOffsets = [stupid, stupid, stupid];
 
 				popupGroup.add(okButt);
 			default:

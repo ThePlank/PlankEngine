@@ -30,6 +30,17 @@ class ImageUtils
 
 		return data;
 	}
-	// static public function drawOutsideBorder() {
-	// }
+
+	static public function getAverageColor(data:BitmapData):FlxColor {
+		var color:Int = 0;
+
+		for (y in 0...data.height) {
+			for (x in 0...data.width) {
+				color += data.getPixel(x, y);
+			}
+		}
+
+		color = Std.int(color / (data.width * data.height));
+		return FlxColor.fromInt(color);
+	}
 }

@@ -49,7 +49,7 @@ class GameOverSubstate extends MusicBeatSubstate
 		// todo: how to not stupid
 
 		var blur = new BlurFilter(1, 1, BitmapFilterQuality.HIGH);
-		FlxG.camera.zoom = 0.5;
+		FlxG.camera.zoom = FlxG.camera.zoom * 0.75;
 
 		FlxTween.tween(blur, {blurX: 12, blurY: 12}, 2, {ease: FlxEase.expoOut});
 		FlxTween.tween(FlxG.camera, {zoom: 1}, 1, {ease: FlxEase.expoOut});
@@ -67,7 +67,7 @@ class GameOverSubstate extends MusicBeatSubstate
 		add(camFollow);
 
 		FlxG.sound.play(Paths.sound('fnf_loss_sfx' + stageSuffix));
-		Conductor.changeBPM(100);
+		Conductor.bpm = 100;
 
 		// FlxG.camera.followLerp = 1;
 		// FlxG.camera.focusOn(FlxPoint.get(FlxG.width / 2, FlxG.height / 2));

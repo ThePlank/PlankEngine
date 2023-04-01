@@ -1,5 +1,6 @@
 package util;
 
+import haxe.io.Bytes;
 import flixel.FlxG;
 import openfl.Lib;
 import lime.ui.Window;
@@ -32,6 +33,10 @@ class CoolUtil
 	public static inline function getMainWindow():Window
 	{
 		return Lib.application.window;
+	}
+
+	public static inline function BytestoIntArray(bytes:Bytes):Array<Int> {
+		return [for (idx in 0...bytes.length) bytes.getInt32(idx)];
 	}
 }
 

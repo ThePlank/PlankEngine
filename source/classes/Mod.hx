@@ -101,7 +101,6 @@ class Mod
 
 	public function getPath(path:String):String
 	{
-		// return FileSystem.absolutePath('$MOD_PATH/$modPath/$path');
 		return '$MOD_PATH/$modPath/$path';
 	}
 
@@ -242,7 +241,8 @@ class Mod
 			FlxG.stage.window.title = (windowSettings.windowName != null ? windowSettings.windowName : "Friday Night Funkin': Plank Engine");
 			if (windowSettings.windowIcon != null)
 			{
-				var icon = Image.fromFile(getPath('images/${windowSettings.windowIcon}'));
+				var icon = getImage(windowSettings.windowIcon).image;
+				icon.format = RGBA32;
 
 				FlxG.stage.window.setIcon(icon);
 			}

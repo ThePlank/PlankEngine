@@ -1,5 +1,6 @@
 package flixel;
 
+import util.CoolUtil.FPSLerp;
 import flixel.math.FlxAngle;
 import flash.display.Bitmap;
 import flash.display.BitmapData;
@@ -170,12 +171,12 @@ class FlxCamera extends FlxBasic
 	 */
 	public var scroll:FlxPoint = FlxPoint.get();
 
-    /**
-	 * uh- i forgor 💀
+	/**
+	 * i uh- i forgor.... 💀
 	 */
 	public var scrollOffset:FlxPoint = FlxPoint.get();
 
-    private var _lastScrollOffset:FlxPoint = FlxPoint.get();
+	private var _lastScrollOffset:FlxPoint = FlxPoint.get();
 
 	/**
 	 * The actual `BitmapData` of the camera display itself.
@@ -229,6 +230,11 @@ class FlxCamera extends FlxBasic
 	 * WARNING: setting this to `false` on blitting targets is very expensive.
 	 */
 	public var pixelPerfectRender:Bool;
+
+	/**
+	 * allan please add details
+	 */
+	public var targetZoom:Float = 0;
 
 	/**
 	 * How wide the camera display is, in game pixels.
@@ -678,8 +684,7 @@ class FlxCamera extends FlxBasic
 			&& _headTriangles.antialiasing == smoothing
 			&& _headTriangles.colored == isColored
 			&& _headTriangles.blending == blendInt #if !flash
-			&& _headTriangles.hasColorOffsets == hasColorOffsets #end
-			// && _headTriangles.shader == shader #end
+			&& _headTriangles.hasColorOffsets == hasColorOffsets #end // && _headTriangles.shader == shader #end
 		)
 		{
 			return _headTriangles;
@@ -1159,55 +1164,52 @@ class FlxCamera extends FlxBasic
 
 		flashSprite.filters = filtersEnabled ? _filters : null;
 
-        updateCanvas();
+		updateCanvas();
 
 		updateFlashSpritePosition();
-        updateFlashOffset();
+		updateFlashOffset();
 		updateShake(elapsed);
-
 	}
 
-    function skewMatrix(matrix:FlxMatrix, ?x:Float = 0, ?y:Float = 0)
-        {
-            var skb = Math.tan(FlxAngle.asRadians(y));
-            var skc = Math.tan(FlxAngle.asRadians(x));
-    
-            matrix.b = matrix.a * skb + matrix.b;
-            matrix.c = matrix.c + matrix.d * skc;
-    
-            matrix.ty = matrix.tx * skb + matrix.ty;
-            matrix.tx = matrix.tx + matrix.ty * skc;
-    
-            return matrix;
-        }
+	function skewMatrix(matrix:FlxMatrix, ?x:Float = 0, ?y:Float = 0)
+	{
+		var skb = Math.tan(FlxAngle.asRadians(y));
+		var skc = Math.tan(FlxAngle.asRadians(x));
 
-    public function updateCanvas() {
-        var flashWidth:Float = (width * flashSprite.scaleX);
-        var flashHeight:Float = (height * flashSprite.scaleY);
+		matrix.b = matrix.a * skb + matrix.b;
+		matrix.c = matrix.c + matrix.d * skc;
 
-        var ratio:Float = width / flashWidth;
+		matrix.ty = matrix.tx * skb + matrix.ty;
+		matrix.tx = matrix.tx + matrix.ty * skc;
 
-        var anchorWidth:Float = width / 2;
-        var anchorHeight:Float = height / 2;
+		return matrix;
+	}
 
-        _canvasMatrix.identity();
-        _canvasMatrix.translate(-anchorWidth, -anchorHeight);
-        _canvasMatrix.scale(scaleX, scaleY);
-        _canvasMatrix.rotate(FlxAngle.asRadians(angle));
-        skewMatrix(_canvasMatrix, skew.x, skew.y);
-        _canvasMatrix.translate(anchorWidth, anchorHeight);
-        _canvasMatrix.translate(x, y);
-        _canvasMatrix.scale(FlxG.scaleMode.scale.x * flashSprite.scaleX, FlxG.scaleMode.scale.y * flashSprite.scaleY);
+	@:access(openfl.display.Sprite)
+	public function updateCanvas()
+	{
+		var flashWidth:Float = (width * flashSprite.scaleX);
+		var flashHeight:Float = (height * flashSprite.scaleY);
 
-        @:privateAccess {
-            canvas.__transform.a = _canvasMatrix.a;
-            canvas.__transform.b = _canvasMatrix.b;
-            canvas.__transform.c = _canvasMatrix.c;
-            canvas.__transform.d = _canvasMatrix.d;
-            canvas.__transform.tx = _canvasMatrix.tx;
-            canvas.__transform.ty = _canvasMatrix.ty;
-        }
-    }
+		var anchorWidth:Float = flashWidth / 2;
+		var anchorHeight:Float = flashHeight / 2;
+
+		_canvasMatrix.identity();
+		_canvasMatrix.translate(-anchorWidth, -anchorHeight);
+		_canvasMatrix.scale(scaleX, scaleY);
+		_canvasMatrix.rotate(FlxAngle.asRadians(angle));
+		skewMatrix(_canvasMatrix, skew.x, skew.y);
+		_canvasMatrix.translate(anchorWidth, anchorHeight);
+		_canvasMatrix.translate(x, y);
+		_canvasMatrix.scale(FlxG.scaleMode.scale.x * flashSprite.scaleX, FlxG.scaleMode.scale.y * flashSprite.scaleY);
+
+		canvas.__transform.a = _canvasMatrix.a;
+		canvas.__transform.b = _canvasMatrix.b;
+		canvas.__transform.c = _canvasMatrix.c;
+		canvas.__transform.d = _canvasMatrix.d;
+		canvas.__transform.tx = _canvasMatrix.tx;
+		canvas.__transform.ty = _canvasMatrix.ty;
+	}
 
 	/**
 	 * Updates (bounds) the camera scroll.
@@ -1234,9 +1236,9 @@ class FlxCamera extends FlxBasic
 		// Either follow the object closely,
 		// or double check our deadzone and update accordingly.
 
-        scroll.x -= _lastScrollOffset.x;
-        scroll.y -= _lastScrollOffset.y;
-        
+		scroll.x -= _lastScrollOffset.x;
+		scroll.y -= _lastScrollOffset.y;
+
 		if (deadzone == null)
 		{
 			target.getMidpoint(_point);
@@ -1318,10 +1320,9 @@ class FlxCamera extends FlxBasic
 			}
 		}
 
-        scroll.x += scrollOffset.x;
+		scroll.x += scrollOffset.x;
 		scroll.y += scrollOffset.y;
 		_lastScrollOffset.set(scrollOffset.x, scrollOffset.y);
-        
 	}
 
 	function updateFlash(elapsed:Float):Void
@@ -1403,7 +1404,7 @@ class FlxCamera extends FlxBasic
 	{
 		if (flashSprite != null)
 		{
-            flashSprite.rotation = 0;
+			flashSprite.rotation = 0;
 			flashSprite.x = x * FlxG.scaleMode.scale.x + _flashOffset.x;
 			flashSprite.y = y * FlxG.scaleMode.scale.y + _flashOffset.y;
 		}
@@ -1415,8 +1416,8 @@ class FlxCamera extends FlxBasic
 	 */
 	function updateFlashOffset():Void
 	{
-        _flashOffset.set((width * 0.5) * FlxG.scaleMode.scale.x * initialZoom - (x * FlxG.scaleMode.scale.x),
-        (height * 0.5) * FlxG.scaleMode.scale.y * initialZoom - (y * FlxG.scaleMode.scale.y));
+		_flashOffset.set((width * 0.5) * FlxG.scaleMode.scale.x * initialZoom - (x * FlxG.scaleMode.scale.x),
+			(height * 0.5) * FlxG.scaleMode.scale.y * initialZoom - (y * FlxG.scaleMode.scale.y));
 	}
 
 	/**

@@ -82,21 +82,19 @@ class LoadingState extends UIBaseState
 		{
 			var library = Assets.getLibrary("songs");
 			final symbolPath = path.split(":").pop();
-			// @:privateAccess
 			// library.types.set(symbolPath, SOUND);
-			// @:privateAccess
 			// library.pathGroups.set(symbolPath, [library.__cacheBreak(symbolPath)]);
 			var callback = callbacks.add("song:" + path);
 			Assets.loadSound(path).onComplete(function (_) { callback(); });
 		}
 	}
 	
+	@:access(lime.utils.Assets)
 	function checkLibrary(library:String)
 	{
 		trace(Assets.hasLibrary(library));
 		if (Assets.getLibrary(library) == null)
 		{
-			@:privateAccess
 			if (!LimeAssets.libraryPaths.exists(library))
 				throw "Missing library: " + library;
 			
@@ -137,12 +135,12 @@ class LoadingState extends UIBaseState
 	
 	static function getSongPath()
 	{
-		return Paths.inst(PlayState.SONG.song);
+		return Paths.inst(PlayState.SONG.song).url;
 	}
 	
 	static function getVocalPath()
 	{
-		return Paths.voices(PlayState.SONG.song);
+		return Paths.voices(PlayState.SONG.song).url;
 	}
 	
 	inline static public function loadAndSwitchState(target:FlxState, stopMusic = false)
@@ -186,6 +184,7 @@ class LoadingState extends UIBaseState
 		callbacks = null;
 	}
 	
+	@:access(lime.utils.Assets)
 	static function initSongsManifest()
 	{
 		var id = "songs";
@@ -201,7 +200,6 @@ class LoadingState extends UIBaseState
 		var path = id;
 		var rootPath = null;
 
-		@:privateAccess
 		var libraryPaths = LimeAssets.libraryPaths;
 		if (libraryPaths.exists(id))
 		{
@@ -219,7 +217,6 @@ class LoadingState extends UIBaseState
 			{
 				rootPath = Path.directory(path);
 			}
-			@:privateAccess
 			path = LimeAssets.__cacheBreak(path);
 		}
 
@@ -239,7 +236,6 @@ class LoadingState extends UIBaseState
 			}
 			else
 			{
-				@:privateAccess
 				LimeAssets.libraries.set(id, library);
 				library.onChange.add(LimeAssets.onChange.dispatch);
 				promise.completeWith(Future.withValue(library));

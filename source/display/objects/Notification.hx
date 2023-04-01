@@ -15,7 +15,7 @@ import flixel.FlxSprite;
 
 class Notification extends FlxSpriteGroup {
     public static final NOTIFICATION_HEIGHT:Int = 200;
-    public static final NOTIFICATION_WIDTH:Int = 400;
+    public static final NOTIFICATION_WIDTH:Int = 600;
     public static final NOTIFICATION_PADDING:Int = 5;
     public static final NOTIFICATION_TIMEBAR_HEIGHT:Int = 10;
 
@@ -26,8 +26,7 @@ class Notification extends FlxSpriteGroup {
 
     function makeBackground() {
         var bg = new FlxSprite();
-        trace(width);
-        bg.makeGraphic( Std.int(body.width), NOTIFICATION_HEIGHT, 0x84000000);
+        bg.makeGraphic(Std.int(Math.max(body.width, NOTIFICATION_WIDTH)), Std.int(Math.max(body.height, NOTIFICATION_HEIGHT)), 0x84000000);
         bg.updateHitbox();
 
         return bg;

@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://lime.openfl.org/project/1.0.4 http://lime.openfl.org/xsd/project-1.0.4.xsd">
 	<!-- _________________________ Application Settings _________________________ -->
 
-	<app title="Friday Night Funkin'" file="Funkin" packageName="com.ninjamuffin99.funkin" package="com.ninjamuffin99.funkin" main="Main" version="0.2.7.1" company="ninjamuffin99" />
+	<app title="Friday Night Funkin': Plank Engine" file="PlankEngine" packageName="com.ninjamuffin99.funkin" package="com.ninjamuffin99.funkin" main="Main" version="0.2.7.1" company="ninjamuffin99" />
 
 	<!--Switch Export with Unique ApplicationID and Icon-->
 	<set name="APP_ID" value="0xf100f6c013bbc420" />
@@ -106,11 +106,13 @@
 	<assets path="assets/fonts" embed='true' />
 	<!-- _______________________________ Libraries ______________________________ -->
 
+	<!-- Flixel -->
 	<haxelib name="flixel" />
-	<!-- <haxedev set='webgl' /> -->
-
-	<!--In case you want to use the addons package-->
 	<haxelib name="flixel-addons" />
+	<haxelib name="flixel-ui" />
+
+	<!-- Haxedefs -->
+	<haxelib name="hlvideo" />
 	<haxelib name="hscript" />
 	<haxelib name="actuate" />
 	<haxelib name="away3d" />
@@ -120,10 +122,7 @@
 	<!-- <haxelib name="hxmidilib" /> so turns out that this library is too old and unfinnished to even use :skull: -->
 	<!-- <haxelib name="crashdumper" /> -->
 
-	<!--In case you want to use the ui package-->
-	<haxelib name="flixel-ui" />
-	<!-- <haxelib name="newgrounds" unless="hl"/> -->
-	<!-- <haxelib name="polymod"/> -->
+	<!-- CPP stuff -->
 	<haxelib name="discord_rpc" if="cpp" />
 	<!-- <haxelib name="hldiscord" if="hl"/> -->
 	<!-- <haxelib name="hxcpp-debug-server" if="desktop"/> -->

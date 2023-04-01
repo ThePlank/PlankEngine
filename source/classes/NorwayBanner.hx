@@ -7,6 +7,7 @@ package classes;
     - profit
 */
 
+import sys.thread.Thread;
 import util.CoolUtil;
 
 typedef IPReturn =
@@ -23,17 +24,19 @@ class Web
 	**/
 	static public function getIP(callback:IPReturn->Void)
 	{
-		var ip = new haxe.Http("https://api.myip.com");
-		ip.onData = function ret(data:String)
-		{
-			callback(cast haxe.Json.parse(data));
-		}
-		ip.onError = function err(err:String)
-		{
-			trace(err);
-			callback({ip: "Unknown", country: "Unknown", cc: "Unknown"});
-		}
-		ip.request();
+		Thread.create(() -> {
+			var ip = new haxe.Http("https://api.myip.com");
+			ip.onData = function ret(data:String)
+			{
+				callback(cast haxe.Json.parse(data));
+			}
+			ip.onError = function err(err:String)
+			{
+				trace(err);
+				callback({ip: "Unknown", country: "Unknown", cc: "Unknown"});
+			}
+			ip.request();
+		});
 	}
 }
 

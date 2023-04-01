@@ -1,5 +1,7 @@
 package display.objects;
 
+import flixel.math.FlxPoint;
+import flixel.animation.FlxAnimation;
 import util.CoolUtil;
 import classes.Conductor;
 import states.PlayState;
@@ -12,19 +14,20 @@ using StringTools;
 
 class Character extends FlxSprite
 {
-	public var animOffsets:Map<String, Array<Dynamic>>;
-	public var debugMode:Bool = false;
+	public var baseAnimOffsets:Map<String, FlxPoint> = [];
+	public var animOffsets:Map<String, FlxPoint> = [];
+	public var debugMode:Bool = true;
 
 	public var isPlayer:Bool = false;
 	public var curCharacter:String = 'bf';
 
 	public var holdTimer:Float = 0;
 
+	@:access(flixel.animation.FlxAnimationController)
 	public function new(x:Float, y:Float, ?character:String = "bf", ?isPlayer:Bool = false)
 	{
 		super(x, y);
 
-		animOffsets = new Map<String, Array<Dynamic>>();
 		curCharacter = character;
 		this.isPlayer = isPlayer;
 
@@ -509,20 +512,21 @@ class Character extends FlxSprite
 			// Doesn't flip for BF, since his are already in the right place???
 			if (!curCharacter.startsWith('bf'))
 			{
-				// var animArray
-				var oldRight = animation.getByName('singRIGHT').frames;
-				animation.getByName('singRIGHT').frames = animation.getByName('singLEFT').frames;
-				animation.getByName('singLEFT').frames = oldRight;
+				swapAnimation('singRIGHT', 'singLEFT');
 
-				// IF THEY HAVE MISS ANIMATIONS??
-				if (animation.getByName('singRIGHTmiss') != null)
-				{
-					var oldMiss = animation.getByName('singRIGHTmiss').frames;
-					animation.getByName('singRIGHTmiss').frames = animation.getByName('singLEFTmiss').frames;
-					animation.getByName('singLEFTmiss').frames = oldMiss;
-				}
+				if (animation._animations.exists('singRIGHTmiss'))
+					return;
+				swapAnimation('singRIGHTmiss', 'singLEFTmiss');
 			}
 		}
+	}
+
+	public function swapAnimation(animation:String, with:String) {
+		var anim:FlxAnimation = this.animation.getByName(animation);
+		var swapAnimation:FlxAnimation = this.animation.getByName(with);
+		var swapFrames:Array<Int> = anim.frames;
+		anim.frames = swapAnimation.frames;
+		swapAnimation.frames = swapFrames;
 	}
 
 	override function update(elapsed:Float)
@@ -578,7 +582,7 @@ class Character extends FlxSprite
 			switch (curCharacter)
 			{
 				case 'gf':
-					if (!animation.curAnim.name.startsWith('hair'))
+				if (!animation.curAnim.name.startsWith('hair'))
 					{
 						danced = !danced;
 
@@ -640,7 +644,7 @@ class Character extends FlxSprite
 		var daOffset = animOffsets.get(AnimName);
 		if (animOffsets.exists(AnimName))
 		{
-			offset.set(daOffset[0], daOffset[1]);
+			offset.set(daOffset.x, daOffset.y);
 		}
 		else
 			offset.set(0, 0);
@@ -663,8 +667,25 @@ class Character extends FlxSprite
 		}
 	}
 
+	override function set_angle(angle:Float) {
+		// account for rotation
+		super.set_angle(angle);
+		updateAnimationOffsets();
+		return this.angle;
+	}
+
+	function updateAnimationOffsets() {
+		for (anim => offsets in baseAnimOffsets) {
+			offsets.x * scale.x;
+			offsets.y * scale.y;
+			offsets.rotateByDegrees(angle);
+			animOffsets[anim] = offsets;
+		}
+	}
+
 	public function addOffset(name:String, x:Float = 0, y:Float = 0)
 	{
-		animOffsets[name] = [x, y];
+		baseAnimOffsets[name] = FlxPoint.get(x, y);
+		updateAnimationOffsets();
 	}
 }

@@ -1,6 +1,5 @@
 package display.objects;
 
-import classes.GarbageCompactor;
 import flixel.util.FlxStringUtil;
 import openfl.Lib;
 import flixel.FlxG;
@@ -56,7 +55,7 @@ class PlankFPS extends TextField
 		text += "\nstage3DDC: " + Context3DStats.contextDrawCalls(DrawCallContext.STAGE3D);
 		#end
 
-		currentMemory = GarbageCompactor.currentMemUsage();
+		currentMemory = 0;
 		if (currentMemory > maxMemory)
 			maxMemory = currentMemory;
 

@@ -1,5 +1,7 @@
 package states.substates;
 
+import flixel.FlxSprite;
+import display.objects.ReferenceObject;
 import flixel.util.FlxColor;
 import flixel.FlxG;
 import classes.Mod;
@@ -39,6 +41,11 @@ class ModSelectionSubstate extends MusicBeatSubstate
             alphabetGroup.add(modText);
 		}
 
+		var LBar:FlxSprite = new FlxSprite();
+		LBar.makeGraphic(250, FlxG.height, 0x79000000);
+		
+
+		add(new ReferenceObject().loadGraphic(Paths.image("menuReferences/Untitled36_20230310154123")));
 		changeSelection();
 	}
 
@@ -59,8 +66,11 @@ class ModSelectionSubstate extends MusicBeatSubstate
 		if (downP)
 			changeSelection(1);
 
-		// if (FlxG.keys.justPressed.T)
-			// openSubState(new PopupSubState(Ok, Text("This is a substate of a substate!")));
+		if (FlxG.keys.justPressed.T)
+			openSubState(new PopupSubState(Ok, Regular, Text("This is a substate of a substate!")));
+
+		if (FlxG.keys.justPressed.Y)
+			openSubState(new PopupSubState(Ok, Error, Text("Whoops! You have to put your CD in your computer")));
 
 		if (accepted) {
             selected = true;

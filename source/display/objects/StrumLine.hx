@@ -1,5 +1,12 @@
 package display.objects;
 
+import display.objects.Note;
+import flixel.math.FlxPoint;
+import flixel.math.FlxAngle;
+import flixel.FlxCamera;
+import flixel.FlxBasic.IFlxBasic;
+import flixel.FlxObject;
+import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.util.FlxColor;
 import flixel.text.FlxText;
 import flixel.util.FlxTimer;
@@ -26,17 +33,24 @@ enum Player
 	PLAYER1;
 }
 
-class StrumLine extends FlxSpriteGroup
+@:access(Note)
+class StrumLine extends FlxTypedSpriteGroup<FlxSprite>
 {
 	public var strumLine:FlxSprite;
 	public var noteHit:FlxTypedSignal<Int->Void>;
 	public var strumLineNotes:FlxSpriteGroup;
+	public var noteSplashes:FlxTypedSpriteGroup<NoteSplash>;
 	public var notes:FlxTypedSpriteGroup<Note>;
 	public var scrollSpeed:Float = 1;
 	public var score:Int = 0;
 	public var combo:Int = 0;
 	public var char:Character;
 	public var player:Player;
+
+	public var onHit:FlxTypedSignal<Int>;
+
+	static var strumHeight:Int = FlxG.height;
+
 
 	public function new(player:Player = NONE, char:Character, ?tweenStrums:Bool = true)
 	{
@@ -50,7 +64,14 @@ class StrumLine extends FlxSpriteGroup
 
 		strumLineNotes = generateStaticArrows(tweenStrums);
 		add(strumLineNotes);
-		// strumLineNotes.angularAcceleration = 5;
+
+		noteSplashes = new FlxTypedSpriteGroup<NoteSplash>();
+
+		var noteSplash:NoteSplash = new NoteSplash(0, 0, 0);
+		noteSplash.alpha = 0.1;
+		noteSplashes.add(noteSplash);
+
+		add(noteSplashes);
 
 		strumLine.makeGraphic(Std.int(strumLineNotes.width), 10);
 
@@ -60,47 +81,30 @@ class StrumLine extends FlxSpriteGroup
 		noteHit = new FlxTypedSignal<Int->Void>();
 	}
 
+	private static var noteMap:Map<Int, String> = [
+		0 => "left",
+		1 => "down",
+		2 => "up",
+		3 => "right",
+	];
+
 	private function generateStaticArrows(?tweenStrums:Bool = true):FlxSpriteGroup
 	{
 		var strumNotes:FlxSpriteGroup = new FlxSpriteGroup();
 
 		for (i in 0...4)
 		{
-			trace(i);
 			var babyArrow:FlxSprite = new FlxSprite(0, strumLine.y);
 
 			babyArrow.frames = Paths.getSparrowAtlas('NOTE_assets');
-			babyArrow.animation.addByPrefix('green', 'arrowUP');
-			babyArrow.animation.addByPrefix('blue', 'arrowDOWN');
-			babyArrow.animation.addByPrefix('purple', 'arrowLEFT');
-			babyArrow.animation.addByPrefix('red', 'arrowRIGHT');
 
 			babyArrow.antialiasing = true;
 			babyArrow.setGraphicSize(Std.int(babyArrow.width * 0.7));
 
-			switch (Math.abs(i))
-			{
-				case 0:
-					babyArrow.x += Note.swagWidth * 0;
-					babyArrow.animation.addByPrefix('static', 'arrowLEFT');
-					babyArrow.animation.addByPrefix('pressed', 'left press', 24, false);
-					babyArrow.animation.addByPrefix('confirm', 'left confirm', 24, false);
-				case 1:
-					babyArrow.x += Note.swagWidth * 1;
-					babyArrow.animation.addByPrefix('static', 'arrowDOWN');
-					babyArrow.animation.addByPrefix('pressed', 'down press', 24, false);
-					babyArrow.animation.addByPrefix('confirm', 'down confirm', 24, false);
-				case 2:
-					babyArrow.x += Note.swagWidth * 2;
-					babyArrow.animation.addByPrefix('static', 'arrowUP');
-					babyArrow.animation.addByPrefix('pressed', 'up press', 24, false);
-					babyArrow.animation.addByPrefix('confirm', 'up confirm', 24, false);
-				case 3:
-					babyArrow.x += Note.swagWidth * 3;
-					babyArrow.animation.addByPrefix('static', 'arrowRIGHT');
-					babyArrow.animation.addByPrefix('pressed', 'right press', 24, false);
-					babyArrow.animation.addByPrefix('confirm', 'right confirm', 24, false);
-			}
+			babyArrow.x += Note.swagWidth * i;
+			babyArrow.animation.addByPrefix('static', 'arrow${noteMap.get(i).toUpperCase()}');
+			babyArrow.animation.addByPrefix('pressed', '${noteMap.get(i)} press', 24, false);
+			babyArrow.animation.addByPrefix('confirm', '${noteMap.get(i)} confirm', 24, false);
 
 			babyArrow.updateHitbox();
 			babyArrow.scrollFactor.set();
@@ -285,13 +289,6 @@ class StrumLine extends FlxSpriteGroup
 		// vocals.volume = 0;
 		FlxG.sound.play(Paths.soundRandom('missnote', 1, 3), FlxG.random.float(0.1, 0.2));
 
-		/* boyfriend.stunned = true;
-			// get stunned for 5 seconds
-			new FlxTimer().start(5 / 60, function(tmr:FlxTimer)
-			{
-				boyfriend.stunned = false;
-		});*/
-
 		switch (direction)
 		{
 			case 0:
@@ -377,7 +374,7 @@ class StrumLine extends FlxSpriteGroup
 				note.clipRect = swagRect;
 			}
 
-			if (note.tooLate)
+			if (note.tooLate && player != CPU )
 			{
 				note.active = false;
 				note.visible = false;
@@ -396,8 +393,8 @@ class StrumLine extends FlxSpriteGroup
 		var noteDiff:Float = Math.abs((strumTime != null ? strumTime : note.strumTime) - Conductor.songPosition);
 
 		var coolText:FlxText = new FlxText(0, 0, 0, "", 32);
-		coolText.x = width / 2;
-		coolText.y = width / 2;
+		coolText.x = strumLine.width / 2;
+		coolText.y = strumHeight / 2;
 		//
 
 		var rating:FlxSprite = new FlxSprite();
@@ -419,6 +416,12 @@ class StrumLine extends FlxSpriteGroup
 		{
 			daRating = 'good';
 			score = 200;
+		}
+
+		if (daRating == 'sick') {
+			var noteSplash:NoteSplash = noteSplashes.recycle(NoteSplash);
+			noteSplash.setupNoteSplash(Note.swagWidth  * note.noteData , strumLine.y, note.noteData);
+			noteSplashes.add(noteSplash);
 		}
 
 		score += score;
@@ -529,9 +532,6 @@ class StrumLine extends FlxSpriteGroup
 
 			if (note.wasGoodHit)
 			{
-				if (!note.isSustainNote)
-					popUpScore(note, note.strumTime);
-				// noteHit.dispatch(Math.abs(note.noteData));
 				var altAnim:String = "";
 
 				// if (note.altAnim)
@@ -561,5 +561,18 @@ class StrumLine extends FlxSpriteGroup
 	public function sortNotes()
 	{
 		notes.sort(FlxSort.byY, FlxSort.DESCENDING);
+	}
+
+	override function set_angle(value:Float):Float {
+		var pivot:FlxPoint = FlxPoint.get(width / 2, strumHeight / 2);
+		strumLineNotes.forEach((sprite:FlxSprite) -> {
+			var spritePoint:FlxPoint = FlxPoint.get(sprite.x, sprite.y);
+			spritePoint.pivotDegrees(pivot, value);
+			sprite.x = spritePoint.x;
+			sprite.y = spritePoint.y;
+			spritePoint.put();
+		});
+
+		return super.set_angle(value);
 	}
 }

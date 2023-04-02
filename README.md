@@ -2,7 +2,7 @@
 
 ![logo](logoAnimated.gif)
 </br>
-[![forthebadge](discord.svg)](https://discord.gg/VwXk2Pdamb)
+![forthebadge](discord.svg) (unavalible)
 # Plank Engine
 ## A HL-optimized engine
 <br/>

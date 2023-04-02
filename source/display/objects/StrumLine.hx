@@ -39,7 +39,7 @@ class StrumLine extends FlxTypedSpriteGroup<FlxSprite>
 	public var strumLine:FlxSprite;
 	public var noteHit:FlxTypedSignal<Int->Void>;
 	public var strumLineNotes:FlxSpriteGroup;
-	public var noteSplashes:FlxTypedSpriteGroup<NoteSplash>;
+	// public var noteSplashes:FlxTypedSpriteGroup<NoteSplash>;
 	public var notes:FlxTypedSpriteGroup<Note>;
 	public var scrollSpeed:Float = 1;
 	public var score:Int = 0;
@@ -65,13 +65,13 @@ class StrumLine extends FlxTypedSpriteGroup<FlxSprite>
 		strumLineNotes = generateStaticArrows(tweenStrums);
 		add(strumLineNotes);
 
-		noteSplashes = new FlxTypedSpriteGroup<NoteSplash>();
+		// noteSplashes = new FlxTypedSpriteGroup<NoteSplash>();
 
-		var noteSplash:NoteSplash = new NoteSplash(0, 0, 0);
-		noteSplash.alpha = 0.1;
-		noteSplashes.add(noteSplash);
+		// var noteSplash:NoteSplash = new NoteSplash(0, 0, 0);
+		// noteSplash.alpha = 0.1;
+		// noteSplashes.add(noteSplash);
 
-		add(noteSplashes);
+		// add(noteSplashes);
 
 		strumLine.makeGraphic(Std.int(strumLineNotes.width), 10);
 
@@ -81,11 +81,11 @@ class StrumLine extends FlxTypedSpriteGroup<FlxSprite>
 		noteHit = new FlxTypedSignal<Int->Void>();
 	}
 
-	private static var noteMap:Map<Int, String> = [
-		0 => "left",
-		1 => "down",
-		2 => "up",
-		3 => "right",
+	private static var noteMap:Array<String> = [
+		"left",
+		"down",
+		"up",
+		"right",
 	];
 
 	private function generateStaticArrows(?tweenStrums:Bool = true):FlxSpriteGroup
@@ -102,9 +102,9 @@ class StrumLine extends FlxTypedSpriteGroup<FlxSprite>
 			babyArrow.setGraphicSize(Std.int(babyArrow.width * 0.7));
 
 			babyArrow.x += Note.swagWidth * i;
-			babyArrow.animation.addByPrefix('static', 'arrow${noteMap.get(i).toUpperCase()}');
-			babyArrow.animation.addByPrefix('pressed', '${noteMap.get(i)} press', 24, false);
-			babyArrow.animation.addByPrefix('confirm', '${noteMap.get(i)} confirm', 24, false);
+			babyArrow.animation.addByPrefix('static', 'arrow${noteMap[i].toUpperCase()}');
+			babyArrow.animation.addByPrefix('pressed', '${noteMap[i]} press', 24, false);
+			babyArrow.animation.addByPrefix('confirm', '${noteMap[i]} confirm', 24, false);
 
 			babyArrow.updateHitbox();
 			babyArrow.scrollFactor.set();
@@ -418,11 +418,11 @@ class StrumLine extends FlxTypedSpriteGroup<FlxSprite>
 			score = 200;
 		}
 
-		if (daRating == 'sick') {
-			var noteSplash:NoteSplash = noteSplashes.recycle(NoteSplash);
-			noteSplash.setupNoteSplash(Note.swagWidth  * note.noteData , strumLine.y, note.noteData);
-			noteSplashes.add(noteSplash);
-		}
+		// if (daRating == 'sick') {
+			// var noteSplash:NoteSplash = noteSplashes.recycle(NoteSplash);
+			// noteSplash.setupNoteSplash(Note.swagWidth  * note.noteData , strumLine.y, note.noteData);
+			// noteSplashes.add(noteSplash);
+		// }
 
 		score += score;
 

@@ -102,6 +102,14 @@ class Paths
 		#end
 	}
 
+	#if hl
+	@:noCompletion private inline static function __init__() {
+		var flags = Gc.flags;
+		flags.unset(NoThreads);
+		Gc.flags = flags;
+	}
+	#end
+
 	@:noCompletion public inline static function compress()
 	{
 		#if cpp

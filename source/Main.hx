@@ -208,6 +208,11 @@ class Main extends Sprite
 
 		var sucess:Bool = FlxG.save.bind("PlankEngine", "PlankDev");
 
+		// FlxG.signals.postStateSwitch.add(clearYourMom);
+		FlxG.signals.postGameReset.add(clearYourMom);
+		FlxG.signals.focusLost.add(clearYourMom);
+		FlxG.signals.focusGained.add(clearYourMom);
+
 		// markAssetsForDeletion();
 
 		/*new PlankScript('
@@ -221,6 +226,12 @@ class Main extends Sprite
 		#if !mobile
 		addChild(new PlankFPS(10, 3));
 		#end
+	}
+
+	function clearYourMom():Void {
+		Paths.clearUnusedMemory();
+		Paths.clearStoredMemory();
+		Paths.gc(true, 15);
 	}
 
 	function update(event:Event) {

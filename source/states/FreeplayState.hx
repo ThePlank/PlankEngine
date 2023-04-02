@@ -40,9 +40,11 @@ class FreeplayState extends UIBaseState
 	var diffText:FlxText;
 	var lerpScore:Int = 0;
 	var intendedScore:Int = 0;
+	var ballTimer:Float = 0;
 
 	private var grpSongs:FlxTypedGroup<Alphabet>;
 	private var curPlaying:Bool = false;
+	private var curPlayingSong:String;
 
 	private var iconArray:Array<HealthIcon> = [];
 
@@ -188,6 +190,13 @@ class FreeplayState extends UIBaseState
 	{
 		super.update(elapsed);
 
+		ballTimer += elapsed;
+
+		if (ballTimer > 1000 && curPlayingSong != songs[curSelected].songName) {
+			FlxG.sound.playMusic(Paths.inst(songs[curSelected].songName), 0);
+			curPlayingSong = songs[curSelected].songName;
+		}
+
 		if (FlxG.sound.music.volume < 0.7)
 		{
 			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;
@@ -281,12 +290,9 @@ class FreeplayState extends UIBaseState
 		// lerpScore = 0;
 		#end
 
-		// Paths.clearStoredMemory();
+		Paths.clearUnusedMemory();
 
-		#if PRELOAD_ALL
-		// FlxG.sound.music.destroy();
-		FlxG.sound.playMusic(Paths.inst(songs[curSelected].songName), 0);
-		#end
+		ballTimer = 0;
 
 		var bullShit:Int = 0;
 

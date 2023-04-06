@@ -23,7 +23,7 @@ away3d
 ```
 ### Gits
 There are some haxelibs that yoy can only get using git, the base command is `haxelib git <HAXELIB NAME> <GIT URL>`
-- flixel3D 
+- flixel3D https://github.com/ThePlank/3D-HaxeFlixel.git
 
 ## Credits that i'm obligated to add
 - The Funkin' team

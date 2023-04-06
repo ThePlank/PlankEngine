@@ -208,7 +208,7 @@ class Main extends Sprite
 
 		var sucess:Bool = FlxG.save.bind("PlankEngine", "PlankDev");
 
-		// FlxG.signals.postStateSwitch.add(clearYourMom);
+		FlxG.signals.postStateSwitch.add(clearYourMom);
 		FlxG.signals.postGameReset.add(clearYourMom);
 		FlxG.signals.focusLost.add(clearYourMom);
 		FlxG.signals.focusGained.add(clearYourMom);
@@ -230,7 +230,7 @@ class Main extends Sprite
 
 	function clearYourMom():Void {
 		Paths.clearUnusedMemory();
-		Paths.clearStoredMemory();
+		// Paths.clearStoredMemory();
 		Paths.gc(true, 15);
 	}
 

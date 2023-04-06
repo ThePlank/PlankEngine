@@ -1,7 +1,9 @@
 package states;
 
 import openfl.Lib;
+#if hlvideo
 import display.objects.HashlinkVideo.Video;
+#end
 import flixel.util.FlxGradient;
 import sys.FileSystem;
 import flixel.group.FlxSpriteGroup;
@@ -239,12 +241,14 @@ class TitleState extends UIBaseState
 		else
 			initialized = true;
 
+		#if hlvideo
 		var video = new Video();
 		video.loadPath("D:/Documents/hlvideotest/res/Untitledav1.mkv");
 		video.scale.x = (FlxG.width / 256);
 		video.scale.y = (FlxG.height / 144);
 		video.updateHitbox();
 		add(video);
+		#end
 
 		// var md:String = Markdown.markdownToHtml(Assets.getText('CHANGELOG.md'));
 		// var text:FlxText = new FlxText(0,0, FlxG.width, "", 16, true);

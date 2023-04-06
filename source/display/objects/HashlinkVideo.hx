@@ -3,6 +3,7 @@
 // ... that have no audio
 // yheah this is limited as fuck but if you wanna https://github.com/HeapsIO/hlvideo
 
+#if hlvideo
 package display.objects;
 
 
@@ -83,3 +84,4 @@ class Video extends FlxSprite
         }
 	}
 }
+#end

@@ -112,7 +112,7 @@
 	<haxelib name="flixel-ui" />
 
 	<!-- Haxedefs -->
-	<haxelib name="hlvideo" />
+	<haxelib name="hlvideo" if="hl" />
 	<haxelib name="hscript" />
 	<haxelib name="actuate" />
 	<haxelib name="away3d" />

@@ -5,17 +5,6 @@ import flixel.util.FlxSave;
 import sys.thread.Thread;
 import flixel.FlxG;
 
-class Option<T> {
-	public var displayName:String; // roblox moment??/?/?/?//
-	public var description:String;
-	public var type:Class<T>;
-	public var onChange:T->Void;
-
-	public function new(displayName:String) {
-		this.displayName = displayName;
-	}
-}
-
 // lol image psych engine saving system
 
 class Options

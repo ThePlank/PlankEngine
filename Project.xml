@@ -104,34 +104,6 @@
 		NOT USING A DIRECT THING TO THE ASSET!!!
 	-->
 	<assets path="assets/fonts" embed='true' />
-	<!-- _______________________________ Libraries ______________________________ -->
-
-	<!-- Flixel -->
-	<haxelib name="flixel" />
-	<haxelib name="flixel-addons" />
-	<haxelib name="flixel-ui" />
-
-	<!-- Haxedefs -->
-	<haxelib name="hlvideo" if="hl" />
-	<haxelib name="hscript" />
-	<haxelib name="actuate" />
-	<haxelib name="away3d" />
-	<haxelib name="flixel3D" />
-	<haxelib name="markdown" />
-	<haxelib name="byteConvert" />
-	<!-- <haxelib name="hxmidilib" /> so turns out that this library is too old and unfinnished to even use :skull: -->
-	<!-- <haxelib name="crashdumper" /> -->
-
-	<!-- CPP stuff -->
-	<haxelib name="discord_rpc" if="cpp" />
-	<!-- <haxelib name="hldiscord" if="hl"/> -->
-	<!-- <haxelib name="hxcpp-debug-server" if="desktop"/> -->
-
-	<!-- <haxelib name="markdown" /> -->
-	<!-- <haxelib name="HtmlParser" /> -->
-
-	<!--In case you want to use nape with flixel-->
-	<!--<haxelib name="nape-haxe4" />-->
 
 	<!-- ______________________________ Haxedefines _____________________________ -->
 
@@ -165,9 +137,37 @@
 	<!--Enable this for Nape release builds for a serious peformance improvement-->
 	<haxedef name="NAPE_RELEASE_BUILD" unless="debug" />
 
+	<!-- <haxedef name="VIDEOS" /> PLEASE CHECK README BEFORE ENABALING -->
+
 	<haxedef name="openfl_disable_handle_error" />
 	<haxedef name="HXCPP_STACK_LINE" /> <!--if you want line numbers-->
 	<haxedef name="HXCPP_STACK_TRACE" /> <!--if you want stack traces-->
+
+	<!-- _______________________________ Libraries ______________________________ -->
+
+	<!-- Flixel -->
+	<haxelib name="flixel" />
+	<haxelib name="flixel-addons" />
+	<haxelib name="flixel-ui" />
+
+	<!-- Haxelibs -->
+	<haxelib name="hlvideo" if="hl VIDEOS" />
+	<haxelib name="hscript" />
+	<haxelib name="actuate" />
+	<haxelib name="away3d" />
+	<haxelib name="flixel3D" />
+	<haxelib name="markdown" />
+	<haxelib name="byteConvert" />
+	<!-- <haxelib name="hxmidilib" /> so turns out that this library is too old and unfinnished to even use :skull: -->
+	<!-- <haxelib name="crashdumper" /> -->
+
+	<!-- CPP stuff -->
+	<haxelib name="discord_rpc" if="cpp" />
+	<!-- <haxelib name="hldiscord" if="hl"/> -->
+	<!-- <haxelib name="hxcpp-debug-server" if="desktop"/> -->
+
+	<!--In case you want to use nape with flixel-->
+	<!--<haxelib name="nape-haxe4" />-->
 
 	<!-- _________________________________ Custom _______________________________ -->
 

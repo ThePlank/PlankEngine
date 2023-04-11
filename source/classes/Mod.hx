@@ -13,6 +13,8 @@ import sys.io.File;
 import openfl.display.BitmapData;
 import sys.FileSystem;
 import lime.graphics.ImageType;
+import lime.system.System;
+import sys.FileSystem;
 
 using StringTools;
 
@@ -76,7 +78,22 @@ class ModWeek
 
 class Mod
 {
-	public static final MOD_PATH:String = "mods";
+	public static final MOD_PATH:String = "User Mods\\Plank Engine";
+
+	public static final MOD_FOLDERS:Array<String> = [ // please forgive me for this, i tried to prent this from happening
+		"characters",
+		"data",
+		"font",
+		"globalScripts",
+		"images",
+		"music",
+		"settings",
+		"songs",
+		"sounds",
+		"states",
+		"videos",
+		"weeks",
+	];
 
 	public static var selectedMod:Mod = null;
 
@@ -88,11 +105,11 @@ class Mod
 
 	/**
 	 * Creates a new mod
-	 * @param modPath 
+	 * @param modPath  
 	 */
 	public function new(modPath:String)
 	{
-		var json:{name:String, description:String, windowSettings:Null<ModWindowSettings>} = Json.parse(getContent(FileSystem.absolutePath('$MOD_PATH/$modPath/mod.json')));
+		var json:{name:String, description:String, windowSettings:Null<ModWindowSettings>} = Json.parse(getContent(FileSystem.absolutePath('${System.documentsDirectory}$MOD_PATH\\$modPath\\mod.json')));
 		this.modName = json.name;
 		this.modDescription = json.description;
 		this.windowSettings = json.windowSettings;
@@ -101,12 +118,18 @@ class Mod
 
 	public function getPath(path:String):String
 	{
-		return '$MOD_PATH/$modPath/$path';
+		path.replace('/', '\\');
+		return '${System.documentsDirectory}$MOD_PATH\\$modPath\\$path';
 	}
 
 	public function getContent(path:String):String
 	{
 		return File.getContent(path);
+	}
+
+	public function hasFile(path:String):Bool
+	{
+		return FileSystem.exists(getPath(path));
 	}
 
 	public function getImage(path:String):BitmapData
@@ -197,7 +220,7 @@ class Mod
 
 	public function getState(path:String):PlankState
 	{
-		return new PlankState(new PlankScript(getContent(getPath('images/$path'))));
+		return new PlankState(new PlankScript(getContent(getPath('states/$path'))));
 	}
 
 	public function getWeeks():Array<ModWeek>
@@ -220,18 +243,24 @@ class Mod
 
 	public static function getAvalibleMods():Array<Mod>
 	{
-		var mods:Array<String> = FileSystem.readDirectory('$MOD_PATH/');
+		var mods:Array<String> = FileSystem.readDirectory('${System.documentsDirectory}$MOD_PATH\\');
 
 		for (mod in mods)
 		{
-			if (!FileSystem.isDirectory('$MOD_PATH/$mod'))
+			if (!FileSystem.isDirectory('${System.documentsDirectory}$MOD_PATH\\$mod'))
 			{
 				mods.remove(mod);
-				continue;
 			}
 		}
 
 		return [for (mod in mods) new Mod(mod)];
+	}
+
+	public static function init():Void {
+		if (!FileSystem.exists('${System.documentsDirectory}$MOD_PATH')) {
+			FileSystem.createDirectory('${System.documentsDirectory}$MOD_PATH');
+			trace('my balls itch');
+		}
 	}
 
 	public function initMod()
@@ -247,6 +276,17 @@ class Mod
 				FlxG.stage.window.setIcon(icon);
 			}
 		}
+	}
+
+	public static function createMod(name:String, metadata:{name:String, description:String, ?windowSettings:Null<ModWindowSettings>}):String {
+		// openfl.utils.Assets.list()
+		for (folder in MOD_FOLDERS) {
+			FileSystem.createDirectory('${System.documentsDirectory}$MOD_PATH\\$name\\$folder');
+			trace('itchy balls $folder');
+		}
+
+		File.saveContent('${System.documentsDirectory}$MOD_PATH\\$name\\mod.json', Json.stringify(metadata));
+		return '${System.documentsDirectory}$MOD_PATH\\$name';
 	}
 
 	public static function reset()

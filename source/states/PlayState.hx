@@ -82,15 +82,12 @@ class PlayState extends states.abstr.MusicBeatState
 	private var notes:FlxTypedGroup<Note>;
 	private var unspawnNotes:Array<Note> = [];
 
-	// private var strumLine:FlxSprite;
 	private var curSection:Int = 0;
 
 	private var camFollow:FlxObject;
 
 	private static var prevCamFollow:FlxObject;
 
-	// private var strumLineNotes:FlxTypedGroup<FlxSprite>;
-	// private var playerStrums:FlxTypedGroup<FlxSprite>;
 	private var playerStrums:StrumLine;
 	private var dadStrums:StrumLine;
 
@@ -130,14 +127,6 @@ class PlayState extends states.abstr.MusicBeatState
 	var upperBoppers:FlxSprite;
 	var bottomBoppers:FlxSprite;
 	var santa:FlxSprite;
-
-	public var KeyAmount:Int = 4;
-
-	var hitpercentages:Array<Int> = [100];
-
-	var accuracy:Float = 0;
-
-	var NoteAnims:Array<String> = ['LEFT', 'DOWN', 'UP', 'RIGHT'];
 
 	var bgGirls:BackgroundGirls;
 	var wiggleShit:WiggleEffect = new WiggleEffect();
@@ -2119,17 +2108,6 @@ class PlayState extends states.abstr.MusicBeatState
 	{
 		number *= Math.pow(10, precision);
 		return Math.round(number) / Math.pow(10, precision);
-	}
-
-	private function ReCalcAccuracy()
-	{
-		var total:Int = 0;
-		for (i in hitpercentages)
-		{
-			total += i;
-		}
-
-		accuracy = roundtoprec(total / hitpercentages.length);
 	}
 
 	var fastCarCanDrive:Bool = true;

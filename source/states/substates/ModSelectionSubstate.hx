@@ -8,11 +8,17 @@ import classes.Mod;
 import states.substates.abstr.MusicBeatSubstate;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import display.objects.Alphabet;
+import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
+import states.abstr.UIBaseState;
+import states.ModEditorState;
 
 class ModSelectionSubstate extends MusicBeatSubstate
 {
 	public static var mods:Array<Mod> = [];
 
+	private var buttonMeta:Array<{name:String, clickCallback:Void->Void}> = [];
+
+	var buttonGroup:flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup<flixel.ui.FlxButton>;
 	var alphabetGroup:FlxTypedGroup<Alphabet>;
 	var curSelected:Int = 0;
 	var selected:Bool = false;
@@ -21,6 +27,16 @@ class ModSelectionSubstate extends MusicBeatSubstate
 	{
 		mods = Mod.getAvalibleMods();
 		mods.push(null); // null = no mod
+
+		buttonMeta.push({name: "import", clickCallback: () -> {}});
+		buttonMeta.push({name: "edit", clickCallback: () -> {
+			UIBaseState.switchState(ModEditorState, [EDITING(mods[curSelected])]);
+		}});
+		buttonMeta.push({name: "delete", clickCallback: () -> {}});
+		buttonMeta.push({name: "add", clickCallback: () -> {
+			UIBaseState.switchState(ModEditorState, [CREATING]);
+		}});
+
 		super(0x60000000);
 	}
 
@@ -28,10 +44,27 @@ class ModSelectionSubstate extends MusicBeatSubstate
 	{
 		super.create();
 
+		var LBar:FlxSprite = new FlxSprite();
+		LBar.makeGraphic(250, FlxG.height, 0x79000000);
+		add(LBar);
+
         alphabetGroup = new FlxTypedGroup<Alphabet>();
         add(alphabetGroup);
 
+        buttonGroup = new FlxTypedSpriteGroup<flixel.ui.FlxButton>();
+        add(buttonGroup);
+
 		var i:Int = 0;
+        for (butt in buttonMeta) {
+        	var buttonGraphic = classes.Paths.image('mods/buttons/${butt.name}');
+        	var elButt = new flixel.ui.FlxButton(FlxG.width - 50 - (5 * i) - buttonGraphic.width - buttonGroup.width, FlxG.height * 0.75, butt.name, butt.clickCallback);
+        	elButt.label.kill();
+        	elButt.loadGraphic(buttonGraphic);
+        	buttonGroup.add(elButt);
+            elButt.scrollFactor.set();
+        	i++;
+        }
+        i = 0;
 		for (mod in mods)
 		{
 			var modText:Alphabet = new Alphabet(0, (70 * i) + 30, (mod != null ? mod.modName : "No Mod"), true, false);
@@ -40,11 +73,7 @@ class ModSelectionSubstate extends MusicBeatSubstate
             modText.scrollFactor.set();
             alphabetGroup.add(modText);
 		}
-
-		var LBar:FlxSprite = new FlxSprite();
-		LBar.makeGraphic(250, FlxG.height, 0x79000000);
 		
-
 		add(new ReferenceObject().loadGraphic(Paths.image("menuReferences/Untitled36_20230310154123")));
 		changeSelection();
 	}

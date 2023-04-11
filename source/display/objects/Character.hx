@@ -16,7 +16,7 @@ class Character extends FlxSprite
 {
 	public var baseAnimOffsets:Map<String, FlxPoint> = [];
 	public var animOffsets:Map<String, FlxPoint> = [];
-	public var debugMode:Bool = true;
+	public var debugMode:Bool = false;
 
 	public var isPlayer:Bool = false;
 	public var curCharacter:String = 'bf';
@@ -667,6 +667,11 @@ class Character extends FlxSprite
 		}
 	}
 
+	override function destroy():Void {
+		// flixel.util.FlxDestroyUtil.putArray();
+		return super.destroy();
+	}
+
 	override function set_angle(angle:Float) {
 		// account for rotation
 		super.set_angle(angle);
@@ -676,8 +681,10 @@ class Character extends FlxSprite
 
 	function updateAnimationOffsets() {
 		for (anim => offsets in baseAnimOffsets) {
-			offsets.x * scale.x;
-			offsets.y * scale.y;
+			offsets.x *= scale.x;
+			offsets.y *= scale.y;
+			offsets.x *= (flipX ? -1 : 1);
+			offsets.y *= (flipY ? -1 : 1);
 			offsets.rotateByDegrees(angle);
 			animOffsets[anim] = offsets;
 		}

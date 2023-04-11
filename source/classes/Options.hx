@@ -18,9 +18,6 @@ class Options
 		"ghostTapping" => true,
 	];
 
-	public static var optionsMap:Map<String, Map<String, Option<Any>>> = [
-	];
-
 	public static var saveData:FlxSave = new FlxSave();
 
 	public static function init():FlxSave {

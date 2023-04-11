@@ -38,6 +38,7 @@ class UIBaseState extends MusicBeatState
 		scrollFactor: [0.5, 0.5]
 	};
 
+	var canOpenModMenu:Bool = true;
 	var bg:FlxSprite;
 
     public static var menus:Map<String, FlxState> = [];
@@ -46,7 +47,7 @@ class UIBaseState extends MusicBeatState
 	{
 		var createdBG:FlxSprite;
 		if (settings.imageFile != "") {
-			createdBG = new FlxSprite(0, 0, Paths.image("menuDesat"));
+			createdBG = new FlxSprite(0, 0, Paths.image('menuDesat'));
 			createdBG.color = settings.bgColor;
 		} else {
 			createdBG = new FlxSprite(0, 0);
@@ -56,15 +57,15 @@ class UIBaseState extends MusicBeatState
 		if (settings.scrollFactor != null)
 			createdBG.scrollFactor.set(settings.scrollFactor[0], settings.scrollFactor[1]);
 
-		if (settings.position != null)
-			createdBG.setPosition(settings.position[0], settings.position[1]);
-
 		if (settings.sizeMultiplier != null)
             createdBG.setGraphicSize(Std.int(createdBG.width * settings.sizeMultiplier));
 
         createdBG.updateHitbox();
 		createdBG.screenCenter();
 		createdBG.antialiasing = true;
+
+		if (settings.position != null)
+			createdBG.setPosition(settings.position[0], settings.position[1]);
 
 		if (settings.bgColorGradient != null) {
 			// https://groups.google.com/g/haxeflixel/c/erHfhP1wy-s
@@ -119,14 +120,14 @@ class UIBaseState extends MusicBeatState
 	}
 
 	override function update(elapsed:Float) {
-		if (FlxG.keys.justPressed.M)
+		if (FlxG.keys.justPressed.M && canOpenModMenu)
 			openSubState(new ModSelectionSubstate());
 
-		if (FlxG.keys.justPressed.T) {
-			var stupid = new FlxSpriteGroup();
-			stupid.add(new Alphabet(0, Notification.NOTIFICATION_HEIGHT / 2, "this is a test lol", true, false));
-			showNotification(new Notification(stupid, 2.5));
-		}
+		//if (FlxG.keys.justPressed.T) {
+			//var stupid = new FlxSpriteGroup();
+			//stupid.add(new Alphabet(0, Notification.NOTIFICATION_HEIGHT / 2, "this is a test lol", true, false));
+			//showNotification(new Notification(stupid, 2.5));
+		//}
 		
 		super.update(elapsed);
 	}

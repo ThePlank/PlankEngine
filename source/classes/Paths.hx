@@ -21,7 +21,7 @@ import sys.FileSystem;
 import flixel.graphics.FlxGraphic;
 import openfl.display.BitmapData;
 import haxe.Json;
-import flash.media.Sound;
+import flash.media.Sound;	
 #if cpp
 import cpp.vm.Gc;
 #elseif hl
@@ -212,8 +212,8 @@ class Paths
 
 	public static function getPath(file:String, ?type:AssetType, ?library:String):String
 	{
-		if (Mod.selectedMod != null)
-			if (FileSystem.exists(Mod.selectedMod.getPath(file)))
+		if (Mod.selectedMod != null) 
+			if (FileSystem.exists(Mod.selectedMod.getPath(file))) 
 				return Mod.selectedMod.getPath(file);
 
 		if (library != null)
@@ -295,11 +295,11 @@ class Paths
 
 	static public function getTextFromFile(key:String, ?ignoreMods:Bool = false):String
 	{
-		#if sys
+		key = getPath(key);
+		trace('my balls $key');
 		if (FileSystem.exists(key))
 			return File.getContent(key);
-		#end
-		return Assets.getText(getPath(key, TEXT));
+		return Assets.getText(key);
 	}
 
 	static public function font(key:String):String

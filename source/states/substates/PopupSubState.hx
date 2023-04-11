@@ -1,6 +1,6 @@
 package states.substates;
 
-// someone remind me to finnish and customise this
+// someone remind me to finish and customise this
 // this is from a unfinnished project
 
 import util.ImageUtils;
@@ -132,6 +132,7 @@ class PopupSubState extends FlxSubState
 				okButt.labelAlphas = [1, 1, 1];
 				var stupid = new FlxPoint(0, okButt.height / 2);
 				okButt.labelOffsets = [stupid, stupid, stupid];
+				stupid.put();
 
 				popupGroup.add(okButt);
 			default:

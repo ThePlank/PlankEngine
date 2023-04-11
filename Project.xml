@@ -92,6 +92,7 @@
 	<assets path="assets/week6" library="week6" exclude="*.mp3" unless="web" />
 
 	<assets path='mods' embed='false' />
+	<assets path='mod_template' embed='true' />
 	<assets path='art/readme.txt' rename='please DO readme.txt' />
 	<assets path='changelog.md' rename='CHANGELOG.md' embed='true' />
 	<!-- <template path='mods' /> -->

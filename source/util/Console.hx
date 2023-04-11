@@ -7,6 +7,73 @@ import lime.utils.LogLevel;
 // yes, java moment.
 using flixel.util.FlxStringUtil;
 
+class Console
+{
+	public static function log(stuffs:Dynamic, ?level:LogLevel = INFO, ?info:PosInfos)
+	{
+		info.className = info.className.remove(".hx");
+		info.className = info.className.toUpperCase();
+
+		var mainText = '';
+
+		switch (level)
+		{
+			case INFO:
+				mainText = ConsoleColors.BLUE;
+			case DEBUG:
+				mainText = ConsoleColors.GREEN;
+			case ERROR:
+				mainText = ConsoleColors.RED_BOLD;
+			case WARN:
+				mainText = ConsoleColors.YELLOW_BOLD;
+			case NONE:
+			case VERBOSE:
+				mainText = ConsoleColors.PURPLE;
+		}
+
+		mainText += '[${info.className} LINE ${info.lineNumber}]:';
+		mainText +=  '${ConsoleColors.RESET} ';
+		mainText +=  '${stuffs}';
+
+		println(mainText);
+	}
+
+	private static inline function print(message:Dynamic):Void
+	{
+		#if sys
+		Sys.print(Std.string(message));
+		#elseif flash
+		untyped __global__["trace"](Std.string(message));
+		#elseif js
+		untyped #if haxe4 js.Syntax.code #else __js__ #end ("console").log(message);
+		#else
+		trace(message);
+		#end
+	}
+
+	private static inline function println(message:Dynamic):Void
+	{
+		#if sys
+		Sys.println(Std.string(message));
+		#elseif flash
+		untyped __global__["trace"](Std.string(message));
+		#elseif js
+		untyped #if haxe4 js.Syntax.code #else __js__ #end ("console").log(message);
+		#else
+		trace(Std.string(message));
+		#end
+	}
+
+	public static function init()
+	{
+		haxe.Log.trace = (stuffs:Dynamic, ?info:PosInfos) ->
+		{
+			log(stuffs, INFO, info);
+		}
+	}
+}
+
+
 class ConsoleColors
 {
 	// Reset
@@ -81,70 +148,4 @@ class ConsoleColors
 	public static final PURPLE_BACKGROUND_BRIGHT = "\033[0;105m"; // PURPLE
 	public static final CYAN_BACKGROUND_BRIGHT = "\033[0;106m"; // CYAN
 	public static final WHITE_BACKGROUND_BRIGHT = "\033[0;107m"; // WHITE
-}
-
-class Console
-{
-	public static function log(stuffs:Dynamic, ?level:LogLevel = INFO, ?info:PosInfos)
-	{
-		info.className = info.className.remove(".hx");
-		info.className = info.className.toUpperCase();
-
-		var mainText = '';
-
-		switch (level)
-		{
-			case INFO:
-				mainText = ConsoleColors.BLUE;
-			case DEBUG:
-				mainText = ConsoleColors.GREEN;
-			case ERROR:
-				mainText = ConsoleColors.RED_BOLD;
-			case WARN:
-				mainText = ConsoleColors.YELLOW_BOLD;
-			case NONE:
-			case VERBOSE:
-				mainText = ConsoleColors.PURPLE;
-		}
-
-		mainText += '[${info.className} LINE ${info.lineNumber}]:';
-		mainText +=  '${ConsoleColors.RESET} ';
-		mainText +=  '${stuffs}';
-
-		println(mainText);
-	}
-
-	private static inline function print(message:Dynamic):Void
-	{
-		#if sys
-		Sys.print(Std.string(message));
-		#elseif flash
-		untyped __global__["trace"](Std.string(message));
-		#elseif js
-		untyped #if haxe4 js.Syntax.code #else __js__ #end ("console").log(message);
-		#else
-		trace(message);
-		#end
-	}
-
-	private static inline function println(message:Dynamic):Void
-	{
-		#if sys
-		Sys.println(Std.string(message));
-		#elseif flash
-		untyped __global__["trace"](Std.string(message));
-		#elseif js
-		untyped #if haxe4 js.Syntax.code #else __js__ #end ("console").log(message);
-		#else
-		trace(Std.string(message));
-		#end
-	}
-
-	public static function init()
-	{
-		haxe.Log.trace = (stuffs:Dynamic, ?info:PosInfos) ->
-		{
-			log(stuffs, INFO, info);
-		}
-	}
 }

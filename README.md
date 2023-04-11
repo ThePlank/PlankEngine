@@ -25,6 +25,9 @@ away3d
 There are some haxelibs that yoy can only get using git, the base command is `haxelib git <HAXELIB NAME> <GIT URL>`
 - flixel3D https://github.com/ThePlank/3D-HaxeFlixel.git
 
+### Videos
+videos are really crappy right now, if you wanna use them, then [git and build this](https://github.com/HeapsIO/hlvideo)
+
 ## Credits that i'm obligated to add
 - The Funkin' team
 

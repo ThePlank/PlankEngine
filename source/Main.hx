@@ -199,9 +199,8 @@ class Main extends Sprite
 		addChild(game);
 		stage.addEventListener(Event.ENTER_FRAME, update);
 		registerClasses();
+		classes.Mod.init();
 		PlayerSettings.init();
-		// NorwayBanner.check();
-
 
 		// var file = new FLFile(CoolUtil.BytestoIntArray(File.getBytes(Paths.getPath('data/reddit.fsc', BINARY))));
 		// trace(ChartParser.fromFSC(ChartParser.fscToNotes(file)).notes[0]);
@@ -212,17 +211,7 @@ class Main extends Sprite
 		FlxG.signals.postGameReset.add(clearYourMom);
 		FlxG.signals.focusLost.add(clearYourMom);
 		FlxG.signals.focusGained.add(clearYourMom);
-
-		// markAssetsForDeletion();
-
-		/*new PlankScript('
-		trace("Hello!");
-
-		function do() {
-			trace("test");
-		}
-		');*/
-
+		
 		#if !mobile
 		addChild(new PlankFPS(10, 3));
 		#end

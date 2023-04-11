@@ -22,7 +22,12 @@ class PlankFPS extends TextField
 	private var maxMemory:Float;
 
 	private var maxColor:FlxColor = 0xFFEC5454;
-	private var normalColor:FlxColor = 0xFFFFFFFF;
+	private var normalColor:FlxColor = 0xFF000000;
+	private var outlineColor:FlxColor = 0xFFFFFFFF;
+	private var outlineTexts:Array<TextField> = [];
+	private var outlineWidth:Int = 4;
+	private var outlineQuality:Int = 8;
+
 
 	public function new(x:Float = 10, y:Float = 10)
 	{
@@ -39,6 +44,15 @@ class PlankFPS extends TextField
 		defaultTextFormat = new TextFormat("VCR OSD Mono", 18, normalColor);
 		width = 250;
 		text = "FPS: ";
+
+		for (i in 0...outlineQuality) {
+			var otext:TextField = new TextField();
+			otext.x = x + Math.sin(i) *outlineWidth;
+			otext.y = y + Math.cos(i) *outlineWidth;
+			otext.defaultTextFormat = this.defaultTextFormat;
+			otext.textColor = outlineColor;
+			outlineTexts.push(otext);
+		}
 
 	}
 
@@ -67,5 +81,12 @@ class PlankFPS extends TextField
 		var mappedFPS = FlxMath.remapToRange(currentFPS, Lib.current.stage.frameRate, Lib.current.stage.frameRate / 2, 0, 1);
 
 		textColor = FlxColor.interpolate(normalColor, maxColor, FlxEase.cubeIn((mappedMemory + mappedFPS) / 2));
+	}
+
+	@:noCompletion override private function set_text(value:String):String {
+		for (text in outlineTexts) {
+			text.text = value;
+		}
+		return super.set_text(value);
 	}
 }

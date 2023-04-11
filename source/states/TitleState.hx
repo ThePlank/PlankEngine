@@ -157,9 +157,10 @@ class TitleState extends UIBaseState
 
 		persistentUpdate = true;
 
-		var grid:BitmapData = FlxGridOverlay.createGrid(Std.int(512 / 8), Std.int(512 / 8), 512, 512, true, 0xFFFFFFFF, 0x00000000);
+		var grid:FlxGraphic = classes.Paths.image('halftonedots');
 
-		backdrop = new FlxBackdrop(grid);
+		backdrop = new FlxBackdrop(grid, X);
+		backdrop.y = FlxG.height - backdrop.height;
 		backdrop.blend = SCREEN;
 		backdrop.alpha = 0.25;
 		backdrop.velocity.x = -100;
@@ -294,9 +295,6 @@ class TitleState extends UIBaseState
 		if (FlxG.sound.music != null) {
 			Conductor.songPosition = FlxG.sound.music.time;
 		}
-
-		if (backdrop != null)
-			backdrop.y = Math.abs(Math.sin((Conductor.songPosition / 1000) * (Conductor.bpm / 60) * Math.PI) * 20);
 
 		
 		// FlxG.watch.addQuick('amp', FlxG.sound.music.amplitude);

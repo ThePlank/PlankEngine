@@ -84,6 +84,7 @@ class Main extends Sprite
 
 	private static var current:Main;
 	public var game:FlxGame;
+	public var fpsCounter:PlankFPS;
 	// var dumper:CrashDumper;
 
 	// You can pretty much ignore everything from here on - your code should go in your states.
@@ -148,11 +149,18 @@ class Main extends Sprite
 	var crashPath = "\\crashes";
 	var crashName = "\\PLECrashlog";
 
+	// todo: truncate the callstack for da popup because it can cause
+	// l
+	// o
+	// n
+	// g
+	// messagebox (windows doesent like that)
 	#if hl
 	function onError(error:Dynamic) {
 		var callstack:String = try Std.string(error) catch(_:Exception) "Unknown";
 		callstack += '\n';
 		callstack += CallStack.toString(CallStack.exceptionStack(true));
+
 
 		Console.log(callstack, ERROR);
 
@@ -213,7 +221,10 @@ class Main extends Sprite
 		FlxG.signals.focusGained.add(clearYourMom);
 		
 		#if !mobile
-		addChild(new PlankFPS(10, 3));
+		fpsCounter = new PlankFPS(10, 3);
+		for (text in fpsCounter.outlineTexts)
+			addChild(text);
+		addChild(fpsCounter);
 		#end
 	}
 

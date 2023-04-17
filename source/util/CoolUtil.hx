@@ -38,6 +38,21 @@ class CoolUtil
 	public static inline function BytestoIntArray(bytes:Bytes):Array<Int> {
 		return [for (idx in 0...bytes.length) bytes.getInt32(idx)];
 	}
+
+	// copied code from old plank engine (i think literally the only good code i have made there)
+	// i dont know for where i got this from
+	// pretty sure i made this myself
+	
+	public static function DynamicToIntArrayMap(dynamicObject:Dynamic)
+	{
+		var map:Map<String, Array<Int>> = new Map();
+		for (field in Reflect.fields(dynamicObject))
+		{
+			map.set(field, Reflect.field(dynamicObject, field));
+		}
+		return map;
+	}
+
 }
 
 class FPSLerp

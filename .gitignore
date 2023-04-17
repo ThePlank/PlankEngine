@@ -1,22 +1,29 @@
-# Exports
+# exports
 export/
 
-# Visual Studio Code specific direcories
+# visual studio code specific direcories
 .vscode/
 
-# yes
+# scrapped stuff that i dont wanna share
 scrapped/
 
+# windows/macos bloat
 .DS_Strore
 desktop.ini
 
-# vegas pro shit dignhwvfuhgevofhgrsfhouh
+# vegas pro... i guess waveform data?
 *.sfk
 
-
-# my sublime proect
+# sublime proects
 *.sublime-project
 *.sublime-workspace
 
 # fl scores (for sniff becauoifhdco9uihgqwuo9dhgiwhdoui hji)
 *.fsc
+
+# git version stuff
+.tmp.ple.version
+
+# fl temp stuff
+*.zip~
+*.flp~

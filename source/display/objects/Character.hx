@@ -12,6 +12,28 @@ import flixel.graphics.frames.FlxAtlasFrames;
 
 using StringTools;
 
+typedef CharacterData = {
+	var assetName:String;
+	var offsets:Dynamic<Array<Int>>;
+	var animationNames:Dynamic<AnimationData>;
+	var swapLR:Bool;
+	var charPosition:Array<Int>;
+	var scale:Array<Int>;
+	var antialias:Bool;
+	var singTimer:Float;
+	var flipX:Bool;
+	var flipY:Bool;
+	var angle:Float;
+}
+
+typedef AnimationData = {
+	var name:String;
+	var fps:Int;
+	var loop:Bool;
+	var ?indecies:Array<Int>;
+	var ?postfix:String;
+}
+
 class Character extends FlxSprite
 {
 	public var baseAnimOffsets:Map<String, FlxPoint> = [];
@@ -20,6 +42,7 @@ class Character extends FlxSprite
 
 	public var isPlayer:Bool = false;
 	public var curCharacter:String = 'bf';
+	public var assetName:String = '';
 
 	public var holdTimer:Float = 0;
 
@@ -39,6 +62,7 @@ class Character extends FlxSprite
 			case 'gf':
 				// GIRLFRIEND CODE
 				tex = Paths.getSparrowAtlas('GF_assets');
+				assetName = 'GF_assets';
 				frames = tex;
 				animation.addByPrefix('cheer', 'GF Cheer', 24, false);
 				animation.addByPrefix('singLEFT', 'GF left note', 24, false);
@@ -70,6 +94,7 @@ class Character extends FlxSprite
 
 			case 'gf-christmas':
 				tex = Paths.getSparrowAtlas('christmas/gfChristmas');
+				assetName = 'gfChristmas';
 				frames = tex;
 				animation.addByPrefix('cheer', 'GF Cheer', 24, false);
 				animation.addByPrefix('singLEFT', 'GF left note', 24, false);
@@ -101,6 +126,7 @@ class Character extends FlxSprite
 
 			case 'gf-car':
 				tex = Paths.getSparrowAtlas('gfCar');
+				assetName = 'gfCar';
 				frames = tex;
 				animation.addByIndices('singUP', 'GF Dancing Beat Hair blowing CAR', [0], "", 24, false);
 				animation.addByIndices('danceLeft', 'GF Dancing Beat Hair blowing CAR', [30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], "", 24, false);
@@ -114,6 +140,7 @@ class Character extends FlxSprite
 
 			case 'gf-pixel':
 				tex = Paths.getSparrowAtlas('weeb/gfPixel');
+				assetName = 'gfPixel';
 				frames = tex;
 				animation.addByIndices('singUP', 'GF IDLE', [2], "", 24, false);
 				animation.addByIndices('danceLeft', 'GF IDLE', [30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], "", 24, false);
@@ -131,6 +158,7 @@ class Character extends FlxSprite
 			case 'dad':
 				// DAD ANIMATION LOADING CODE
 				tex = Paths.getSparrowAtlas('DADDY_DEAREST');
+				assetName = 'DADDY_DEAREST';
 				frames = tex;
 				animation.addByPrefix('idle', 'Dad idle dance', 24);
 				animation.addByPrefix('singUP', 'Dad Sing Note UP', 24);
@@ -147,6 +175,7 @@ class Character extends FlxSprite
 				playAnim('idle');
 			case 'spooky':
 				tex = Paths.getSparrowAtlas('spooky_kids_assets');
+				assetName = 'spooky_kids_assets';
 				frames = tex;
 				animation.addByPrefix('singUP', 'spooky UP NOTE', 24, false);
 				animation.addByPrefix('singDOWN', 'spooky DOWN note', 24, false);
@@ -166,6 +195,7 @@ class Character extends FlxSprite
 				playAnim('danceRight');
 			case 'mom':
 				tex = Paths.getSparrowAtlas('Mom_Assets');
+				assetName = 'Mom_Assets';
 				frames = tex;
 
 				animation.addByPrefix('idle', "Mom Idle", 24, false);
@@ -186,6 +216,7 @@ class Character extends FlxSprite
 
 			case 'mom-car':
 				tex = Paths.getSparrowAtlas('momCar');
+				assetName = 'momCar';
 				frames = tex;
 
 				animation.addByPrefix('idle', "Mom Idle", 24, false);
@@ -205,6 +236,7 @@ class Character extends FlxSprite
 				playAnim('idle');
 			case 'monster':
 				tex = Paths.getSparrowAtlas('Monster_Assets');
+				assetName = 'Monster_Assets';
 				frames = tex;
 				animation.addByPrefix('idle', 'monster idle', 24, false);
 				animation.addByPrefix('singUP', 'monster up note', 24, false);
@@ -220,6 +252,7 @@ class Character extends FlxSprite
 				playAnim('idle');
 			case 'monster-christmas':
 				tex = Paths.getSparrowAtlas('christmas/monsterChristmas');
+				assetName = 'monsterChristmas';
 				frames = tex;
 				animation.addByPrefix('idle', 'monster idle', 24, false);
 				animation.addByPrefix('singUP', 'monster up note', 24, false);
@@ -235,6 +268,7 @@ class Character extends FlxSprite
 				playAnim('idle');
 			case 'pico':
 				tex = Paths.getSparrowAtlas('Pico_FNF_assetss');
+				assetName = 'Pico_FNF_assetss';
 				frames = tex;
 				animation.addByPrefix('idle', "Pico Idle Dance", 24);
 				animation.addByPrefix('singUP', 'pico Up note0', 24, false);
@@ -274,6 +308,7 @@ class Character extends FlxSprite
 
 			case 'bf':
 				var tex = Paths.getSparrowAtlas('BOYFRIEND');
+				assetName = 'BOYFRIEND';
 				frames = tex;
 				animation.addByPrefix('idle', 'BF idle dance', 24, false);
 				animation.addByPrefix('singUP', 'BF NOTE UP0', 24, false);
@@ -313,6 +348,7 @@ class Character extends FlxSprite
 
 			case 'bf-christmas':
 				var tex = Paths.getSparrowAtlas('christmas/bfChristmas');
+				assetName = 'bfChristmas';
 				frames = tex;
 				animation.addByPrefix('idle', 'BF idle dance', 24, false);
 				animation.addByPrefix('singUP', 'BF NOTE UP0', 24, false);
@@ -341,6 +377,7 @@ class Character extends FlxSprite
 				flipX = true;
 			case 'bf-car':
 				var tex = Paths.getSparrowAtlas('bfCar');
+				assetName = 'bfCar';
 				frames = tex;
 				animation.addByPrefix('idle', 'BF idle dance', 24, false);
 				animation.addByPrefix('singUP', 'BF NOTE UP0', 24, false);
@@ -366,6 +403,7 @@ class Character extends FlxSprite
 				flipX = true;
 			case 'bf-pixel':
 				frames = Paths.getSparrowAtlas('weeb/bfPixel');
+				assetName = 'bfPixel';
 				animation.addByPrefix('idle', 'BF IDLE', 24, false);
 				animation.addByPrefix('singUP', 'BF UP NOTE', 24, false);
 				animation.addByPrefix('singLEFT', 'BF LEFT NOTE', 24, false);
@@ -398,6 +436,7 @@ class Character extends FlxSprite
 
 				flipX = true;
 			case 'bf-pixel-dead':
+				assetName = 'bf-pixel-dead';
 				frames = Paths.getSparrowAtlas('weeb/bfPixelsDEAD');
 				animation.addByPrefix('singUP', "BF Dies pixel", 24, false);
 				animation.addByPrefix('firstDeath', "BF Dies pixel", 24, false);
@@ -416,6 +455,7 @@ class Character extends FlxSprite
 				flipX = true;
 
 			case 'senpai':
+				assetName = 'senpai';
 				frames = Paths.getSparrowAtlas('weeb/senpai');
 				animation.addByPrefix('idle', 'Senpai Idle', 24, false);
 				animation.addByPrefix('singUP', 'SENPAI UP NOTE', 24, false);
@@ -436,6 +476,7 @@ class Character extends FlxSprite
 
 				antialiasing = false;
 			case 'senpai-angry':
+				assetName = 'senpai-angry';
 				frames = Paths.getSparrowAtlas('weeb/senpai');
 				animation.addByPrefix('idle', 'Angry Senpai Idle', 24, false);
 				animation.addByPrefix('singUP', 'Angry Senpai UP NOTE', 24, false);
@@ -457,6 +498,7 @@ class Character extends FlxSprite
 
 			case 'spirit':
 				frames = Paths.getPackerAtlas('weeb/spirit');
+				assetName = 'spirit';
 				animation.addByPrefix('idle', "idle spirit_", 24, false);
 				animation.addByPrefix('singUP', "up_", 24, false);
 				animation.addByPrefix('singRIGHT', "right_", 24, false);
@@ -478,6 +520,7 @@ class Character extends FlxSprite
 
 			case 'parents-christmas':
 				frames = Paths.getSparrowAtlas('christmas/mom_dad_christmas_assets');
+				assetName = 'mom_dad_christmas_assets';
 				animation.addByPrefix('idle', 'Parent Christmas Idle', 24, false);
 				animation.addByPrefix('singUP', 'Parent Up Note Dad', 24, false);
 				animation.addByPrefix('singDOWN', 'Parent Down Note Dad', 24, false);
@@ -558,17 +601,6 @@ class Character extends FlxSprite
 
 		super.update(elapsed);
 	}
-
-	public function loadOffsetFile(character:String, library:String = 'shared')
-		{
-			var offset:Array<String> = CoolUtil.coolTextFile(Paths.txt('images/characters/' + character + "Offsets", library));
-	
-			for (i in 0...offset.length)
-			{
-				var data:Array<String> = offset[i].split(' ');
-				addOffset(data[0], Std.parseInt(data[1]), Std.parseInt(data[2]));
-			}
-		}
 	
 	private var danced:Bool = false;
 
@@ -695,4 +727,35 @@ class Character extends FlxSprite
 		baseAnimOffsets[name] = FlxPoint.get(x, y);
 		updateAnimationOffsets();
 	}
+
+		/*
+	public function toCharacterData():CharacterData {
+		var realOffsets: Dynamic<Array<Int>> = [];
+
+		for (key => point in baseAnimOffsets)
+			realOffsets[key] = [point.x, point.y];
+
+			var assetName:String;
+	var offsets:Dynamic<Array<Int>>;
+	var animationNames:Dynamic<AnimationData>;
+	var swapLR:Bool;
+	var charPosition:Array<Int>;
+	var scale:Array<Int>;
+	var antialias:Bool;
+	var singTimer:Float;
+	var flipX:Bool;
+	var flipY:Bool;
+	var angle:Float;
+
+		return {
+			assetName: assetName,
+			swapLR: false, // no really a way to get if the lr get swapped (this function is meant to be for converting source characters to the system)
+			flipX: flipX,
+			flipY: flipY,
+			scale: [scale.x, scale.y],
+			offsets: realOffsets,
+			angle: 0
+		}
+	}
+	*/
 }

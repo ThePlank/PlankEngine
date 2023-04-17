@@ -24,8 +24,8 @@ class PlankFPS extends TextField
 	private var maxColor:FlxColor = 0xFFEC5454;
 	private var normalColor:FlxColor = 0xFF000000;
 	private var outlineColor:FlxColor = 0xFFFFFFFF;
-	private var outlineTexts:Array<TextField> = [];
-	private var outlineWidth:Int = 4;
+	public var outlineTexts:Array<TextField> = [];
+	private var outlineWidth:Int = 2;
 	private var outlineQuality:Int = 8;
 
 
@@ -51,6 +51,7 @@ class PlankFPS extends TextField
 			otext.y = y + Math.cos(i) *outlineWidth;
 			otext.defaultTextFormat = this.defaultTextFormat;
 			otext.textColor = outlineColor;
+			otext.width = this.width;
 			outlineTexts.push(otext);
 		}
 

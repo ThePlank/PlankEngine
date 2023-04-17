@@ -100,7 +100,9 @@ class MainMenuState extends UIBaseState
 
 		FlxG.camera.follow(camFollow, null, 0.06);
 
-		var versionShit:FlxText = new FlxText(5, FlxG.height - 18, 0, "v" + Application.current.meta.get('version'), 12);
+		// ill update this to be automatic but balls
+		var versionShit:FlxText = new FlxText(5, 0, 0, 'Plank Engine v0.1\n${classes.macros.Version.version()}\nBase Game v${Application.current.meta.get('version')}', 12);
+		versionShit.y = FlxG.height - versionShit.height - 5;
 		versionShit.scrollFactor.set();
 		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		add(versionShit);

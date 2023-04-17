@@ -185,7 +185,9 @@ class TitleState extends UIBaseState
 		
 		stupid = new ColorSwap();
 		var filter:ShaderFilter = new ShaderFilter(stupid.shader);
+		// trace(filter.blendMode);
 		filter.blendMode = NORMAL; // this is stupid, i've made a fix for this just now https://github.com/openfl/openfl/pull/2619
+		// trace(filter.blendMode);
 		FlxG.camera.setFilters([filter]);
 
 		titleText = new FlxSprite(100, FlxG.height * 0.8);

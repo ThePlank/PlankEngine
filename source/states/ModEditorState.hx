@@ -137,9 +137,8 @@ class ModEditorState extends UIBaseState {
 			classes.Mod.createMod(Paths.formatToSongPath(modDescriptionInput.text), {
 				name: modDescriptionInput.text,
 				description: modDescriptionInput.text,
-
 			});
-			UIBaseState.switchState(ModEditorState, [EDITING(new Mod(Paths.formatToSongPath(modName.text)))]);
+			UIBaseState.switchState(ModEditorState, [EDITING(new Mod(Paths.formatToSongPath(modDescriptionInput.text)))]);
 		});
 
 		createButton.x = group.width / 2 - createButton.width / 2;
@@ -161,12 +160,16 @@ class ModEditorState extends UIBaseState {
 		bg.offset.x = flixel.math.FlxMath.lerp(bg.offset.x, -(FlxG.mouse.screenX -  FlxG.width / 2) * 0.05, 0.12);
 		bg.offset.y = flixel.math.FlxMath.lerp(bg.offset.y, -(FlxG.mouse.screenY - FlxG.height / 2) * 0.05, 0.12);
 
+		var back = controls.BACK;
+
+		if (back)
+			UIBaseState.switchState(TitleState);
+
 		if (mod == null) return;
 
 		var upP = controls.UP_P;
 		var downP = controls.DOWN_P;
 		var accepted = controls.ACCEPT;
-		var back = controls.BACK;
 
 		if (upP)
 			changeSelection(-1);

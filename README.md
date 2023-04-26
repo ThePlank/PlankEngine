@@ -2,7 +2,7 @@
 
 ![logo](logoAnimated.gif)
 </br>
-![forthebadge](discord.svg) (very soon)
+![forthebadge](discord.svg) (very soon (soon))
 # Plank Engine
 ## A HL-optimized engine
 <br/>

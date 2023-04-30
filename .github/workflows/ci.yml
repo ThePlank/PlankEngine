@@ -6,7 +6,7 @@ jobs:
     strategy:
       matrix:
         include:
-         - name: Windows Hashlink
+         - name: Hashlink (Windows)
            os: windows-latest
            platform: hl
            build_type: debug
@@ -14,12 +14,13 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: ThePlank/PlankEngine
           ref: main
+      # i dont know if this does anything here, if not ill remove it
       - name: Cache
-        uses: actions/cache@v3.2.6
+        uses: actions/cache@v3.3.1
         with:
           path: |
             ./export/${{ matrix.build_type }}/${{ matrix.platform }}/haxe
@@ -29,9 +30,9 @@ jobs:
             ~/.haxelib
           key: ${{ matrix.name }}-cache-${{ hashFiles('./Project.xml') }}
       - name: Install & Setup Haxe
-        uses: krdlab/setup-haxe@v1.1.5
+        uses: krdlab/setup-haxe@v1.5.0
         with:
-          haxe-version: 4.2.5
+          haxe-version: 4.3.0
       - name: Install Haxe Extensions
         run: |
           haxelib --quiet install lime

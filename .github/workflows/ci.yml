@@ -18,7 +18,6 @@ jobs:
         with:
           repository: ThePlank/PlankEngine
           ref: main
-      # i dont know if this does anything here, if not ill remove it
       - name: Cache
         uses: actions/cache@v3.3.1
         with:
@@ -50,14 +49,11 @@ jobs:
           haxelib --quiet git discord_rpc https://github.com/Aidan63/linc_discord-rpc
       - name: Setup Lime
         run: haxelib --quiet run lime setup
-      # - name: Install git
-      #   if: ${{ matrix.os == 'windows-latest' }}
-      #   run: choco install git -y
       - name: Build using Lime
         run: haxelib run lime build ${{ matrix.platform }} -${{ matrix.build_type }}
       - name: Upload Artifact
         uses: actions/upload-artifact@v2.2.2
         with:
           name: |
-            Plank Engine for ${{ matrix.name }}
+            Plank Engine for ${{ matrix.name }} ${{ matrix.build_type }}
           path: export/${{ matrix.build_type }}/${{ matrix.platform }}/bin

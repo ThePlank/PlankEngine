@@ -5,11 +5,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Setup Haxe
-        uses: krdlab/setup-haxe@v1
+        uses: krdlab/setup-haxe@v1.5.0
         with:
-          haxe-version: 4.1.5
+          haxe-version: 4.3.0
       - name: Lint Haxe
         run: |
           haxelib install haxelint

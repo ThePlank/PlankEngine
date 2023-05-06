@@ -81,12 +81,7 @@ class StrumLine extends FlxTypedSpriteGroup<FlxSprite>
 		noteHit = new FlxTypedSignal<Int->Void>();
 	}
 
-	private static var noteMap:Array<String> = [
-		"left",
-		"down",
-		"up",
-		"right",
-	];
+
 
 	private function generateStaticArrows(?tweenStrums:Bool = true):FlxSpriteGroup
 	{
@@ -102,9 +97,10 @@ class StrumLine extends FlxTypedSpriteGroup<FlxSprite>
 			babyArrow.setGraphicSize(Std.int(babyArrow.width * 0.7));
 
 			babyArrow.x += Note.swagWidth * i;
-			babyArrow.animation.addByPrefix('static', 'arrow${noteMap[i].toUpperCase()}');
-			babyArrow.animation.addByPrefix('pressed', '${noteMap[i]} press', 24, false);
-			babyArrow.animation.addByPrefix('confirm', '${noteMap[i]} confirm', 24, false);
+			var dir:String = Note.getNameFromDirection(i);
+			babyArrow.animation.addByPrefix('static', 'arrow${dir.toUpperCase()}');
+			babyArrow.animation.addByPrefix('pressed', '${dir} press', 24, false);
+			babyArrow.animation.addByPrefix('confirm', '${dir} confirm', 24, false);
 
 			babyArrow.updateHitbox();
 			babyArrow.scrollFactor.set();

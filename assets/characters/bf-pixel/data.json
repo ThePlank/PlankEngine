@@ -1,0 +1,33 @@
+{
+    "assetName": "bfPixel",
+    "offsets": {
+        "idle": [],
+        "singUP": [],
+        "singRIGHT": [],
+        "singLEFT": [],
+        "singDOWN": [],
+        "singUPmiss": [],
+        "singRIGHTmiss": [],
+        "singLEFTmiss": [],
+        "singDOWNmiss": []
+    },
+    "animationNames": {
+        "singLEFT": { "name": "BF NOTE LEFT0", "fps": 24, "loop": false },
+        "singDOWN": { "name": "BF NOTE DOWN0", "fps": 24, "loop": false },
+        "singUP": { "name": "BF NOTE UP0", "fps": 24, "loop": false },
+        "singRIGHT": { "name": "BF NOTE RIGHT0", "fps": 24, "loop": false },
+        "idle": { "name": "BF idle dance", "fps": 24, "loop": false },
+        "singLEFTmiss": { "name": "BF NOTE LEFT MISS", "fps": 24, "loop": false },
+        "singDOWNmiss": { "name": "BF NOTE DOWN MISS", "fps": 24, "loop": false },
+        "singUPmiss": { "name": "BF NOTE UP MISS", "fps": 24, "loop": false },
+        "singRIGHTmiss": { "name": "BF NOTE RIGHT MISS", "fps": 24, "loop": false }
+    },
+    "swapLR": false,
+    "antialias": false,
+    "charPosition": [0, 0],
+    "scale": [1, 1],
+    "flipX": true,
+    "flipY": false,
+    "angle": 0,
+    "singTimer": 4
+}

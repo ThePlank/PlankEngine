@@ -1,0 +1,22 @@
+{
+    "assetName": "Monster_Assets",
+    "offsets": {
+        "idle": [0, 0],
+        "singLEFT": [-30, -0],
+        "singDOWN": [-30, -40],
+        "singUP": [-20, 50],
+        "singRIGHT": [-51, 0]
+    },
+    "animationNames": {
+        "singLEFT": {"name": "Monster left note", "fps": 24, "loop": false},
+        "singDOWN": {"name": "monster down", "fps": 24, "loop": false},
+        "singUP": {"name": "monster up note", "fps": 24, "loop": false},
+        "singRIGHT": {"name": "Monster Right note", "fps": 24, "loop": false},
+        "idle": {"name": "monster idle", "fps": 24, "loop": false}
+    },
+    "swapLR": false,
+    "antialias": true,
+    "charPosition": [0, 0],
+    "scale": [1, 1],
+    "singTimer": 4
+}

@@ -1,0 +1,22 @@
+{
+    "assetName": "DADDY_DEAREST",
+    "offsets": {
+        "idle": [0, 0],
+        "singLEFT": [-1, 27],
+        "singDOWN": [4, -31],
+        "singUP": [-11, 50],
+        "singRIGHT": [-15, 11]
+    },
+    "animationNames": {
+        "singLEFT": {"name": "Dad Sing Note LEFT", "fps": 24, "loop": false},
+        "singDOWN": {"name": "Dad Sing Note DOWN", "fps": 24, "loop": false},
+        "singUP": {"name": "Dad Sing note UP", "fps": 24, "loop": false},
+        "singRIGHT": {"name": "dad sing note right", "fps": 24, "loop": false},
+        "idle": {"name": "Dad idle dance", "fps": 24, "loop": false}
+    },
+    "swapLR": false,
+    "antialias": true,
+    "charPosition": [0, 0],
+    "scale": [1, 1],
+    "singTimer": 6.1
+}

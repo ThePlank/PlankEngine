@@ -1,0 +1,30 @@
+{
+    "assetName": "mom_dad_christmas_assets",
+    "offsets": {
+        "idle": [0, 0],
+        "singUP": [-47, 24],
+        "singRIGHT": [-1, -23],
+        "singLEFT": [-30, 16],
+        "singDOWN",: [31, -29],
+        "singUP-alt": [-47, 24],
+        "singRIGHT-alt": [-1, -24],
+        "singLEFT-alt": [-30, 15],
+        "singDOWN-alt": [-30, -27]
+    },
+    "animationNames": {
+        "singLEFT": {"name": "Parent Left Note Dad", "fps": 24, "loop": false},
+        "singDOWN": {"name": "Parent Down Note Dad", "fps": 24, "loop": false},
+        "singUP": {"name": "Parent Up Note Dad", "fps": 24, "loop": false},
+        "singRIGHT": {"name": "Parent Right Note Dad", "fps": 24, "loop": false},
+        "singLEFT-alt": {"name": "Parent Left Note Mom", "fps": 24, "loop": false},
+        "singDOWN-alt": {"name": "Parent Down Note Mom", "fps": 24, "loop": false},
+        "singUP-alt": {"name": "Parent Up Note Mom", "fps": 24, "loop": false},
+        "singRIGHT-alt": {"name": "Parent Right Note Mom", "fps": 24, "loop": false},
+        "idle": {"name": "Parent Christmas Idle", "fps": 24, "loop": false}
+    },
+    "swapLR": false,
+    "antialias": true,
+    "charPosition": [0, 0],
+    "scale": [1, 1],
+    "singTimer": 4
+}

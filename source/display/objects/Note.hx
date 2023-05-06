@@ -28,12 +28,8 @@ class Note extends FlxSprite
 	public var noteScore:Float = 1;
 
 	public static var swagWidth:Float = 160 * 0.7;
-	public static var PURP_NOTE:Int = 0;
-	public static var GREEN_NOTE:Int = 2;
-	public static var BLUE_NOTE:Int = 1;
-	public static var RED_NOTE:Int = 3;
 
-	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false)
+	public function new(strumTime:Float, noteData:Int, ?prevNote:Note)
 	{
 		super();
 
@@ -41,7 +37,6 @@ class Note extends FlxSprite
 			prevNote = this;
 
 		this.prevNote = prevNote;
-		isSustainNote = sustainNote;
 
 		x += 50;
 		// MAKE SURE ITS DEFINITELY OFF SCREEN?
@@ -62,21 +57,6 @@ class Note extends FlxSprite
 				animation.add('blueScroll', [5]);
 				animation.add('purpleScroll', [4]);
 
-				if (isSustainNote)
-				{
-					loadGraphic(Paths.image('weeb/pixelUI/arrowEnds'), true, 7, 6);
-
-					animation.add('purpleholdend', [4]);
-					animation.add('greenholdend', [6]);
-					animation.add('redholdend', [7]);
-					animation.add('blueholdend', [5]);
-
-					animation.add('purplehold', [0]);
-					animation.add('greenhold', [2]);
-					animation.add('redhold', [3]);
-					animation.add('bluehold', [1]);
-				}
-
 				setGraphicSize(Std.int(width * PlayState.daPixelZoom));
 				updateHitbox();
 
@@ -87,16 +67,6 @@ class Note extends FlxSprite
 				animation.addByPrefix('redScroll', 'red0');
 				animation.addByPrefix('blueScroll', 'blue0');
 				animation.addByPrefix('purpleScroll', 'purple0');
-
-				animation.addByPrefix('purpleholdend', 'pruple end hold');
-				animation.addByPrefix('greenholdend', 'green hold end');
-				animation.addByPrefix('redholdend', 'red hold end');
-				animation.addByPrefix('blueholdend', 'blue hold end');
-
-				animation.addByPrefix('purplehold', 'purple hold piece');
-				animation.addByPrefix('greenhold', 'green hold piece');
-				animation.addByPrefix('redhold', 'red hold piece');
-				animation.addByPrefix('bluehold', 'blue hold piece');
 
 				setGraphicSize(Std.int(width * 0.7));
 				updateHitbox();
@@ -119,58 +89,32 @@ class Note extends FlxSprite
 				animation.play('redScroll');
 		}
 
-		if (FlxG.save.data.downscroll && sustainNote) 
-			flipY = true;
+		// if (FlxG.save.data.downscroll && sustainNote) 
+			// flipY = true;
 
 		// trace(prevNote);
-
-		if (isSustainNote && prevNote != null)
-		{
-			noteScore * 0.2;
-			alpha = 0.6;
-
-
-			switch (noteData)
-			{
-				case 2:
-					animation.play('greenholdend');
-				case 3:
-					animation.play('redholdend');
-				case 1:
-					animation.play('blueholdend');
-				case 0:
-					animation.play('purpleholdend');
-			}
-			offset.add(swagWidth / 2 + width);
-
-			updateHitbox();
-
-
-			// if (PlayState.curStage.startsWith('school'))
-				// x += 30;
-
-			if (prevNote.isSustainNote)
-			{
-				switch (prevNote.noteData)
-				{
-					case 0:
-						prevNote.animation.play('purplehold');
-					case 1:
-						prevNote.animation.play('bluehold');
-					case 2:
-						prevNote.animation.play('greenhold');
-					case 3:
-						prevNote.animation.play('redhold');
-				}
-
-
-				prevNote.scale.y *= Conductor.stepCrochet / 100 * 1.5 * PlayState.SONG.speed;
-				prevNote.updateHitbox();
-				// prevNote.offset.add(swagWidth / 2);
-				// prevNote.setGraphicSize();
-			}
-		}
+		// prevNote.scale.y *= Conductor.stepCrochet / 100 * 1.5 * PlayState.SONG.speed;
 	}
+
+	private static var noteMap:Array<String> = [
+		"left",
+		"down",
+		"up",
+		"right",
+	];
+
+	private static var colorMap:Array<String> = [
+		"purple",
+		"blue",
+		"green",
+		"red",
+	];
+
+	public static function getColorFromDirection(dir:Int):String 
+		return colorMap[dir];
+
+	public static function getNameFromDirection(dir:Int):String 
+		return noteMap[dir];
 
 	override function update(elapsed:Float)
 	{

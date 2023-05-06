@@ -31,12 +31,12 @@ class PlankScript implements IFlxDestroyable {
     public function new(code:String) {
         this.source = code;
         this.interp = new Interp();
+        setupVariables();
         parser.allowTypes = true;
         parser.allowJSON = true;
 
         expression = parser.parseString(source);
-        setupVariables();
-        parser.parseModule(source);
+        // parser.parseModule(source);
 
         scripts.push(this);
     }

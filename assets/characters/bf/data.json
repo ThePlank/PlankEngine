@@ -1,0 +1,42 @@
+{
+    "assetName": "BOYFRIEND",
+    "offsets": {
+        "idle": [-5, 0],
+        "singUP": [-29, 27],
+        "singRIGHT": [-38, -7],
+        "singLEFT": [12, -6],
+        "singDOWN": [-10, -50],
+        "singUPmiss": [-29, 27],
+        "singRIGHTmiss": [-30, 21],
+        "singLEFTmiss": [12, 24],
+        "singDOWNmiss": [-11, -19],
+        "hey": [7, 4],
+        "firstDeath": [37, 11],
+        "deathLoop": [37, 5],
+        "deathConfirm": [37, 69],
+        "scared": [-4, 0]
+    },
+    "animationNames": {
+        "singLEFT": {"name": "BF NOTE LEFT0", "fps": 24, "loop": false},
+        "singDOWN": {"name": "BF NOTE DOWN0", "fps": 24, "loop": false},
+        "singUP": {"name": "BF NOTE UP0", "fps": 24, "loop": false},
+        "singRIGHT": {"name": "BF NOTE RIGHT0", "fps": 24, "loop": false},
+        "idle": {"name": "BF idle dance", "fps": 24, "loop": false},
+        "singLEFTmiss": {"name": "BF NOTE LEFT MISS", "fps": 24, "loop": false},
+        "singDOWNmiss": {"name": "BF NOTE DOWN MISS", "fps": 24, "loop": false},
+        "singUPmiss": {"name": "BF NOTE UP MISS", "fps": 24, "loop": false},
+        "singRIGHTmiss": {"name": "BF NOTE RIGHT MISS", "fps": 24, "loop": false},
+        "hey": {"name": "BF HEY", "fps": 24, "loop": false},
+        "firstDeath": {"name": "BF dies", "fps": 24, "loop": false},
+        "deathLoop": {"name": "BF Dead Loop", "fps": 24, "loop": true},
+        "deathConfirm": {"name": "BF Dead confirm", "fps": 24, "loop": false},
+        "scared": {"name": "BF idle shaking", "fps": 24, "loop": false}
+    },
+    "swapLR": false,
+    "antialias": true,
+    "charPosition": [0, 0],
+    "scale": [1, 1],
+    "flipX": true,
+    "flipY": false,
+    "singTimer": 4
+}

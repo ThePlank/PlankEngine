@@ -70,12 +70,13 @@ class PlankFPS extends TextField
 		text += "\nstage3DDC: " + Context3DStats.contextDrawCalls(DrawCallContext.STAGE3D);
 		#end
 
-		currentMemory = 0;
+		currentMemory = hl.Gc.stats().currentMemory;
 		if (currentMemory > maxMemory)
 			maxMemory = currentMemory;
 
 		text += 'MEM: ${FlxStringUtil.formatBytes(currentMemory)}\n';
-		text += 'MEM MAX: ${FlxStringUtil.formatBytes(maxMemory)}\n';
+		text += 'ALLOC MEM: ${FlxStringUtil.formatBytes(hl.Gc.stats().totalAllocated)}\n';
+		text += 'ALLOC COUNT: ${hl.Gc.stats().allocationCount}\n';
 
 		// 4000MB = 4GB, max memory usage of Windows
 		var mappedMemory = FlxMath.remapToRange(currentMemory, 0, 4000, 0, 1);

@@ -109,6 +109,8 @@ class Main extends Sprite
 		}
 	}
 
+	@:access(flixel.FlxGame)
+	@:access(openfl.display.Stage)
 	private function init(?E:Event):Void
 	{
 		if (hasEventListener(Event.ADDED_TO_STAGE))
@@ -125,17 +127,20 @@ class Main extends Sprite
 		Console.init();
 
 		// dumper = new CrashDumper(CRASH_SESSION_ID #if flash , stage #end);
-		stage.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, (error:UncaughtErrorEvent) -> {
-			error.preventDefault();
-			error.stopImmediatePropagation();
+		stage.rethowErrors = false;
+		stage.onError.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, (e:UncaughtErrorEvent) -> {
+			FlxG.game._requestedState = new UnexpectedCrashState(e.error, CallStack.exceptionStack(true));
+			FlxG.game.switchState();
+			stage.__rendering = false; // make it render again
 		});
-		#if hl
-		hl.Api.setErrorHandler(onError);
-		#end
 		setupGame();
+
+		#if hl
+		hl.Api.setErrorHandler(Main.onError);
+		#end
 	}
 
-	static var consoleClasses:Array<Class<Dynamic>> = [Options, System, Lib, Main, CoolUtil, ZipTools, PlayerSettings, Conductor, Paths];
+	static var consoleClasses:Array<Class<Dynamic>> = [Options, System, Lib, Main, CoolUtil, ZipTools, PlayerSettings, Conductor, Paths #if hl , hl.Gc #end];
 	static var consoleEnums:Array<Enum<Dynamic>> = [Player];
 
 	function registerClasses()
@@ -146,8 +151,9 @@ class Main extends Sprite
 			FlxG.console.registerEnum(unregisteredEnum);
 	}
 
-	var crashPath = "\\crashes";
-	var crashName = "\\PLECrashlog";
+	public static var crashPath = "\\crashes";
+	public static var crashName = "\\PLECrashlog";
+	static var skipErrors = false;
 
 	// todo: truncate the callstack for da popup because it can cause
 	// l
@@ -156,34 +162,41 @@ class Main extends Sprite
 	// g
 	// messagebox (windows doesent like that)
 	#if hl
-	function onError(error:Dynamic) {
+	public static function onError(error:Dynamic) {
+		if (skipErrors)
+			return;
+
+		var stack:CallStack = CallStack.exceptionStack(true);
 		var callstack:String = try Std.string(error) catch(_:Exception) "Unknown";
 		callstack += '\n';
-		callstack += CallStack.toString(CallStack.exceptionStack(true));
-
+		callstack += CallStack.toString(stack);
 
 		Console.log(callstack, ERROR);
 
 		var params:EnumFlags<DialogFlags> = new EnumFlags<DialogFlags>();
 		params.set(IsError);
 
-		if (!FileSystem.isDirectory(FileSystem.absolutePath(crashPath))) {
+		saveCrash(error, stack, 'unhandled');
+
+		UI.dialog("Plank Engine Crash Dialog", callstack, params);
+	}
+	#end
+
+	static public function saveCrash(error:Dynamic, stack:CallStack, subdirectory:String):String {
+		var callstack:String = try Std.string(error) catch(_:Exception) "Unknown";
+		callstack += '\n';
+		callstack += CallStack.toString(stack);
+		if (!FileSystem.isDirectory(FileSystem.absolutePath(crashPath)))
 			FileSystem.createDirectory(FileSystem.absolutePath(crashPath));
-		}
+
+		if (!FileSystem.isDirectory(FileSystem.absolutePath('$crashPath\\$subdirectory')))
+			FileSystem.createDirectory(FileSystem.absolutePath('$crashPath\\$subdirectory'));
 
 		var timeString:String = DateTools.format(Date.now(), '%F_%T').replace(':', "-");
 
-		File.saveContent('${FileSystem.absolutePath(crashPath)}\\${crashName}_${timeString}.txt', callstack);
-		
-		// if (game == null)
-			UI.dialog("Plank Engine Crash Dialog", callstack, params);
-		// else {
-			// FlxG.switchState(new UnexpectedCrashState());
-		// }
-
-		return;
+		File.saveContent('${FileSystem.absolutePath(crashPath)}\\$subdirectory\\${crashName}_${timeString}.txt', callstack);
+		return '${FileSystem.absolutePath(crashPath)}\\$subdirectory\\${crashName}_${timeString}.txt';
 	}
-	#end
 
 	private function setupGame():Void
 	{
@@ -209,9 +222,10 @@ class Main extends Sprite
 		registerClasses();
 		classes.Mod.init();
 		PlayerSettings.init();
+		trace(hl.Gc.stats().totalAllocated);
+		// hl.Gc.blocking();
 
-		// var file = new FLFile(CoolUtil.BytestoIntArray(File.getBytes(Paths.getPath('data/reddit.fsc', BINARY))));
-		// trace(ChartParser.fromFSC(ChartParser.fscToNotes(file)).notes[0]);
+		new PlankScript('trace(\'goodbye, world\');');
 
 		var sucess:Bool = FlxG.save.bind("PlankEngine", "PlankDev");
 
@@ -235,7 +249,7 @@ class Main extends Sprite
 	}
 
 	function update(event:Event) {
-		#if (haxe >= "4.3.0" && hl) // only avalible on 4.3rc+
+		#if (haxe_version >= 4.3 && hl) // only avalible on 4.3rc+
 		hl.Api.checkReload();
 		#end
 	}
@@ -248,3 +262,4 @@ class Main extends Sprite
 		return null;
 	}
 }
+

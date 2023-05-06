@@ -15,16 +15,7 @@ import flixel.util.FlxSignal;
 import flixel.util.FlxAxes;
 import flixel.FlxSprite.IFlxSprite;
 
-interface IFlxScrollable
-{
-	public var scrollAxes:FlxAxes;
-	public var scrollSignal:FlxSignal;
-	public var scrollPoint:FlxPoint;
-	function scrollTo(point:FlxPoint):Void;
-	private function updateScroll(point:FlxPoint):Void;
-}
-
-class ScrollableSprite implements IFlxScrollable extends FlxTypedSpriteGroup<FlxSprite>
+class ScrollableSprite extends FlxTypedSpriteGroup<FlxSprite>
 {
 	public var scrollAxes:FlxAxes = Y;
 
@@ -33,9 +24,7 @@ class ScrollableSprite implements IFlxScrollable extends FlxTypedSpriteGroup<Flx
 	public var scrollPoint:FlxPoint = new FlxPoint();
 	public var scrollableRect:FlxRect = new FlxRect();
 
-	public function scrollTo(point:FlxPoint)
-	{
-	}
+	public function scrollTo(point:FlxPoint) {}
 
 	var memberPositions(default, null):Map<FlxSprite, FlxPoint> = [];
 
@@ -64,9 +53,9 @@ class ScrollableSprite implements IFlxScrollable extends FlxTypedSpriteGroup<Flx
 	override function set_x(Value:Float):Float {
 		var originalX:Float = x;
 		var returnX:Float = super.set_x(Value);
-		var deltaX:Float = returnX - originalX;
+		var deltaX:Float = originalX - returnX;
 		for (sprite => position in memberPositions)
-			position.x += deltaX;
+			position.x -= deltaX;
 		scrollableRect.setPosition(x, y);
 		return returnX;
 	}
@@ -74,14 +63,14 @@ class ScrollableSprite implements IFlxScrollable extends FlxTypedSpriteGroup<Flx
 	override function set_y(Value:Float):Float {
 		var originalY:Float = y;
 		var returnY:Float = super.set_y(Value);
-		var deltaY:Float = returnY - originalY;
+		var deltaY:Float = originalY - returnY;
 		for (sprite => position in memberPositions)
-			position.y += deltaY;
+			position.y -= deltaY;
 		scrollableRect.setPosition(x, y);
 		return returnY;
 	}
 
-	public function new(x:Int = 0, y:Int = 0, width:Int, height:Int, ?maxSize:Int = 0)
+	public function new(x:Float = 0, y:Float = 0, width:Float, height:Float, ?maxSize:Int = 0)
 	{
 		super(x, y, maxSize);
 		scrollableRect.width = width;
@@ -91,7 +80,6 @@ class ScrollableSprite implements IFlxScrollable extends FlxTypedSpriteGroup<Flx
 
 	override function update(elapsed:Float)
 	{
-		super.update(elapsed);
 		clipRect = scrollableRect;
         
 		if (rectOverlapsPoint(scrollableRect, FlxG.mouse.getPosition()) && Math.abs(FlxG.mouse.wheel) > 0) {
@@ -100,7 +88,9 @@ class ScrollableSprite implements IFlxScrollable extends FlxTypedSpriteGroup<Flx
 
 		scrollPoint.x = FPSLerp.lerp(scrollPoint.x, 0, 0.05);
 		scrollPoint.y = FPSLerp.lerp(scrollPoint.y, 0, 0.05);
+		// scrollPoint.y = FlxMath.bound(scrollPoint.y, y, height + y);
 		updateScroll(scrollPoint);
+		super.update(elapsed);
 	}
 
     function updateScroll(scrollPoint:FlxPoint) {

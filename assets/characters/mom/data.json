@@ -1,0 +1,22 @@
+{
+    "assetName": "Mom_Assets",
+    "offsets": {
+        "idle": [0, 0],
+        "singLEFT": [250, -23],
+        "singDOWN": [20, -160],
+        "singUP": [14, 71],
+        "singRIGHT": [10, -60]
+    },
+    "animationNames": {
+        "singLEFT": {"name": "Mom Left Pose", "fps": 24, "loop": false},
+        "singDOWN": {"name": "MOM DOWN POSE", "fps": 24, "loop": false},
+        "singUP": {"name": "Mom Up Pose", "fps": 24, "loop": false},
+        "singRIGHT": {"name": "Mom Pose Left", "fps": 24, "loop": false},
+        "idle": {"name": "Mom Idle", "fps": 24, "loop": false}
+    },
+    "swapLR": false,
+    "antialias": true,
+    "charPosition": [0, 0],
+    "scale": [1, 1],
+    "singTimer": 4
+}

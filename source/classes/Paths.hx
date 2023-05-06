@@ -93,6 +93,16 @@ class Paths
 		'images/square.png',
 	];
 
+	// this dumps the memory to inspect
+	// good if yoy have memory problems
+
+	@:noCompletion public inline static function _dumpMemory()
+	{
+		#if hl
+		Gc.dumpMemory();
+		#end
+	}
+
 	@:noCompletion private inline static function _gc(major:Bool)
 	{
 		#if (cpp || neko)
@@ -106,6 +116,8 @@ class Paths
 	@:noCompletion private inline static function __init__() {
 		var flags = Gc.flags;
 		flags.unset(NoThreads);
+		// flags.set(Profile);
+		Gc.enable(true);
 		Gc.flags = flags;
 	}
 	#end
@@ -296,7 +308,6 @@ class Paths
 	static public function getTextFromFile(key:String, ?ignoreMods:Bool = false):String
 	{
 		key = getPath(key);
-		trace('my balls $key');
 		if (FileSystem.exists(key))
 			return File.getContent(key);
 		return Assets.getText(key);
@@ -360,7 +371,7 @@ class Paths
 	{
 		var graph:FlxGraphic = null;
 
-		var path:String = getPath('images/$key.png', IMAGE, library);
+		var path:String = (key.endsWith('.png') ? key : getPath('images/$key.png', IMAGE, library) );
 		path = path.substr(path.indexOf(':') + 1);
 		if ((graph = currentTrackedAssets.get(path)) != null)
 			return graph;
@@ -378,7 +389,7 @@ class Paths
 			return graph;
 		}
 
-		Console.log('SHIT! $path doesen\'t exist!');
+		Console.log('fuck $path doesent exist');
 		return null;
 	}
 

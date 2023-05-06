@@ -8,7 +8,6 @@ import classes.Options;
 import classes.Highscore;
 import states.substates.GameOverSubstate;
 import states.substates.PauseSubState;
-import states.GitarooPause;
 import display.objects.DialogueBox;
 import classes.Song;
 import display.objects.HealthIcon;
@@ -59,6 +58,7 @@ import lime.utils.Assets;
 import openfl.display.BlendMode;
 import openfl.display.StageQuality;
 import openfl.filters.ShaderFilter;
+import states.substates.GitarooPauseSubstate;
 
 using StringTools;
 
@@ -729,7 +729,6 @@ class PlayState extends states.abstr.MusicBeatState
 		dadStrums.scrollSpeed = SONG.speed;
 		add(dadStrums);
 
-		
 		// startCountdown();
 
 		generateSong(SONG.song);
@@ -994,7 +993,7 @@ class PlayState extends states.abstr.MusicBeatState
 
 					ready.screenCenter();
 					add(ready);
-					FlxTween.tween(ready, {y: ready.y += 100, alpha: 0}, Conductor.crochet / 1000, {
+					FlxTween.tween(ready, {/*y: ready.y += 100,*/ alpha: 0}, Conductor.crochet / 1000, {
 						ease: FlxEase.cubeInOut,
 						onComplete: function(twn:FlxTween)
 						{
@@ -1011,7 +1010,7 @@ class PlayState extends states.abstr.MusicBeatState
 
 					set.screenCenter();
 					add(set);
-					FlxTween.tween(set, {y: set.y += 100, alpha: 0}, Conductor.crochet / 1000, {
+					FlxTween.tween(set, {/*y: ready.y += 100,*/ alpha: 0}, Conductor.crochet / 1000, {
 						ease: FlxEase.cubeInOut,
 						onComplete: function(twn:FlxTween)
 						{
@@ -1030,7 +1029,7 @@ class PlayState extends states.abstr.MusicBeatState
 
 					go.screenCenter();
 					add(go);
-					FlxTween.tween(go, {y: go.y += 100, alpha: 0}, Conductor.crochet / 1000, {
+					FlxTween.tween(go, {/*y: ready.y += 100,*/ alpha: 0}, Conductor.crochet / 1000, {
 						ease: FlxEase.cubeInOut,
 						onComplete: function(twn:FlxTween)
 						{
@@ -1131,24 +1130,17 @@ class PlayState extends states.abstr.MusicBeatState
 				susLength = susLength / Conductor.stepCrochet;
 				unspawnNotes.push(swagNote);
 
-				for (susNote in 0...Math.floor(susLength))
-				{
-					oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
+				// incase suslength isnt the tjing daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet
+				var sustainNote:display.objects.Sustain = new display.objects.Sustain(swagNote, Std.int(susLength));
+				sustainNote.scrollFactor.set();
+				// unspawnNotes.push(sustainNote);
 
-					var sustainNote:Note = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, oldNote, true);
-					sustainNote.scrollFactor.set();
-					unspawnNotes.push(sustainNote);
-
-					sustainNote.mustPress = gottaHitNote;
-				}
+				// sustainNote.mustPress = gottaHitNote;
 
 				swagNote.mustPress = gottaHitNote;
 			}
 			daBeats += 1;
 		}
-
-		// trace(unspawnNotes.length);
-		// playerCounter += 1;
 
 		unspawnNotes.sort(sortByShit);
 
@@ -1403,13 +1395,13 @@ class PlayState extends states.abstr.MusicBeatState
 			paused = true;
 
 			// 1 / 1000 chance for Gitaroo Man easter egg
-			if (FlxG.random.bool(0.1))
-			{
+			// if (FlxG.random.bool(0.1))
+			// {
 				// gitaroo man easter egg
-				UIBaseState.switchState(GitarooPause);
-			}
-			else
-				openSubState(new PauseSubState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
+				openSubState(new GitarooPauseSubstate());
+			// }
+			// else
+				// openSubState(new PauseSubState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
 
 			#if (discord_rpc || hldiscord)
 			DiscordClient.changePresence(detailsPausedText, SONG.song + " (" + storyDifficultyText + ")", iconRPC);

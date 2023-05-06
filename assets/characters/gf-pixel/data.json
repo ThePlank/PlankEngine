@@ -1,0 +1,20 @@
+{
+    "assetName": "gfPixel",
+    "offsets": {
+        "danceLeft": [0, 0],
+        "danceRight": [0, 0],
+        "singUP": [0, 0],
+    },
+    "animationNames": {
+        "singUP": {"name": "GF IDLE", "indecies": [2], "fps": 24, "loop": false},
+        "danceLeft": {"name": "GF IDLE", "fps": 24, "loop": false, "indecies": [30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], "postfix": ""},
+        "danceRight": {"name": "GF IDLE", "fps": 24, "loop": false, "indecies": [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], "postfix": ""},
+    },
+    "swapLR": true,
+    "antialias": false,
+    "charPosition": [6, 6],
+    "scale": [1, 1],
+    "flipX": false,
+    "flipY": false,
+    "singTimer": 4
+}

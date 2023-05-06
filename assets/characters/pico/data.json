@@ -1,0 +1,33 @@
+{
+    "assetName": "Pico_FNF_assetss",
+    "offsets": {
+        "idle": [0, 0],
+        "singUP": [-29, 27],
+        "singRIGHT": [-68, -7],
+        "singLEFT": [65, 9],
+        "singDOWN": [200, -70],
+        "singUPmiss": [-19, 67],
+        "singLEFTmiss": [-60, 41],
+        "singRIGHTmiss": [62, 64],
+        "singDOWNmiss": [210, -28]
+    },
+    "animationNames": {
+        "singLEFT": {"name": "Pico Note Right0", "fps": 24, "loop": false},
+        "singDOWN": {"name": "Pico Down Note0", "fps": 24, "loop": false},
+        "singUP": {"name": "pico Up note0", "fps": 24, "loop": false},
+        "singRIGHT": {"name": "Pico NOTE LEFT0", "fps": 24, "loop": false},
+        "idle": {"name": "Pico Idle Dance", "fps": 24, "loop": false},
+        "singLEFTmiss": {"name": "Pico NOTE LEFT miss", "fps": 24, "loop": false},
+        "singDOWNmiss": {"name": "Pico Down Note MISS", "fps": 24, "loop": false},
+        "singUPmiss": {"name": "pico Up note miss", "fps": 24, "loop": false},
+        "singRIGHTmiss": {"name": "Pico Note Right Miss", "fps": 24, "loop": false}
+    },
+    "swapLR": false,
+    "antialias": true,
+    "charPosition": [0, 0],
+    "scale": [1, 1],
+    "flipX": true,
+    "flipY": false,
+    "angle": 0,
+    "singTimer": 4
+}

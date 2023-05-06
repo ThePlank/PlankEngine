@@ -1,0 +1,23 @@
+{
+    "assetName": "bfPixelsDEAD",
+    "offsets": {
+        "singUP": [0, 0],
+        "firstDeath": [0, 0],
+        "deathLoop": [-37, 0],
+        "deathConfirm": [-37, 0],
+    },
+    "animationNames": {
+        "singUP": { "name": "BF Dies pixel", "fps": 24, "loop": false },
+        "firstDeath": { "name": "BF Dies pixel", "fps": 24, "loop": false },
+        "deathLoop": { "name": "Retry Loop", "fps": 24, "loop": true },
+        "deathConfirm": { "name": "RETRY CONFIRM", "fps": 24, "loop": true },
+    },
+    "swapLR": false,
+    "antialias": false,
+    "charPosition": [0, 0],
+    "scale": [6, 6],
+    "flipX": true,
+    "flipY": false,
+    "angle": 0,
+    "singTimer": 4
+}

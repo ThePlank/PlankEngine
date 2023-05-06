@@ -6,7 +6,7 @@ jobs:
     strategy:
       matrix:
         include:
-         - name: Windows Hashlink
+         - name: Hashlink (Windows)
            os: windows-latest
            platform: hl
            build_type: debug
@@ -14,12 +14,12 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: ThePlank/PlankEngine
           ref: main
       - name: Cache
-        uses: actions/cache@v3.2.6
+        uses: actions/cache@v3.3.1
         with:
           path: |
             ./export/${{ matrix.build_type }}/${{ matrix.platform }}/haxe
@@ -29,9 +29,9 @@ jobs:
             ~/.haxelib
           key: ${{ matrix.name }}-cache-${{ hashFiles('./Project.xml') }}
       - name: Install & Setup Haxe
-        uses: krdlab/setup-haxe@v1.1.5
+        uses: krdlab/setup-haxe@v1.5.0
         with:
-          haxe-version: 4.2.5
+          haxe-version: 4.3.0
       - name: Install Haxe Extensions
         run: |
           haxelib --quiet install lime
@@ -49,14 +49,11 @@ jobs:
           haxelib --quiet git discord_rpc https://github.com/Aidan63/linc_discord-rpc
       - name: Setup Lime
         run: haxelib --quiet run lime setup
-      # - name: Install git
-      #   if: ${{ matrix.os == 'windows-latest' }}
-      #   run: choco install git -y
       - name: Build using Lime
         run: haxelib run lime build ${{ matrix.platform }} -${{ matrix.build_type }}
       - name: Upload Artifact
         uses: actions/upload-artifact@v2.2.2
         with:
           name: |
-            Plank Engine for ${{ matrix.name }}
+            Plank Engine for ${{ matrix.name }} ${{ matrix.build_type }}
           path: export/${{ matrix.build_type }}/${{ matrix.platform }}/bin

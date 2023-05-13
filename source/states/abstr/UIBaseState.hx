@@ -2,13 +2,13 @@ package states.abstr;
 
 import openfl.display.BitmapData;
 import sys.io.File;
-import states.substates.ModSelectionSubstate;
+import states.substates.ui.ModSelectionSubstate;
 import flixel.FlxState;
-import display.objects.Alphabet;
+import display.objects.ui.Alphabet;
 import flixel.group.FlxSpriteGroup;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
-import display.objects.Notification;
+import display.objects.ui.Notification;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.util.FlxGradient;
@@ -119,7 +119,7 @@ class UIBaseState extends MusicBeatState
 		super.create();
 	}
 
-	override function update(elapsed:Float) {
+	override function update(delta:Float) {
 		if (FlxG.keys.justPressed.M && canOpenModMenu)
 			openSubState(new ModSelectionSubstate());
 
@@ -129,6 +129,6 @@ class UIBaseState extends MusicBeatState
 			//showNotification(new Notification(stupid, 2.5));
 		//}
 		
-		super.update(elapsed);
+		super.update(delta);
 	}
 }

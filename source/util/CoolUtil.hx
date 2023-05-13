@@ -4,7 +4,7 @@ import haxe.io.Bytes;
 import flixel.FlxG;
 import openfl.Lib;
 import lime.ui.Window;
-import states.PlayState;
+import states.game.PlayState;
 import lime.utils.Assets;
 
 using StringTools;

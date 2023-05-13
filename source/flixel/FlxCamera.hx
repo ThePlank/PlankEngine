@@ -1151,7 +1151,7 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Updates the camera scroll as well as special effects like screen-shake or fades.
 	 */
-	override public function update(elapsed:Float):Void
+	override public function update(delta:Float):Void
 	{
 		// follow the target, if there is one
 		if (target != null)
@@ -1159,8 +1159,8 @@ class FlxCamera extends FlxBasic
 			updateFollow();
 		}
 
-		updateFlash(elapsed);
-		updateFade(elapsed);
+		updateFlash(delta);
+		updateFade(delta);
 
 		flashSprite.filters = filtersEnabled ? _filters : null;
 
@@ -1168,7 +1168,7 @@ class FlxCamera extends FlxBasic
 
 		updateFlashSpritePosition();
 		updateFlashOffset();
-		updateShake(elapsed);
+		updateShake(delta);
 	}
 
 	function skewMatrix(matrix:FlxMatrix, ?x:Float = 0, ?y:Float = 0)
@@ -1325,12 +1325,12 @@ class FlxCamera extends FlxBasic
 		_lastScrollOffset.set(scrollOffset.x, scrollOffset.y);
 	}
 
-	function updateFlash(elapsed:Float):Void
+	function updateFlash(delta:Float):Void
 	{
 		// Update the "flash" special effect
 		if (_fxFlashAlpha > 0.0)
 		{
-			_fxFlashAlpha -= elapsed / _fxFlashDuration;
+			_fxFlashAlpha -= delta / _fxFlashDuration;
 			if ((_fxFlashAlpha <= 0) && (_fxFlashComplete != null))
 			{
 				_fxFlashComplete();
@@ -1338,14 +1338,14 @@ class FlxCamera extends FlxBasic
 		}
 	}
 
-	function updateFade(elapsed:Float):Void
+	function updateFade(delta:Float):Void
 	{
 		if (_fxFadeDuration == 0.0)
 			return;
 
 		if (_fxFadeIn)
 		{
-			_fxFadeAlpha -= elapsed / _fxFadeDuration;
+			_fxFadeAlpha -= delta / _fxFadeDuration;
 			if (_fxFadeAlpha <= 0.0)
 			{
 				_fxFadeAlpha = 0.0;
@@ -1354,7 +1354,7 @@ class FlxCamera extends FlxBasic
 		}
 		else
 		{
-			_fxFadeAlpha += elapsed / _fxFadeDuration;
+			_fxFadeAlpha += delta / _fxFadeDuration;
 			if (_fxFadeAlpha >= 1.0)
 			{
 				_fxFadeAlpha = 1.0;
@@ -1370,11 +1370,11 @@ class FlxCamera extends FlxBasic
 			_fxFadeComplete();
 	}
 
-	function updateShake(elapsed:Float):Void
+	function updateShake(delta:Float):Void
 	{
 		if (_fxShakeDuration > 0)
 		{
-			_fxShakeDuration -= elapsed;
+			_fxShakeDuration -= delta;
 			if (_fxShakeDuration <= 0)
 			{
 				if (_fxShakeComplete != null)

@@ -135,8 +135,14 @@ class Paths
 
 	public inline static function gc(major:Bool = false, repeat:Int = 1)
 	{
+		#if hl
+		Gc.blocking(true);
+		#end
 		while (repeat-- > 0)
 			_gc(major);
+		#if hl
+		Gc.blocking(false);
+		#end
 	}
 
 	public static function decacheGraphic(key:String) {

@@ -52,9 +52,9 @@ class MusicBeatState extends FlxUIState
 		super.create();
 	}
 
-	override function update(elapsed:Float)
+	override function update(delta:Float)
 	{
-		totalElapsed += elapsed;
+		totalElapsed += delta;
 
 		var oldStep:Int = curStep;
 
@@ -64,7 +64,7 @@ class MusicBeatState extends FlxUIState
 		if (oldStep != curStep && curStep > 0)
 			stepHit();
 
-		super.update(elapsed);
+		super.update(delta);
 	}
 
 	private function updateBeat():Void

@@ -60,9 +60,9 @@ class Video extends FlxSprite
 		playing = true;
 	}
 
-	override function update(elapsed:Float)
+	override function update(delta:Float)
 	{
-		super.update(elapsed);
+		super.update(delta);
 
 		if (!playing)
 			return;

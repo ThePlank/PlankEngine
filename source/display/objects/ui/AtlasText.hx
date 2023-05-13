@@ -25,7 +25,7 @@ class AtlasText extends FlxTypedSpriteGroup<AtlasChar>
 	
 	var font:AtlasFontData;
 	
-	public var atlas(get, never):FlxAtlasFrames;
+	public var atlas(get, never):String;
 	inline function get_atlas() return font.atlas;
 	public var caseAllowed(get, never):Case;
 	inline function get_caseAllowed() return font.caseAllowed;
@@ -110,6 +110,7 @@ class AtlasText extends FlxTypedSpriteGroup<AtlasChar>
 	function appendTextCased(text:String)
 	{
 		var charCount = group.countLiving();
+		var sparrowAtlas = Paths.getSparrowAtlas(atlas);
 		var xPos:Float = 0;
 		var yPos:Float = 0;
 		// `countLiving` returns -1 if group is empty
@@ -140,7 +141,7 @@ class AtlasText extends FlxTypedSpriteGroup<AtlasChar>
 				{
 					var charSprite:AtlasChar;
 					if (group.members.length <= charCount)
-						charSprite = new AtlasChar(atlas, char);
+						charSprite = new AtlasChar(sparrowAtlas, char);
 					else
 					{
 						charSprite = group.members[charCount];
@@ -219,18 +220,18 @@ private class AtlasFontData
 	static public var upperChar = ~/^[A-Z]\d+$/;
 	static public var lowerChar = ~/^[a-z]\d+$/;
 	
-	public var atlas:FlxAtlasFrames;
+	public var atlas:String;
 	public var maxHeight:Float = 0.0;
 	public var caseAllowed:Case = Both;
 	
 	public function new (name:String)
 	{
-		atlas = Paths.getSparrowAtlas("fonts/" + name.toLowerCase());
+		atlas = "fonts/" + name.toLowerCase();
 		
 		var containsUpper = false;
 		var containsLower = false;
 		
-		for (frame in atlas.frames)
+		for (frame in Paths.getSparrowAtlas(atlas).frames)
 		{
 			maxHeight = Math.max(maxHeight, frame.frame.height);
 			

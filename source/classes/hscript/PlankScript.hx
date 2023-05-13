@@ -2,9 +2,9 @@ package classes.hscript;
 
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import util.Console;
-import display.objects.Alphabet;
-import display.objects.Character;
-import states.PlayState;
+import display.objects.ui.Alphabet;
+import display.objects.game.Character;
+import states.game.PlayState;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxTimer;

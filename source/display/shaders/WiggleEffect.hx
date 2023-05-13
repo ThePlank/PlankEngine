@@ -25,9 +25,9 @@ class WiggleEffect
 		shader.uTime.value = [0];
 	}
 
-	public function update(elapsed:Float):Void
+	public function update(delta:Float):Void
 	{
-		shader.uTime.value[0] += elapsed;
+		shader.uTime.value[0] += delta;
 	}
 
 	function set_effectType(v:WiggleEffectType):WiggleEffectType

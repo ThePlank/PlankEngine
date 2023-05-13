@@ -29,8 +29,8 @@ class Checkbox extends FlxSprite {
         }
     }
 
-    override function update(elapsed:Float) {
-        super.update(elapsed);
+    override function update(delta:Float) {
+        super.update(delta);
         offset.x = frame.frame.width - mainRect.width;
         offset.y = frame.frame.height - mainRect.height;
     }

@@ -23,10 +23,10 @@ class ColorSwap
 		shader.awesomeOutline.value = [hasOutline];
 	}
 
-	public function update(elapsed:Float):Void
+	public function update(delta:Float):Void
 	{
-		shader.uTime.value[0] += elapsed;
-		hueShit += elapsed;
+		shader.uTime.value[0] += delta;
+		hueShit += delta;
 		// trace(shader.money.value[0]);
 	}
 

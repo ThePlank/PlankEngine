@@ -10,4 +10,7 @@ import flixel.addons.transition.FlxTransitionableState;
 import flixel.group.FlxGroup;
 import flixel.util.FlxSignal;
 
-class OptionsState extends MusicBeatState { }
+class OptionsState extends MusicBeatState {
+	
+	
+}

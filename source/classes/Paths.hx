@@ -197,7 +197,7 @@ class Paths
 		}
 
 		compress();
-		gc(true);
+		// gc(true);
 	}
 
 	// define the locally tracked assets
@@ -365,7 +365,7 @@ class Paths
 		if (assetCompressTrack > 6)
 		{
 			assetCompressTrack = 0;
-			gc(true);
+			// gc(true);
 			
 		}
 	}

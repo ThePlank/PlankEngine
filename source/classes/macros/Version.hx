@@ -7,10 +7,10 @@ class Version {
   }
 
   static function getLine(cmd: String, args: Array<String>):String {
-    Sys.command(cmd + " " + args.join(" ") + " > .tmp.ple.version");
-    var f = sys.io.File.getContent(".tmp.ple.version");
-    Sys.command("rm -f .tmp.ple.version");
-    return StringTools.trim(f);
+    var process:sys.io.Process = new sys.io.Process(cmd, args);
+    var line:String = process.stdout.readLine();
+    process.close();
+    return StringTools.trim(line);
   }
 
   macro static function getGitVersion() {

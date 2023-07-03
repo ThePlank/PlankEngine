@@ -171,9 +171,9 @@ class Assets
 			bitmap.image.data = null;
 			bitmap.dispose();
 			bitmap.disposeImage();
-			#if !macro
-			Paths.gc(false);
-			#end
+			// #if !macro
+			// Paths.gc(false);
+			// #end
 
 			bitmap = BitmapData.fromTexture(texture);
 		}

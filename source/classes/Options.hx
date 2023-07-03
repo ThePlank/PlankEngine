@@ -5,6 +5,24 @@ import flixel.util.FlxSave;
 import sys.thread.Thread;
 import flixel.FlxG;
 
+// i whould do OptionEntry<T> but idek ho to get the Class<Dynamic> of it
+class OptionEntry {
+	public var description:String;
+	public var entryName:String;
+	public var displayName:String;
+	public var type:Class<Dynamic>;
+	public var limits:{?min:Float, ?max:Float, ?options:Array<Dynamic>};
+
+	public function new(entryName:String, displayName:String, description:String, type:Class<Dynamic>, ?limits:{?min:Float, ?max:Float, ?options:Array<Dynamic>}) {
+		this.description = description;
+		this.entryName = entryName;
+		this.displayName = displayName;
+		this.type = type;
+		this.limits = limits;
+	}
+}
+
+
 // lol image psych engine saving system
 
 class Options
@@ -61,7 +79,7 @@ class Options
 		}
 	}
 
-	public static function initSetting(key:String):Bool {
+	public static function resetSetting(key:String):Bool {
 		if (getValue(key) == null && deafultData.exists(key)) {
 			setValue(key, deafultData.get(key));
 			return true;

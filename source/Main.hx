@@ -16,7 +16,6 @@ import flixel.tweens.FlxTween;
 import flixel.FlxSprite;
 import classes.Conductor;
 import haxe.EnumFlags;
-import classes.NorwayBanner;
 import display.objects.game.StrumLine.Player;
 import sys.io.FileOutput;
 import sys.io.File;
@@ -48,6 +47,7 @@ import openfl.display.FPS;
 import openfl.display.Sprite;
 import openfl.events.Event;
 import states.ui.TitleState;
+// import sdl.Window as SdlWindow;
 #if hl
 import hl.UI;
 #end
@@ -79,12 +79,9 @@ class Main extends Sprite
 	}
 
 
-	// public final CRASH_SESSION_ID:String = SessionData.generateID("PlankEngine_");
-
 	private static var current:Main;
 	public var game:FlxGame;
 	public var fpsCounter:PlankFPS;
-	// var dumper:CrashDumper;
 
 	// You can pretty much ignore everything from here on - your code should go in your states.
 
@@ -125,7 +122,6 @@ class Main extends Sprite
 		Highscore.load();
 		Console.init();
 
-		// dumper = new CrashDumper(CRASH_SESSION_ID #if flash , stage #end);
 		stage.rethowErrors = false;
 		stage.onError.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, (e:UncaughtErrorEvent) -> {
 			FlxG.game._requestedState = new UnexpectedCrashState(e.error, CallStack.exceptionStack(true));
@@ -210,6 +206,7 @@ class Main extends Sprite
 			settings.gameWidth = Math.ceil(stageWidth / settings.zoom);
 			settings.gameHeight = Math.ceil(stageHeight / settings.zoom);
 		}
+		stage.window.frameRate = settings.framerate;
 
 		#if (debug)
 		settings.initialState = TitleState;
@@ -217,14 +214,11 @@ class Main extends Sprite
 
 		game = new FlxGame(settings.gameWidth, settings.gameHeight, settings.initialState, #if (flixel < "5.0.0") settings.zoom, #end settings.framerate, settings.framerate, settings.skipSplash, settings.startFullscreen);
 		addChild(game);
-		stage.addEventListener(Event.ENTER_FRAME, update);
+		// stage.addEventListener(Event.ENTER_FRAME, update);
 		registerClasses();
 		classes.Mod.init();
 		PlayerSettings.init();
-		trace(hl.Gc.stats().totalAllocated);
-		// hl.Gc.blocking();
-
-		new PlankScript('trace(\'goodbye, world\');');
+		// classes.Discord.DiscordClient.initialize();
 
 		var sucess:Bool = FlxG.save.bind("PlankEngine", "PlankDev");
 
@@ -235,8 +229,6 @@ class Main extends Sprite
 		
 		#if !mobile
 		fpsCounter = new PlankFPS(10, 3);
-		for (text in fpsCounter.outlineTexts)
-			addChild(text);
 		addChild(fpsCounter);
 		#end
 	}
@@ -262,3 +254,19 @@ class Main extends Sprite
 	}
 }
 
+/*
+class Main extends Sprite
+ {
+ 	public static function main():Void
+		new Main();
+
+	public function new()
+	{
+		super();
+		addEventListener(Event.ENTER_FRAME, (event:Event) -> trace(hl.Gc.stats()));
+	}
+
+	static public function saveCrash(error:Dynamic, stack:CallStack, subdirectory:String) { return ''; }
+	public static function onError(error:Dynamic) {}
+ }
+*/

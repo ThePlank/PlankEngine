@@ -10,8 +10,9 @@ import openfl.Memory;
 import lime.system.System;
 import openfl.text.TextFormat;
 import openfl.text.TextField;
+import openfl.display.Sprite;
 
-class PlankFPS extends TextField
+class PlankFPS extends Sprite
 {
 	/**
 		The current frame rate, expressed using frames-per-second
@@ -24,9 +25,13 @@ class PlankFPS extends TextField
 	private var maxColor:FlxColor = 0xFFEC5454;
 	private var normalColor:FlxColor = 0xFF000000;
 	private var outlineColor:FlxColor = 0xFFFFFFFF;
+	public var baseText:TextField;
 	public var outlineTexts:Array<TextField> = [];
 	private var outlineWidth:Int = 2;
 	private var outlineQuality:Int = 8;
+	var defaultTextFormat:TextFormat;
+
+	public var text(default, set):String; 
 
 
 	public function new(x:Float = 10, y:Float = 10)
@@ -36,24 +41,32 @@ class PlankFPS extends TextField
 		this.x = x;
 		this.y = y;
 
+		this.defaultTextFormat = new TextFormat("VCR OSD Mono", 18, normalColor);
+
+		baseText = new TextField();
+		baseText.defaultTextFormat = this.defaultTextFormat;
+		baseText.selectable = false;
+		baseText.mouseEnabled = false;
+		baseText.width = FlxG.width;
+
 		currentFPS = 0;
 		currentMemory = 0;
 		maxMemory = 0;
-		selectable = false;
-		mouseEnabled = false;
-		defaultTextFormat = new TextFormat("VCR OSD Mono", 18, normalColor);
-		width = 250;
-		text = "FPS: ";
 
 		for (i in 0...outlineQuality) {
 			var otext:TextField = new TextField();
-			otext.x = x + Math.sin(i) *outlineWidth;
-			otext.y = y + Math.cos(i) *outlineWidth;
+			otext.x = Math.sin(i) *outlineWidth;
+			otext.y = Math.cos(i) *outlineWidth;
 			otext.defaultTextFormat = this.defaultTextFormat;
 			otext.textColor = outlineColor;
-			otext.width = this.width;
+			otext.width = baseText.width;
 			outlineTexts.push(otext);
+			addChild(otext);
 		}
+
+		addChild(baseText);
+
+		text = "FPS: ";
 
 	}
 
@@ -62,7 +75,6 @@ class PlankFPS extends TextField
 	{
 		currentFPS = Math.floor(1 / (deltaTime / 1000));
 
-		text = 'FPS: ${currentFPS}\n';
 
 		#if (gl_stats && !disable_cffi && (!html5 || !canvas))
 		text += "\ntotalDC: " + Context3DStats.totalDrawCalls();
@@ -70,25 +82,23 @@ class PlankFPS extends TextField
 		text += "\nstage3DDC: " + Context3DStats.contextDrawCalls(DrawCallContext.STAGE3D);
 		#end
 
-		currentMemory = hl.Gc.stats().currentMemory;
+		var stats:{currentMemory:Float, totalAllocated:Float, allocationCount:Float} = hl.Gc.stats();
+		currentMemory = stats.currentMemory;
 		if (currentMemory > maxMemory)
 			maxMemory = currentMemory;
 
-		text += 'MEM: ${FlxStringUtil.formatBytes(currentMemory)}\n';
-		text += 'ALLOC MEM: ${FlxStringUtil.formatBytes(hl.Gc.stats().totalAllocated)}\n';
-		text += 'ALLOC COUNT: ${hl.Gc.stats().allocationCount}\n';
+		text = 'FPS: ${currentFPS}\nMEM: ${FlxStringUtil.formatBytes(currentMemory)} / ${FlxStringUtil.formatBytes(maxMemory)}';
 
-		// 4000MB = 4GB, max memory usage of Windows
-		var mappedMemory = FlxMath.remapToRange(currentMemory, 0, 4000, 0, 1);
-		var mappedFPS = FlxMath.remapToRange(currentFPS, Lib.current.stage.frameRate, Lib.current.stage.frameRate / 2, 0, 1);
+		var mappedFPS = FlxMath.remapToRange(currentFPS, FlxG.drawFramerate, FlxG.drawFramerate / 2, 0, 1);
 
-		textColor = FlxColor.interpolate(normalColor, maxColor, FlxEase.cubeIn((mappedMemory + mappedFPS) / 2));
+		baseText.textColor = FlxColor.interpolate(normalColor, maxColor, FlxEase.cubeIn(mappedFPS));
 	}
 
-	@:noCompletion override private function set_text(value:String):String {
+	private function set_text(value:String):String {
+		baseText.text = value;
 		for (text in outlineTexts) {
 			text.text = value;
 		}
-		return super.set_text(value);
+		return value;
 	}
 }

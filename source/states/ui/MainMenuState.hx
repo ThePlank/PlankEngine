@@ -111,6 +111,13 @@ class MainMenuState extends UIBaseState
 
 		changeItem();
 
+		var notifGroup = new flixel.group.FlxSpriteGroup();
+		var text = new FlxText(0, 15, display.objects.ui.Notification.NOTIFICATION_WIDTH, 'A new Plank Engine version has released!');
+		text.setFormat("VCR OSD Mono", 24, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		notifGroup.add(text);
+		var notif = new display.objects.ui.Notification(notifGroup, 25);
+		showNotification(notif);
+
 	}
 
 	var selectedSomethin:Bool = false;
@@ -121,6 +128,9 @@ class MainMenuState extends UIBaseState
 		{
 			FlxG.sound.music.fadeIn(0.5, FlxG.sound.music.volume, 0.8);
 		}
+
+		if (FlxG.keys.justPressed.H)
+			throw "guh????";
 
 		if (!selectedSomethin)
 		{

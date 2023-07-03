@@ -7,29 +7,36 @@ import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.math.FlxMath;
 import flixel.util.FlxColor;
+import flixel.util.FlxPool;
 
 using StringTools;
 
+typedef NoteData = {
+	var strumTime:Float;
+	@:optional var mustPress:Bool; // useless data to note, only here for PlayState
+	var noteData:Int;
+}
+
 class Note extends FlxSprite
 {
-	public var strumTime:Float = 0;
-	public var distance:Float = 0;
-
-	public var mustPress:Bool = false;
-	public var noteData:Int = 0;
 	public var canBeHit:Bool = false;
 	public var tooLate:Bool = false;
 	public var wasGoodHit:Bool = false;
 	public var prevNote:Note;
 
-	public var sustainLength:Float = 0;
-	public var isSustainNote:Bool = false;
-
 	public var noteScore:Float = 1;
+	public var strumTime:Float;
+	public var distance:Float;
+	public var sustainLength:Float;
+	public var mustPress:Bool;
+	public var isSustainNote:Bool;
+	public var noteData:Int;
 
 	public static var swagWidth:Float = 160 * 0.7;
 
-	public function new(strumTime:Float, noteData:Int, ?prevNote:Note)
+	public static var __pool:FlxPool<Note>;
+
+	public function new(strumTime:Float, ?noteData:Int, ?prevNote:Note)
 	{
 		super();
 
@@ -88,12 +95,10 @@ class Note extends FlxSprite
 				x += swagWidth * 3;
 				animation.play('redScroll');
 		}
+	}
 
-		// if (FlxG.save.data.downscroll && sustainNote) 
-			// flipY = true;
+	public function reload(noteData:NoteData) {
 
-		// trace(prevNote);
-		// prevNote.scale.y *= Conductor.stepCrochet / 100 * 1.5 * PlayState.SONG.speed;
 	}
 
 	private static var noteMap:Array<String> = [

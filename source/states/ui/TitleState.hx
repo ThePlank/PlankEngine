@@ -52,6 +52,7 @@ import flixel.util.FlxTimer;
 import lime.app.Application;
 import openfl.Assets;
 import states.abstr.MusicBeatState;
+import display.objects.ui.AtlasText;
 
 using StringTools;
 
@@ -118,7 +119,7 @@ class TitleState extends UIBaseState
 		#end
 	}
 
-	var logoBl:FlxSprite;
+	var logo:FlxSprite;
 	var gfDance:FlxSprite;
 	var stupid:ColorSwap;
 	var thingy:FlxSprite;
@@ -166,14 +167,13 @@ class TitleState extends UIBaseState
 		backdrop.velocity.x = -100;
 		add(backdrop);
 
-		logoBl = new FlxSprite(-150, -100);
-		logoBl.frames = Paths.getSparrowAtlas('logoBumpin');
-		logoBl.antialiasing = true;
-		logoBl.animation.addByPrefix('bump', 'logo bumpin', 24);
-		logoBl.animation.play('bump');
-		logoBl.updateHitbox();
-		// logoBl.screenCenter();
-		// logoBl.color = FlxColor.BLACK;
+		logo = new FlxSprite(-150, -100);
+		logo.frames = Paths.getSparrowAtlas('logoBumpin');
+		logo.antialiasing = true;
+		logo.animation.addByPrefix('bump', 'logo bumpin', 24);
+		logo.animation.play('bump');
+		logo.updateHitbox();
+		add(logo);
 
 		gfDance = new FlxSprite(FlxG.width * 0.4, FlxG.height * 0.07);
 		gfDance.frames = Paths.getSparrowAtlas('gfDanceTitle');
@@ -181,13 +181,9 @@ class TitleState extends UIBaseState
 		gfDance.animation.addByIndices('danceRight', 'gfDance', [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], "", 24, false);
 		gfDance.antialiasing = true;
 		add(gfDance);
-		add(logoBl);
 		
 		stupid = new ColorSwap();
 		var filter:ShaderFilter = new ShaderFilter(stupid.shader);
-		// trace(filter.blendMode);
-		filter.blendMode = NORMAL; // this is stupid, i've made a fix for this just now https://github.com/openfl/openfl/pull/2619
-		// trace(filter.blendMode);
 		FlxG.camera.setFilters([filter]);
 
 		titleText = new FlxSprite(100, FlxG.height * 0.8);
@@ -197,16 +193,7 @@ class TitleState extends UIBaseState
 		titleText.antialiasing = true;
 		titleText.animation.play('idle');
 		titleText.updateHitbox();
-		// titleText.screenCenter(X);
 		add(titleText);
-
-		var logo:FlxSprite = new FlxSprite().loadGraphic(Paths.image('logo'));
-		logo.screenCenter();
-		logo.antialiasing = true;
-		// add(logo);
-
-		// FlxTween.tween(logoBl, {y: logoBl.y + 50}, 0.6, {ease: FlxEase.quadInOut, type: PINGPONG});
-		// FlxTween.tween(logo, {y: logoBl.y + 50}, 0.6, {ease: FlxEase.quadInOut, type: PINGPONG, startDelay: 0.1});
 
 		credGroup = new FlxGroup();
 		add(credGroup);
@@ -252,17 +239,6 @@ class TitleState extends UIBaseState
 		video.updateHitbox();
 		add(video);
 		#end
-
-		// var md:String = Markdown.markdownToHtml(Assets.getText('CHANGELOG.md'));
-		// var text:FlxText = new FlxText(0,0, FlxG.width, "", 16, true);
-		// text.textField.htmlText = md;
-		// text.screenCenter(Y);
-		// text.alignment = CENTER;
-		// var scroll:ScrollableSprite = new ScrollableSprite(0, 0, FlxG.width, FlxG.height);
-		// scroll.add(text);
-		// add(scroll);
-
-		// credGroup.add(credTextShit);
 	}
 
 	function getIntroTextShit():Array<Array<String>>
@@ -287,37 +263,18 @@ class TitleState extends UIBaseState
 		if (!initialized)
 			return;
 
-
 		if (FlxG.keys.pressed.LEFT)
 			stupid.update(-delta * 0.15);
 
 		if (FlxG.keys.pressed.RIGHT)
 			stupid.update(delta * 0.15);
 
-		if (FlxG.sound.music != null) {
-			Conductor.songPosition = FlxG.sound.music.time;
-		}
-
-		
-		// FlxG.watch.addQuick('amp', FlxG.sound.music.amplitude);
+		Conductor.songPosition = FlxG.sound?.music.time;
 
 		if (FlxG.keys.justPressed.F)
-		{
 			FlxG.fullscreen = !FlxG.fullscreen;
-		}
 
 		var pressedEnter:Bool = FlxG.keys.justPressed.ENTER;
-
-		#if mobile
-		for (touch in FlxG.touches.list)
-		{
-			if (touch.justPressed)
-			{
-				pressedEnter = true;
-			}
-		}
-		#end
-
 		var gamepad:FlxGamepad = FlxG.gamepads.lastActive;
 
 		if (gamepad != null)
@@ -341,29 +298,9 @@ class TitleState extends UIBaseState
 			transitioning = true;
 			// FlxG.sound.music.stop();
 
-			new FlxTimer().start(2, function(tmr:FlxTimer)
+			new FlxTimer().start(2, (tmr:FlxTimer) ->
 			{
-				// Check if version is outdated
-
-				#if newgrounds
-				var version:String = "v" + Application.current.meta.get('version');
-				#else
-				var version:String = "";
-				#end
-
-				// if (version.trim() != NGio.GAME_VER_NUMS.trim() && !OutdatedSubState.leftState)
-				// {
-				// 	FlxG.switchState(new OutdatedSubState());
-				// 	trace('OLD VERSION!');
-				// 	trace('old ver');
-				// 	trace(version.trim());
-				// 	trace('cur ver');
-				// 	trace(NGio.GAME_VER_NUMS.trim());
-				// }
-				// else
-				// {
 				UIBaseState.switchState(MainMenuState);
-				// }
 			});
 			// FlxG.sound.play(Paths.music('titleShoot'), 0.7);
 		}
@@ -380,7 +317,7 @@ class TitleState extends UIBaseState
 	{
 		for (i in 0...textArray.length)
 		{
-			var money:Alphabet = new Alphabet(0, 0, textArray[i], true, false);
+			var money:AtlasText = new AtlasText(0, 0, textArray[i], AtlasFont.Bold);
 			money.screenCenter(X);
 			money.y += (i * 60) + 200;
 			credGroup.add(money);
@@ -390,7 +327,7 @@ class TitleState extends UIBaseState
 
 	function addMoreText(text:String)
 	{
-		var coolText:Alphabet = new Alphabet(0, 0, text, true, false);
+		var coolText:AtlasText = new AtlasText(0, 0, text, AtlasFont.Bold);
 		coolText.screenCenter(X);
 		coolText.y += (textGroup.length * 60) + 200;
 		credGroup.add(coolText);
@@ -409,68 +346,39 @@ class TitleState extends UIBaseState
 	override function beatHit()
 	{
 		super.beatHit();
-
-		if (logoBl != null)
-			logoBl.animation.play('bump');
 		danceLeft = !danceLeft;
 
-		if (gfDance != null)
-		{
-			if (danceLeft)
-				gfDance.animation.play('danceRight');
-			else
-				gfDance.animation.play('danceLeft');
-		}
-
-		FlxG.log.add(curBeat);
+		logo?.animation.play('bump');
+		gfDance?.animation.play((danceLeft ? 'danceLeft' : 'danceRight'));
 
 		switch (curBeat)
 		{
 			case 1:
 				createCoolText(['ninjamuffin99', 'phantomArcade', 'kawaisprite', 'evilsk8er']);
-			// credTextShit.visible = true;
 			case 3:
 				addMoreText('present');
-			// credTextShit.text += '\npresent...';
-			// credTextShit.addText();
 			case 4:
 				deleteCoolText();
-			// credTextShit.visible = false;
-			// credTextShit.text = 'In association \nwith';
-			// credTextShit.screenCenter();
 			case 5:
 				createCoolText(['In association', 'with']);
 			case 7:
 				addMoreText('newgrounds');
-				ngSpr.visible = true;
-			// credTextShit.text += '\nNewgrounds';
+				add(ngSpr);
 			case 8:
 				deleteCoolText();
-				ngSpr.visible = false;
-			// credTextShit.visible = false;
-
-			// credTextShit.text = 'Shoutouts Tom Fulp';
-			// credTextShit.screenCenter();
+				remove(ngSpr);
 			case 9:
 				createCoolText([curWacky[0]]);
-			// credTextShit.visible = true;
 			case 11:
 				addMoreText(curWacky[1]);
-			// credTextShit.text += '\nlmao';
 			case 12:
 				deleteCoolText();
-			// credTextShit.visible = false;
-			// credTextShit.text = "Friday";
-			// credTextShit.screenCenter();
 			case 13:
 				addMoreText('Friday');
-			// credTextShit.visible = true;
 			case 14:
 				addMoreText('Night');
-			// credTextShit.text += '\nNight';
 			case 15:
-				addMoreText('Funkin'); // credTextShit.text += '\nFunkin';
-
+				addMoreText('Funkin');
 			case 16:
 				skipIntro();
 		}
@@ -482,8 +390,6 @@ class TitleState extends UIBaseState
 	{
 		if (!skippedIntro)
 		{
-			remove(ngSpr);
-
 			FlxG.camera.flash(FlxColor.WHITE, 4);
 			remove(credGroup);
 			skippedIntro = true;

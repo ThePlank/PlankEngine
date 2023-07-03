@@ -15,6 +15,7 @@ import flixel.FlxG;
 import hscript.Expr;
 import hscript.Parser;
 import hscript.Interp;
+import display.objects.ui.AtlasText;
 
 // TODO: make this class
 @:access(hscript.Interp)
@@ -53,7 +54,7 @@ class PlankScript implements IFlxDestroyable {
 		setVariable('Mod', Mod);
 		setVariable('Conductor', Conductor);
 		setVariable('Character', Character);
-		setVariable('Alphabet', Alphabet);
+		setVariable('AtlasText', AtlasText);
 		setVariable('StringTools', StringTools);
 		setVariable('trace', function(value:Array<Dynamic>) {
             Console.log('HScript: ${Std.string(value)}', VERBOSE);

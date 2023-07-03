@@ -3,7 +3,9 @@
 	xsi:schemaLocation="http://lime.openfl.org/project/1.0.4 http://lime.openfl.org/xsd/project-1.0.4.xsd">
 	<!-- _________________________ Application Settings _________________________ -->
 
-	<app title="Friday Night Funkin': Plank Engine" file="PlankEngine" packageName="com.ninjamuffin99.funkin" package="com.ninjamuffin99.funkin" main="Main" version="0.2.7.1" company="ninjamuffin99" />
+	<app title="Plank Engine" file="PlankEngine" main="Main"/>
+	<app packageName="com.ninjamuffin99.funkin" package="com.ninjamuffin99.funkin"/>
+	<app  version="0.2.7.1" company="ninjamuffin99"/>
 
 	<!--Switch Export with Unique ApplicationID and Icon-->
 	<set name="APP_ID" value="0xf100f6c013bbc420" />
@@ -19,7 +21,7 @@
 	<!-- ____________________________ Window Settings ___________________________ -->
 
 	<!--These window settings apply to all targets-->
-	<window width="1280" height="720" fps="00" background="#000000" hardware="true" vsync="false" />
+	<window width="1280" height="720" fps="60" background="#000000" hardware="true" vsync="false" />
 
 	<!--HTML5-specific-->
 	<window if="html5" resizable="true" />
@@ -130,6 +132,8 @@
 	<!--Disable the Flixel sound management code-->
 	<!--<haxedef name="FLX_NO_SOUND_SYSTEM" />-->
 
+	<haxedef name="UPDATE_PROMPTS" if="release" />
+
 	<!--Disable the Flixel core focus lost screen-->
 	<haxedef name="FLX_NO_FOCUS_LOST_SCREEN" />
 
@@ -154,6 +158,7 @@
 
 	<!-- Haxelibs -->
 	<haxelib name="hlvideo" if="hl VIDEOS" />
+	<haxelib name="hldx" />
 	<haxelib name="hscript" />
 	<haxelib name="actuate" />
 	<haxelib name="away3d" />

@@ -11,7 +11,7 @@ import openfl.text.TextFormatAlign;
 import openfl.text.TextFormat;
 import openfl.text.TextField;
 import util.CoolUtil;
-import flixel.system.FlxSound;
+
 import flixel.system.FlxAssets;
 import motion.easing.Expo;
 import motion.Actuate;

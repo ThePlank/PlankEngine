@@ -3,8 +3,6 @@ package util;
 import haxe.PosInfos;
 import lime.utils.LogLevel;
 
-// https://stackoverflow.com/questions/5762491/how-to-print-color-in-console-using-system-out-println
-// yes, java moment.
 using flixel.util.FlxStringUtil;
 
 class Console

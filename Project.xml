@@ -143,11 +143,7 @@
 	<!--Enable this for Nape release builds for a serious peformance improvement-->
 	<haxedef name="NAPE_RELEASE_BUILD" unless="debug" />
 
-	<!-- <haxedef name="VIDEOS" /> PLEASE CHECK README BEFORE ENABALING -->
-
-	<haxedef name="openfl_disable_handle_error" />
-	<haxedef name="HXCPP_STACK_LINE" /> <!--if you want line numbers-->
-	<haxedef name="HXCPP_STACK_TRACE" /> <!--if you want stack traces-->
+	<haxedef name="VIDEOS" /> <!-- PLEASE CHECK README BEFORE ENABALING -->
 
 	<!-- _______________________________ Libraries ______________________________ -->
 
@@ -165,8 +161,7 @@
 	<haxelib name="flixel3D" />
 	<haxelib name="markdown" />
 	<haxelib name="byteConvert" />
-	<!-- <haxelib name="hxmidilib" /> so turns out that this library is too old and unfinnished to even use :skull: -->
-	<!-- <haxelib name="crashdumper" /> -->
+	<haxelib name="format" />
 
 	<!-- CPP stuff -->
 	<haxelib name="discord_rpc" if="cpp" />

@@ -7,7 +7,7 @@ import openfl.filters.ShaderFilter;
 import display.shaders.ShutterEffect;
 import display.objects.ui.ScrollableSprite;
 import states.abstr.UIBaseState;
-import flixel.system.FlxSound;
+
 import classes.Song;
 import util.CoolUtil;
 import display.objects.ui.HealthIcon;
@@ -53,6 +53,13 @@ class FreeplayState extends UIBaseState
 	{
 		super.create();
 
+		var isDebug:Bool = false;
+
+		#if debug
+		isDebug = true;
+		addWeek(['Test'], -1, ['bf']);
+		#end
+
 		// if (PlayState.SONG == null) Paths.clearUnusedMemory();
 		var initSonglist = CoolUtil.coolTextFile(Paths.txt('freeplaySonglist'));
 
@@ -64,12 +71,6 @@ class FreeplayState extends UIBaseState
 		#if (discord_rpc || hldiscord)
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("In the Menus", null);
-		#end
-
-		var isDebug:Bool = false;
-
-		#if debug
-		isDebug = true;
 		#end
 
 		if (StoryMenuState.weekUnlocked[2] || isDebug)
@@ -148,16 +149,6 @@ class FreeplayState extends UIBaseState
 
 			trace(md);
 		 */
-
-		 var stupid:ShutterEffect = new ShutterEffect();
-		 stupid.shutterTargetMode = ShutterEffect.SHUTTER_TARGET_FLXCAMERA;
-
-		 FlxG.camera.setFilters([new ShaderFilter(stupid.shader)]);
-
-		 FlxTween.tween(stupid, {radius: 1500}, 0.75, {ease: FlxEase.expoInOut, onComplete: (ass) -> {
-			FlxG.camera.setFilters([]);
-		 }});
-
 	}
 
 	public function addSong(songName:String, weekNum:Int, songCharacter:String)

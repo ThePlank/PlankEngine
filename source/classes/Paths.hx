@@ -373,6 +373,12 @@ class Paths
 	public static var hardwareCache:Bool = false;
 	public static var currentTrackedAssets:Map<String, FlxGraphic> = [];
 
+	@:keep public static function listAllGraphicMemory(args) {
+		for (asset => graphic in currentTrackedAssets) {
+			FlxG.log.add('$asset: ${flixel.util.FlxStringUtil.formatBytes(flixel.util.FlxBitmapDataUtil.getMemorySize(graphic.bitmap))}');
+		}
+	}
+
 	public static function returnGraphic(key:String, ?library:String):FlxGraphic
 	{
 		var graph:FlxGraphic = null;

@@ -4,7 +4,7 @@ import states.abstr.UIBaseState;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
-import flixel.system.FlxSound;
+
 import classes.Conductor;
 import states.game.PlayState;
 import states.ui.MainMenuState;
@@ -70,6 +70,7 @@ class GitarooPauseSubstate extends states.substates.abstr.MusicBeatSubstate
 	override public function beatHit() {
 		cameras[0].zoom += 0.15;
 		bf.scale.set(1.2, 0.8);
+		bf.flipX = !bf.flipX;
 	}
 
 	override function update(delta:Float)
@@ -125,7 +126,7 @@ class GitarooOption extends flixel.group.FlxSpriteGroup {
 		add(bg);
 		this.text = new flixel.text.FlxText(0, 0, width + (text.length * 18), text, 80);
 		this.text.x = (this.width / 2) - (this.text.width / 2);
-		this.text.y = (this.height / 2) - (this.text.height / 2);
+		this.text.y = (this.height / 2);
 		this.text.setFormat(Paths.font('vcr.ttf'), 80, 0xff000000, CENTER);
 		add(this.text);
 	}

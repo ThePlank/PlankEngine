@@ -59,7 +59,7 @@ class MainMenuState extends UIBaseState
 		backgroundSettings = {
 			enabled: true,
 			bgColor: 0xFFFDE871,
-			position: [-80, 0],
+			position: [0, -80],
 			scrollFactor: [0, 0.18],
 			sizeMultiplier: 1.1,
 		}
@@ -72,7 +72,7 @@ class MainMenuState extends UIBaseState
 		magenta = createBackground({
 			enabled: true,
 			bgColor: 0xFFfd719b,
-			position: [-80, 0],
+			position: [0, -80],
 			scrollFactor: [0, 0.18],
 			sizeMultiplier: 1.1,
 		});
@@ -111,12 +111,12 @@ class MainMenuState extends UIBaseState
 
 		changeItem();
 
-		var notifGroup = new flixel.group.FlxSpriteGroup();
-		var text = new FlxText(0, 15, display.objects.ui.Notification.NOTIFICATION_WIDTH, 'A new Plank Engine version has released!');
-		text.setFormat("VCR OSD Mono", 24, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		notifGroup.add(text);
-		var notif = new display.objects.ui.Notification(notifGroup, 25);
-		showNotification(notif);
+		// var notifGroup = new flixel.group.FlxSpriteGroup();
+		// var text = new FlxText(0, 15, display.objects.ui.Notification.NOTIFICATION_WIDTH, 'A new Plank Engine version has released!');
+		// text.setFormat("VCR OSD Mono", 24, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		// notifGroup.add(text);
+		// var notif = new display.objects.ui.Notification(notifGroup, 25);
+		// showNotification(notif);
 
 	}
 
@@ -201,7 +201,7 @@ class MainMenuState extends UIBaseState
 											UIBaseState.switchState(StoryMenuState);
 											trace("Story Menu Selected");
 										case 'freeplay':
-											UIBaseState.switchState(FreeplayState);
+											LoadingState.loadAndSwitchState(new FreeplayState());
 	
 											trace("Freeplay Menu Selected");
 	

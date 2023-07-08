@@ -4,6 +4,8 @@ import haxe.DynamicAccess;
 import flixel.util.FlxSave;
 import sys.thread.Thread;
 import flixel.FlxG;
+import flixel.util.typeLimit.OneOfTwo;
+import flixel.group.FlxSpriteGroup;
 
 // i whould do OptionEntry<T> but idek ho to get the Class<Dynamic> of it
 class OptionEntry {
@@ -11,22 +13,24 @@ class OptionEntry {
 	public var entryName:String;
 	public var displayName:String;
 	public var type:Class<Dynamic>;
-	public var limits:{?min:Float, ?max:Float, ?options:Array<Dynamic>};
+	public var limits:{?min:Float, ?max:Float, ?incrementValue:Float, ?options:Array<Dynamic>};
+	public var onChange:Dynamic->Void;
 
-	public function new(entryName:String, displayName:String, description:String, type:Class<Dynamic>, ?limits:{?min:Float, ?max:Float, ?options:Array<Dynamic>}) {
+	public function new(entryName:String, displayName:String, description:String, type:Class<Dynamic>, ?onChange:Dynamic->Void, ?limits:{?min:Float, ?max:Float, ?incrementValue:Float, ?options:Array<Dynamic>}) {
 		this.description = description;
 		this.entryName = entryName;
 		this.displayName = displayName;
 		this.type = type;
 		this.limits = limits;
+		this.onChange = onChange;
 	}
 }
-
 
 // lol image psych engine saving system
 
 class Options
 {
+	public static var optionData:Map<String, OneOfTwo<Array<OptionEntry>, FlxSpriteGroup->Void>> = [];
 	private static var deafultData:Map<String, Dynamic> = [
 		"Yes" => "Yes", // do NOT delete this entry!
 		"downscroll" => false,
@@ -85,5 +89,12 @@ class Options
 			return true;
 		}
 		return false;
+	}
+
+	public static function initOptions() {
+		optionData['gameplay'] = [
+			new OptionEntry('downscroll', 'Downscroll', 'Makes the notes scroll idk', Type.getClass(Bool)),
+			new OptionEntry('flashingMenu', 'Sex Scenes', 'uhhh', Type.getClass(Bool)),
+		];
 	}
 }

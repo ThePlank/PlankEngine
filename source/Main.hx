@@ -119,6 +119,7 @@ class Main extends Sprite
 		#end
 
 		Options.init();
+		Options.initOptions();
 		Highscore.load();
 		Console.init();
 
@@ -240,7 +241,7 @@ class Main extends Sprite
 	}
 
 	function update(event:Event) {
-		#if (haxe_version >= 4.3 && hl) // only avalible on 4.3rc+
+		#if hl
 		hl.Api.checkReload();
 		#end
 	}
@@ -253,20 +254,3 @@ class Main extends Sprite
 		return null;
 	}
 }
-
-/*
-class Main extends Sprite
- {
- 	public static function main():Void
-		new Main();
-
-	public function new()
-	{
-		super();
-		addEventListener(Event.ENTER_FRAME, (event:Event) -> trace(hl.Gc.stats()));
-	}
-
-	static public function saveCrash(error:Dynamic, stack:CallStack, subdirectory:String) { return ''; }
-	public static function onError(error:Dynamic) {}
- }
-*/

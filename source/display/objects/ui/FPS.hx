@@ -73,7 +73,7 @@ class PlankFPS extends Sprite
 	// Event Handlers
 	private override function __enterFrame(deltaTime:Float):Void
 	{
-		currentFPS = Math.floor(1 / (deltaTime / 1000));
+		currentFPS = Math.floor(Math.max(1 / (deltaTime / 1000), 0)); // clamp the value so it doesent go to -2147483647 FPS
 
 
 		#if (gl_stats && !disable_cffi && (!html5 || !canvas))

@@ -3,9 +3,16 @@ package util;
 import flixel.util.FlxColor;
 import openfl.display.BitmapData;
 import openfl.geom.Rectangle;
+import flixel.math.FlxMatrix;
 
 class ImageUtils
 {
+	/*
+	static public function rotate(data:BitmapData, angle:Float, antialias:Bool = false):BitmapData {
+		var matrix:FlxMatrix = new FlxMatrix();
+	}
+	*/
+
 	static public function drawInsideBorder(data:BitmapData, width:Int, color:FlxColor)
 	{
 		data.lock();

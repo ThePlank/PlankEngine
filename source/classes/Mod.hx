@@ -8,7 +8,7 @@ import classes.hscript.PlankScript;
 import haxe.io.Path;
 import openfl.media.Sound;
 import classes.Song;
-import flixel.system.FlxSound;
+
 import sys.io.File;
 import openfl.display.BitmapData;
 import sys.FileSystem;

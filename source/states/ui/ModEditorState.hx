@@ -163,7 +163,7 @@ class ModEditorState extends UIBaseState {
 
 		var back = controls.BACK;
 
-		if (back)
+		if (back && state != CREATING)
 			UIBaseState.switchState(TitleState);
 
 		if (mod == null) return;

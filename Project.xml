@@ -143,7 +143,7 @@
 	<!--Enable this for Nape release builds for a serious peformance improvement-->
 	<haxedef name="NAPE_RELEASE_BUILD" unless="debug" />
 
-	<haxedef name="VIDEOS" /> <!-- PLEASE CHECK README BEFORE ENABALING -->
+	<!-- <haxedef name="VIDEOS" /> PLEASE CHECK README BEFORE ENABALING -->
 
 	<!-- _______________________________ Libraries ______________________________ -->
 

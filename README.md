@@ -4,7 +4,7 @@
 </br>
 ![forthebadge](discord.svg) (very soon (soon))
 # Plank Engine
-## A HL-optimized engine
+## A HL-centric engine
 <br/>
 this engine is currently a WIP and is the &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; engine of all time
 </div>

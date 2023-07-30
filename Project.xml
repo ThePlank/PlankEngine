@@ -154,13 +154,11 @@
 
 	<!-- Haxelibs -->
 	<haxelib name="hlvideo" if="hl VIDEOS" />
-	<haxelib name="hldx" />
 	<haxelib name="hscript" />
 	<haxelib name="actuate" />
 	<haxelib name="away3d" />
 	<haxelib name="flixel3D" />
 	<haxelib name="markdown" />
-	<haxelib name="byteConvert" />
 	<haxelib name="format" />
 
 	<!-- CPP stuff -->

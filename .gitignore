@@ -18,9 +18,6 @@ desktop.ini
 *.sublime-project
 *.sublime-workspace
 
-# fl scores (for sniff becauoifhdco9uihgqwuo9dhgiwhdoui hji)
-*.fsc
-
 # git version stuff
 .tmp.ple.version
 

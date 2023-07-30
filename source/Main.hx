@@ -1,9 +1,6 @@
 package;
 
-import classes.ChartParser;
 import haxe.io.Bytes;
-import byteConvert.ByteConvert;
-import classes.FL.FLFile;
 import states.ui.UnexpectedCrashState;
 import haxe.Exception;
 import openfl.display.Loader;

@@ -11,7 +11,7 @@ using StringTools;
 
 class CoolUtil
 {
-	public static var difficultyArray:Array<String> = ['EASY', "NORMAL", "HARD"];
+	public static var difficultyArray:Array<String> = ['EASY', 'NORMAL', 'HARD'];
 
 	public static inline function difficultyString():String
 	{
@@ -32,11 +32,7 @@ class CoolUtil
 
 	public static inline function getMainWindow():Window
 	{
-		return Lib.application.window;
-	}
-
-	public static inline function BytestoIntArray(bytes:Bytes):Array<Int> {
-		return [for (idx in 0...bytes.length) bytes.getInt32(idx)];
+		return FlxG.stage.window;
 	}
 
 	// copied code from old plank engine (i think literally the only good code i have made there)

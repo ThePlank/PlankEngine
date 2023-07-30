@@ -16,7 +16,6 @@ Here is the list of all haxelibs excluding gits, openfl and flixel stuff:
 ```
 flixel-addons, USE NEWEST OR ILL EXPLODE YOY >:(
 flixel-ui
-byteConvert
 markdown
 actuate
 away3d

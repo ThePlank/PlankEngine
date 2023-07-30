@@ -15,6 +15,8 @@ import flixel.group.FlxSpriteGroup;
 import display.objects.ui.AtlasText;
 import display.objects.ui.MenuList;
 
+// "make me a comment 👿" - Unholywanderer04 on July 8th, 2023 at 8:59
+
 class OptionsState extends states.abstr.UIBaseState {
 	
 	private var categories:Map<String, FlxSpriteGroup> = [];
@@ -39,18 +41,25 @@ class OptionsState extends states.abstr.UIBaseState {
 		var categoryGroup:MenuList = new MenuList(0, 0, HORIZONTAL);
 		categoryGroup.focused = true;
 		categoryGroup.padding = 150;
+		categoryGroup.canSelect = false;
 		for (category => options in Options.optionData) {
 			var group:MenuList = new MenuList(0, 0, VERTICAL(false));
 			group.focused = true;
-			group.padding = 15;
+			group.padding = 25;
 			setupOptionGroup(cast options, group);
 			add(group);
-			group.screenCenter(X);
+			group.screenCenter();
+			group.moveWithCurSelection = true;
+			group.canSelect = true;
 			var categoryOption:AtlasText = new AtlasText(0, 0, category, AtlasFont.Bold);
 			categories.set(category, group);
 			categoryGroup.add(categoryOption);
 		}
+		var categoryOption:AtlasText = new AtlasText(0, 0, 'my balls', AtlasFont.Bold);
+		categoryGroup.add(categoryOption);
+		categoryGroup.screenCenter(X);
 		categoryGroup.y = barBottom.y + (barBottom.height / 2 - categoryGroup.height / 2);
+		categoryGroup.moveWithCurSelection = true;
 		add(categoryGroup);
 	}
 

@@ -8,7 +8,6 @@ import flixel.tweens.FlxTween;
 import flixel.FlxCamera;
 import states.abstr.UIBaseState;
 import classes.Conductor;
-import display.objects.game.Boyfriend;
 import states.substates.abstr.MusicBeatSubstate;
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -20,10 +19,11 @@ import states.game.PlayState;
 import states.ui.LoadingState;
 import states.ui.StoryMenuState;
 import states.ui.FreeplayState;
+import display.objects.game.Character;
 
 class GameOverSubstate extends MusicBeatSubstate
 {
-	var bf:Boyfriend;
+	var bf:Character;
 	var camFollow:FlxObject;
 
 	var stageSuffix:String = "";
@@ -64,7 +64,7 @@ class GameOverSubstate extends MusicBeatSubstate
 
 		Conductor.songPosition = 0;
 
-		bf = new Boyfriend(x, y, daBf);
+		bf = new Character(x, y, daBf, true);
 		add(bf);
 
 		camFollow = new FlxObject(bf.getGraphicMidpoint().x, bf.getGraphicMidpoint().y, 1, 1);

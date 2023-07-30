@@ -122,6 +122,7 @@ class TitleState extends UIBaseState
 	var logo:FlxSprite;
 	var gfDance:FlxSprite;
 	var stupid:ColorSwap;
+	//var outline:display.shaders.OutlineShader;
 	var thingy:FlxSprite;
 	var danceLeft:Bool = false;
 	var titleText:FlxSprite;
@@ -148,11 +149,6 @@ class TitleState extends UIBaseState
 			// transOut = FlxTransitionableState.defaultTransOut;
 		}
 
-		
-		FlxG.sound.playMusic(Paths.music('freakyMenu'), true);
-
-		FlxG.sound.music.fadeIn(4, 0, 0.7);
-
 		var settings = Json.parse(Paths.getTextFromFile("data/freakyMenu.json"));
 		Conductor.bpm = settings.bpm;
 
@@ -172,6 +168,7 @@ class TitleState extends UIBaseState
 		logo.antialiasing = true;
 		logo.animation.addByPrefix('bump', 'logo bumpin', 24);
 		logo.animation.play('bump');
+		//logo.useFramePixels = true;
 		logo.updateHitbox();
 		add(logo);
 
@@ -180,6 +177,7 @@ class TitleState extends UIBaseState
 		gfDance.animation.addByIndices('danceLeft', 'gfDance', [30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], "", 24, false);
 		gfDance.animation.addByIndices('danceRight', 'gfDance', [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], "", 24, false);
 		gfDance.antialiasing = true;
+		//gfDance.useFramePixels = true;
 		add(gfDance);
 		
 		stupid = new ColorSwap();

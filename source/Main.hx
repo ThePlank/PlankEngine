@@ -47,6 +47,7 @@ import openfl.display.FPS;
 import openfl.display.Sprite;
 import openfl.events.Event;
 import states.ui.TitleState;
+import states.AudioFilterTestState;
 // import sdl.Window as SdlWindow;
 #if hl
 import hl.UI;
@@ -71,7 +72,7 @@ class Main extends Sprite
 	public static var settings:GameSettings = {
 		gameWidth: 1280, // Width of the game in pixels (might be less / more in actual pixels depending on your zoom).
 		gameHeight: 720, // Height of the game in pixels (might be less / more in actual pixels depending on your zoom).
-		initialState: PlankSplash, // The FlxState the game starts with.
+		initialState: TitleState, // The FlxState the game starts with.
 		zoom: 1.0, // If -1, zoom is automatically calculated to fit the window dimensions.
 		framerate: 60, // How many frames per second the game should run at.
 		skipSplash: true, // Whether to skip the flixel splash screen that appears in release mode.
@@ -145,6 +146,9 @@ class Main extends Sprite
 			FlxG.console.registerClass(unregisteredClass);
 		for (unregisteredEnum in consoleEnums)
 			FlxG.console.registerEnum(unregisteredEnum);
+		FlxG.console.registerFunction('openModMenu', () -> {
+			FlxG.state.openSubState(new states.substates.ui.ModSelectionSubstate());
+		});
 	}
 
 	public static var crashPath = "\\crashes";

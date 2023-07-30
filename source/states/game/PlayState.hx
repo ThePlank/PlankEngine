@@ -12,7 +12,6 @@ import display.objects.ui.DialogueBox;
 import classes.Song;
 import display.objects.ui.HealthIcon;
 import display.objects.game.Note;
-import display.objects.game.Boyfriend;
 import display.objects.game.Character;
 import util.CoolUtil;
 import display.objects.BackgroundGirls;
@@ -83,7 +82,7 @@ class PlayState extends states.abstr.MusicBeatState
 
 	private var dad:Character;
 	private var gf:Character;
-	private var boyfriend:Boyfriend;
+	private var boyfriend:Character;
 
 	private var notes:FlxTypedGroup<Note>;
 	private var unspawnNotes:Array<Note> = [];
@@ -659,7 +658,7 @@ class PlayState extends states.abstr.MusicBeatState
 				camPos.set(dad.getGraphicMidpoint().x + 300, dad.getGraphicMidpoint().y);
 		}
 
-		boyfriend = new Boyfriend(770, 450, SONG.player1);
+		boyfriend = new Character(770, 450, SONG.player1, true);
 
 		// REPOSITIONING PER STAGE
 		switch (curStage)
@@ -724,13 +723,13 @@ class PlayState extends states.abstr.MusicBeatState
 		// add(strumLineNotes);
 
 		// playerStrums = new FlxTypedGroup<FlxSprite>();
-		playerStrums = new StrumLine(PLAYER1, boyfriend);
+		playerStrums = new StrumLine(0, 50, PLAYER1, boyfriend);
 		playerStrums.x += 50;
 		playerStrums.x += (FlxG.width) / 2;
 		playerStrums.scrollSpeed = SONG.speed;
 		add(playerStrums);
 
-		dadStrums = new StrumLine(CPU, dad);
+		dadStrums = new StrumLine(0, 50, CPU, dad);
 		dadStrums.x += 50;
 		dadStrums.scrollSpeed = SONG.speed;
 		add(dadStrums);
@@ -1303,10 +1302,10 @@ class PlayState extends states.abstr.MusicBeatState
 			// if (FlxG.random.bool(0.1))
 			// {
 				// gitaroo man easter egg
-				openSubState(new GitarooPauseSubstate());
+				// openSubState(new GitarooPauseSubstate());
 			// }
 			// else
-				// openSubState(new PauseSubState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
+				openSubState(new PauseSubState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
 
 			#if (discord_rpc || hldiscord)
 			DiscordClient.changePresence(detailsPausedText, SONG.song + " (" + storyDifficultyText + ")", iconRPC);
@@ -1490,8 +1489,6 @@ class PlayState extends states.abstr.MusicBeatState
 
 		if (health <= 0)
 		{
-			boyfriend.stunned = true;
-
 			persistentUpdate = false;
 			persistentDraw = false;
 			paused = true;
@@ -1873,62 +1870,6 @@ class PlayState extends states.abstr.MusicBeatState
 				&& !boyfriend.animation.curAnim.name.endsWith("miss"))
 				boyfriend.playAnim("idle");
 		}*/
-
-		function noteMiss(direction:Int = 1, playSound:Bool = true):Void
-			{
-				if (!boyfriend.stunned)
-				{
-					if (combo < 5)
-						gf.playAnim('sad');
-					combo = 0;
-					songScore -= 10;
-					misses++;
-					FlxG.sound.play(Paths.soundRandom("missnote", 1, 3), FlxG.random.float(0.1, 0.2));
-					boyfriend.stunned = true;
-					new FlxTimer().start(0.08, function(e)
-					{
-						boyfriend.stunned = false;
-					});
-					switch (direction)
-					{
-						case 0:
-							boyfriend.playAnim("singLEFTmiss", true);
-						case 1:
-							boyfriend.playAnim("singDOWNmiss", true);
-						case 2:
-							boyfriend.playAnim("singUPmiss", true);
-						case 3:
-							boyfriend.playAnim("singRIGHTmiss", true);
-					}
-				}
-			}
-		
-			function badNoteHit(playSound:Bool = true)
-			{
-				var daTapping = Options.getValue("ghostTapping");
-
-				if (!daTapping)
-					return;
-		
-				if (controls.LEFT_P)
-					noteMiss(0, playSound);
-				if (controls.DOWN_P)
-					noteMiss(1, playSound);
-				if (controls.UP_P)
-					noteMiss(2, playSound);
-				if (controls.RIGHT_P)
-					noteMiss(3, playSound);
-			}
-		
-			function noteCheck(keyP:Bool, note:Note):Void
-			{
-				if (keyP)
-					goodNoteHit(note);
-				else
-				{
-					badNoteHit();
-				}
-			}
 		
 			function goodNoteHit(note:Note):Void
 			{
@@ -1985,21 +1926,6 @@ class PlayState extends states.abstr.MusicBeatState
 		
 				}
 			}
-
-	public function hitNote(note:Note)
-	{
-		if (!note.wasGoodHit)
-		{
-			note.wasGoodHit = true;
-			vocals.volume = 1;
-			if (!note.isSustainNote)
-			{
-				note.kill();
-				notes.remove(note, true);
-				note.destroy();
-			}
-		}
-	}
 
 	private function roundtoprec(number:Float, ?precision = 2):Float
 	{

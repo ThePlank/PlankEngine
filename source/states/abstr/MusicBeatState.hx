@@ -38,10 +38,6 @@ class MusicBeatState extends FlxUIState
 		return super.add(Object);
 	}
 
-	override function switchTo(nextState:FlxState):Bool {
-		return super.switchTo(nextState);
-	}
-
 	inline function get_controls():Controls
 		return PlayerSettings.player1.controls;
 

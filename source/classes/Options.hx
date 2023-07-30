@@ -94,7 +94,8 @@ class Options
 	public static function initOptions() {
 		optionData['gameplay'] = [
 			new OptionEntry('downscroll', 'Downscroll', 'Makes the notes scroll idk', Type.getClass(Bool)),
-			new OptionEntry('flashingMenu', 'Sex Scenes', 'uhhh', Type.getClass(Bool)),
+			new OptionEntry('flashingMenu', 'Flashing Lights', 'uhhh', Type.getClass(Bool)),
+			new OptionEntry('camZoom', 'cumpenis', 'uhhh', Type.getClass(Bool)),
 		];
 	}
 }

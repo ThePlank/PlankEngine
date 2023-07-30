@@ -11,4 +11,13 @@ import flixel.sound.FlxSound;
 import flixel.system.FlxSound;
 #end
 
+import display.objects.ui.AtlasText;
+import display.objects.ui.AtlasText.AtlasFont;
+import states.abstr.*;
+import util.*;
+import	 flixel.math.FlxMath;
+import	 classes.Conductor;
+import flixel.tweens.FlxTween;
+import flixel.tweens.FlxEase;
+
 #end

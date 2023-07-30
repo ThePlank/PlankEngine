@@ -33,32 +33,36 @@ enum Player
 	PLAYER1;
 }
 
+typedef HitData = {
+	var note:Note;
+	var rating:String;
+	var score:Int;
+	var noteDiff:Float;
+}
+
 @:access(Note)
 class StrumLine extends FlxTypedSpriteGroup<FlxSprite>
 {
 	public var strumLine:FlxSprite;
-	public var noteHit:FlxTypedSignal<Int->Void>;
+	public var noteHit:FlxTypedSignal<HitData->Void>;
 	public var strumLineNotes:FlxSpriteGroup;
 	public var noteSplashes:FlxTypedSpriteGroup<NoteSplash>;
 	public var notes:FlxTypedSpriteGroup<Note>;
 	public var scrollSpeed:Float = 1;
 	public var score:Int = 0;
 	public var combo:Int = 0;
-	public var char:Character;
+	public var char:Null<Character>;
 	public var player:Player;
-
-	public var onHit:FlxTypedSignal<Int>;
 
 	static var strumHeight:Int = FlxG.height;
 
-
-	public function new(player:Player = NONE, char:Character, ?tweenStrums:Bool = true)
+	public function new(x:Int, y:Int, player:Player = NONE, ?char:Character, ?tweenStrums:Bool = true)
 	{
-		super();
+		super(0, 0);
 		this.char = char;
 		this.player = player;
 
-		strumLine = new FlxSprite(0, 50);
+		strumLine = new FlxSprite(x, y);
 		strumLine.alpha = 0.5;
 		// add(strumLine);
 
@@ -78,10 +82,8 @@ class StrumLine extends FlxTypedSpriteGroup<FlxSprite>
 		notes = new FlxTypedSpriteGroup<Note>();
 		add(notes);
 
-		noteHit = new FlxTypedSignal<Int->Void>();
+		noteHit = new FlxTypedSignal<HitData->Void>();
 	}
-
-
 
 	private function generateStaticArrows(?tweenStrums:Bool = true):FlxSpriteGroup
 	{
@@ -177,7 +179,7 @@ class StrumLine extends FlxTypedSpriteGroup<FlxSprite>
 		// PRESSES, check for note hits
 		if (pressArray.contains(true) /*!boyfriend.stunned && */)
 		{
-			char.holdTimer = 0;
+			if (char != null) char.holdTimer = 0;
 
 			var possibleNotes:Array<Note> = []; // notes that can be hit
 			var directionList:Array<Int> = []; // directions that can be hit
@@ -247,11 +249,13 @@ class StrumLine extends FlxTypedSpriteGroup<FlxSprite>
 			}
 		}
 
-		if (char.holdTimer > Conductor.stepCrochet * 4 * 0.001 && !holdArray.contains(true))
-		{
-			if (char.animation.curAnim.name.startsWith('sing') && !char.animation.curAnim.name.endsWith('miss'))
+		if (char != null) {
+			if (char.holdTimer > Conductor.stepCrochet * char.singTime * 0.001 && !holdArray.contains(true))
 			{
-				char.playAnim('idle');
+				if (char.animation.curAnim.name.startsWith('sing') && !char.animation.curAnim.name.endsWith('miss'))
+				{
+					char.playAnim('idle');
+				}
 			}
 		}
 
@@ -261,21 +265,18 @@ class StrumLine extends FlxTypedSpriteGroup<FlxSprite>
 				spr.animation.play('pressed');
 			if (!holdArray[spr.ID])
 				spr.animation.play('static');
-
+			
+			spr.centerOffsets();
 			if (spr.animation.curAnim.name == 'confirm')
 			{
-				spr.centerOffsets();
 				spr.offset.x -= 13;
 				spr.offset.y -= 13;
 			}
-			else
-				spr.centerOffsets();
 		});
 	}
 
 	function noteMiss(direction:Int = 1):Void
 	{
-		// whole function used to be encased in if (!boyfriend.stunned)
 		health -= 0.04;
 		combo = 0;
 
@@ -288,13 +289,13 @@ class StrumLine extends FlxTypedSpriteGroup<FlxSprite>
 		switch (direction)
 		{
 			case 0:
-				char.playAnim('singLEFTmiss', true);
+				charPlayAnim('singLEFTmiss', true);
 			case 1:
-				char.playAnim('singDOWNmiss', true);
+				charPlayAnim('singDOWNmiss', true);
 			case 2:
-				char.playAnim('singUPmiss', true);
+				charPlayAnim('singUPmiss', true);
 			case 3:
-				char.playAnim('singRIGHTmiss', true);
+				charPlayAnim('singRIGHTmiss', true);
 		}
 	}
 
@@ -302,27 +303,19 @@ class StrumLine extends FlxTypedSpriteGroup<FlxSprite>
 	{
 		if (!note.wasGoodHit)
 		{
-			if (!note.isSustainNote)
-			{
-				combo += 1;
-				popUpScore(note, note.strumTime);
-			}
-
-			if (note.noteData >= 0)
-				health += 0.023;
-			else
-				health += 0.004;
+			combo += 1;
+			popUpScore(note, note.strumTime);
 
 			switch (note.noteData)
 			{
 				case 0:
-					char.playAnim('singLEFT', true);
+					charPlayAnim('singLEFT', true);
 				case 1:
-					char.playAnim('singDOWN', true);
+					charPlayAnim('singDOWN', true);
 				case 2:
-					char.playAnim('singUP', true);
+					charPlayAnim('singUP', true);
 				case 3:
-					char.playAnim('singRIGHT', true);
+					charPlayAnim('singRIGHT', true);
 			}
 
 			strumLineNotes.forEach(function(spr:FlxSprite)
@@ -383,17 +376,83 @@ class StrumLine extends FlxTypedSpriteGroup<FlxSprite>
 		});
 	}
 
-	// turns out that you cant only have note because that makes the inputs tighter????///?/??/?/?/??/
+	public function generatePopup(data:HitData) {
+		var group:FlxSpriteGroup = new FlxSpriteGroup();
+
+		var rating:FlxSprite = new FlxSprite(-40, -60, Paths.image(data.rating));
+		rating.acceleration.y = 550;
+		rating.velocity.y -= FlxG.random.int(140, 175);
+		rating.velocity.x -= FlxG.random.int(0, 10);
+		rating.angularAcceleration = FlxG.random.int(-45, 45);
+
+		var comboSpr:FlxSprite = new FlxSprite(0, 0, Paths.image('combo'));
+		comboSpr.acceleration.y = 600;
+		comboSpr.velocity.y -= 150;
+		comboSpr.angularAcceleration = FlxG.random.int(-45, 45);
+		comboSpr.velocity.x += FlxG.random.int(1, 10);
+		rating.setGraphicSize(Std.int(rating.width * 0.7));
+		rating.antialiasing = true;
+		comboSpr.setGraphicSize(Std.int(comboSpr.width * 0.7));
+		comboSpr.antialiasing = true;
+		comboSpr.updateHitbox();
+		rating.updateHitbox();
+
+		var seperatedScore:Array<Int> = [];
+
+		seperatedScore.push(Math.floor(combo / 100));
+		seperatedScore.push(Math.floor((combo - (seperatedScore[0] * 100)) / 10));
+		seperatedScore.push(combo % 10);
+
+		var daLoop:Int = 0;
+		for (i in seperatedScore)
+		{
+			var numScore:FlxSprite = new FlxSprite((43 * daLoop) - 90, 80, Paths.image('num' + Std.int(i)));
+
+			numScore.antialiasing = true;
+			numScore.setGraphicSize(Std.int(numScore.width * 0.5));
+			numScore.updateHitbox();
+
+			numScore.acceleration.y = FlxG.random.int(200, 300);
+			numScore.angularAcceleration = FlxG.random.int(-45, 45);
+			numScore.velocity.y -= FlxG.random.int(140, 160);
+			numScore.velocity.x = FlxG.random.float(-5, 5);
+
+			if (combo >= 10 || combo == 0)
+				group.add(numScore);
+
+			FlxTween.tween(numScore, {alpha: 0}, 0.2, {
+				onComplete: function(tween:FlxTween)
+				{
+					numScore.destroy();
+				},
+				startDelay: Conductor.crochet * 0.002
+			});
+
+			daLoop++;
+		}
+
+		group.add(rating);
+		group.add(comboSpr);
+
+		FlxTween.tween(rating, {alpha: 0}, 0.2, {
+			startDelay: Conductor.crochet * 0.001
+		});
+
+		FlxTween.tween(comboSpr, {alpha: 0}, 0.2, {
+			onComplete: function(tween:FlxTween)
+			{
+				comboSpr.destroy();
+				rating.destroy();
+				group.destroy();
+			},
+			startDelay: Conductor.crochet * 0.001
+		});
+	}
+
 	private function popUpScore(note:Note, ?strumTime:Float):Void
 	{
-		var noteDiff:Float = Math.abs((strumTime != null ? strumTime : note.strumTime) - Conductor.songPosition);
+		var noteDiff:Float = Math.abs(note.strumTime - Conductor.songPosition);
 
-		var coolText:FlxText = new FlxText(0, 0, 0, "", 32);
-		coolText.x = strumLine.width / 2;
-		coolText.y = strumHeight / 2;
-		//
-
-		var rating:FlxSprite = new FlxSprite();
 		var score:Int = 350;
 
 		var daRating:String = "sick";
@@ -421,95 +480,27 @@ class StrumLine extends FlxTypedSpriteGroup<FlxSprite>
 		}
 
 		score += score;
-
-		rating.loadGraphic(Paths.image(daRating));
-		rating.x = coolText.x - 40;
-		rating.y = coolText.y - 60;
-		rating.acceleration.y = 550;
-		rating.velocity.y -= FlxG.random.int(140, 175);
-		rating.velocity.x -= FlxG.random.int(0, 10);
-		rating.angularAcceleration = FlxG.random.int(-45, 45);
-
-		var comboSpr:FlxSprite = new FlxSprite().loadGraphic(Paths.image('combo'));
-		comboSpr.x = coolText.x;
-		comboSpr.y = coolText.y;
-		comboSpr.acceleration.y = 600;
-		comboSpr.velocity.y -= 150;
-		comboSpr.angularAcceleration = FlxG.random.int(-45, 45);
-
-		comboSpr.velocity.x += FlxG.random.int(1, 10);
-		add(rating);
-
-		rating.setGraphicSize(Std.int(rating.width * 0.7));
-		rating.antialiasing = true;
-		comboSpr.setGraphicSize(Std.int(comboSpr.width * 0.7));
-		comboSpr.antialiasing = true;
-
-		comboSpr.updateHitbox();
-		rating.updateHitbox();
-
-		var seperatedScore:Array<Int> = [];
-
-		seperatedScore.push(Math.floor(combo / 100));
-		seperatedScore.push(Math.floor((combo - (seperatedScore[0] * 100)) / 10));
-		seperatedScore.push(combo % 10);
-
-		var daLoop:Int = 0;
-		for (i in seperatedScore)
-		{
-			var numScore:FlxSprite = new FlxSprite().loadGraphic(Paths.image('num' + Std.int(i)));
-			numScore.screenCenter();
-			numScore.x = coolText.x + (43 * daLoop) - 90;
-			numScore.y = coolText.y + 80;
-
-			numScore.antialiasing = true;
-			numScore.setGraphicSize(Std.int(numScore.width * 0.5));
-			numScore.updateHitbox();
-
-			numScore.acceleration.y = FlxG.random.int(200, 300);
-			numScore.angularAcceleration = FlxG.random.int(-45, 45);
-			numScore.velocity.y -= FlxG.random.int(140, 160);
-			numScore.velocity.x = FlxG.random.float(-5, 5);
-
-			if (combo >= 10 || combo == 0)
-				add(numScore);
-
-			FlxTween.tween(numScore, {alpha: 0}, 0.2, {
-				onComplete: function(tween:FlxTween)
-				{
-					numScore.destroy();
-				},
-				startDelay: Conductor.crochet * 0.002
-			});
-
-			daLoop++;
-		}
-		/* 
-			trace(combo);
-			trace(seperatedScore);
-		 */
-
-		coolText.text = Std.string(seperatedScore);
-		// add(coolText);
-
-		FlxTween.tween(rating, {alpha: 0}, 0.2, {
-			startDelay: Conductor.crochet * 0.001
-		});
-
-		FlxTween.tween(comboSpr, {alpha: 0}, 0.2, {
-			onComplete: function(tween:FlxTween)
-			{
-				coolText.destroy();
-				comboSpr.destroy();
-
-				rating.destroy();
-			},
-			startDelay: Conductor.crochet * 0.001
+		
+		noteHit.dispatch({
+			note: note,
+			rating: daRating,
+			score: score,
+			noteDiff: note.strumTime - Conductor.songPosition,
 		});
 	}
 
 	public function checkNoteHit()
 	{
+		strumLineNotes.forEach(function(spr:FlxSprite) {
+			spr.centerOffsets();
+			if (spr.animation.curAnim.name == 'confirm')
+			{
+				spr.offset.x -= 13;
+				spr.offset.y -= 13;
+			}
+			spr.animation.finishCallback = (name) -> {if (name == 'confirm') spr.animation.play('static');}
+		});
+
 		notes.forEachAlive((note:Note) ->
 		{
 			if (note.y > FlxG.height)
@@ -523,41 +514,18 @@ class StrumLine extends FlxTypedSpriteGroup<FlxSprite>
 				note.active = true;
 			}
 
-			if (note.strumTime <= Conductor.songPosition)
-				note.wasGoodHit = true;
-
-			if (note.wasGoodHit)
-			{
-				var altAnim:String = "";
-
-				// if (note.altAnim)
-				// altAnim = '-alt';
-
-				switch (Math.abs(note.noteData))
-				{
-					case 0:
-						char.playAnim('singLEFT' + altAnim, true);
-					case 1:
-						char.playAnim('singDOWN' + altAnim, true);
-					case 2:
-						char.playAnim('singUP' + altAnim, true);
-					case 3:
-						char.playAnim('singRIGHT' + altAnim, true);
-				}
-
-				char.holdTimer = 0;
-
-				note.kill();
-				notes.remove(note, true);
-				note.destroy();
+			if (note.strumTime <= Conductor.songPosition) {
+				goodNoteHit(note);
+				if (char != null) char.holdTimer = 0;
 			}
 		});
 	}
 
+	function charPlayAnim(name:String, ?force:Bool = false)
+		if (char != null) char.playAnim(name, force);
+
 	public function sortNotes()
-	{
 		notes.sort(FlxSort.byY, FlxSort.DESCENDING);
-	}
 
 	override function set_angle(value:Float):Float {
 		var pivot:FlxPoint = FlxPoint.get(width / 2, strumHeight / 2);

@@ -146,19 +146,22 @@ class Character extends FlxSprite
 
 	override function update(delta:Float)
 	{
-		if (!curCharacter.startsWith('bf'))
-		{
-			if (animation.curAnim.name.startsWith('sing'))
-			{
-				holdTimer += delta;
-			}
+		if (animation.curAnim.name.startsWith('sing'))
+			holdTimer += delta;
+		else if (isPlayer)
+			holdTimer = 0;
 
-			if (holdTimer >= Conductor.stepCrochet * singTime * 0.001)
-			{
-				dance();
-				holdTimer = 0;
-			}
+		if (!isPlayer && holdTimer >= Conductor.stepCrochet * singTime * 0.001)
+		{
+			dance();
+			holdTimer = 0;
 		}
+
+		if (animation.curAnim.name.endsWith('miss') && animation.curAnim.finished && !debugMode)
+			playAnim('idle', true, false, 10);
+
+		if (animation.curAnim.name == 'firstDeath' && animation.curAnim.finished)
+			playAnim('deathLoop');
 
 		if (doGFDanceShit) 
 				if (animation.curAnim.name == 'hairFall' && animation.curAnim.finished)

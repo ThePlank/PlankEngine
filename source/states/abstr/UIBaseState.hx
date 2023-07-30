@@ -106,6 +106,11 @@ class UIBaseState extends MusicBeatState
 		Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
 
+		if (FlxG.sound.music == null || !FlxG.sound.music.playing) {
+			FlxG.sound.playMusic(Paths.music('freakyMenu'), 0, true);
+			FlxG.sound.music.fadeIn(4, 0, 0.7);
+		}
+
         if (backgroundSettings.enabled) {
 		    this.bg = createBackground(backgroundSettings);
             insert(0, bg);

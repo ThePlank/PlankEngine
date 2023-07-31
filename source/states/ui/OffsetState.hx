@@ -1,4 +1,5 @@
 package states.ui;
+
 import display.objects.game.StrumLine;
 import flixel.FlxG;
 import flixel.addons.display.FlxBackdrop;

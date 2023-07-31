@@ -1,6 +1,9 @@
 package display.objects.ui;
 
 import flixel.FlxSprite;
+import haxe.Exception;
+import display.objects.game.Character.CharacterData;
+import display.objects.game.Character;
 
 class HealthIcon extends FlxSprite
 {
@@ -9,32 +12,32 @@ class HealthIcon extends FlxSprite
 	 */
 	public var sprTracker:FlxSprite;
 
+	public var character:String = 'bf';
+	public var isPlayer:Bool = false;
+
 	public function new(char:String = 'bf', isPlayer:Bool = false)
 	{
 		super();
-		loadGraphic(Paths.image('iconGrid'), true, 150, 150);
+		character = char;
+		this.isPlayer = isPlayer;
+		try {
+			doStuff();
+		} catch(ex:Exception) {
+			character = 'bf';
+			doStuff();
+		}
+	}
 
-		antialiasing = true;
-		animation.add('bf', [0, 1], 0, false, isPlayer);
-		animation.add('bf-car', [0, 1], 0, false, isPlayer);
-		animation.add('bf-christmas', [0, 1], 0, false, isPlayer);
-		animation.add('bf-pixel', [21, 21], 0, false, isPlayer);
-		animation.add('spooky', [2, 3], 0, false, isPlayer);
-		animation.add('pico', [4, 5], 0, false, isPlayer);
-		animation.add('mom', [6, 7], 0, false, isPlayer);
-		animation.add('mom-car', [6, 7], 0, false, isPlayer);
-		animation.add('tankman', [8, 9], 0, false, isPlayer);
-		animation.add('face', [10, 11], 0, false, isPlayer);
-		animation.add('dad', [12, 13], 0, false, isPlayer);
-		animation.add('senpai', [22, 22], 0, false, isPlayer);
-		animation.add('senpai-angry', [22, 22], 0, false, isPlayer);
-		animation.add('spirit', [23, 23], 0, false, isPlayer);
-		animation.add('bf-old', [14, 15], 0, false, isPlayer);
-		animation.add('gf', [16], 0, false, isPlayer);
-		animation.add('parents-christmas', [17], 0, false, isPlayer);
-		animation.add('monster', [19, 20], 0, false, isPlayer);
-		animation.add('monster-christmas', [19, 20], 0, false, isPlayer);
-		animation.play(char);
+	function doStuff() {
+		var image = Paths.image(Paths.getPath('characters/$character/icon.png'));
+		if (image == null) throw 'Missing icon';
+		loadGraphic(image, true, 150, 150);
+		var data:CharacterData = Character.getCharData(character);
+
+		antialiasing = data.antialias;
+		animation.add('normal', [0], 0, false, isPlayer);
+		animation.add('losing', [1], 0, false, isPlayer);
+		animation.play('normal');
 		scrollFactor.set();
 	}
 

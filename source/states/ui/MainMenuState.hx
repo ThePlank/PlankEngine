@@ -184,33 +184,21 @@ class MainMenuState extends UIBaseState
 						{
 							FlxFlicker.flicker(spr, 1, 0.06, false, false, function(flick:FlxFlicker)
 							{
-								var stupid:ShutterEffect = new ShutterEffect();
-								stupid.shutterTargetMode = ShutterEffect.SHUTTER_TARGET_FLXCAMERA;
-								stupid.radius = 1500;
+								var daChoice:String = optionShit[curSelected];
 
-								FlxG.camera.setFilters([new ShaderFilter(stupid.shader)]);
-								FlxTransitionableState.skipNextTransIn = true;
-								FlxTransitionableState.skipNextTransOut = true;
+								switch (daChoice)
+								{
+									case 'story mode':
+										UIBaseState.switchState(StoryMenuState);
+										trace("Story Menu Selected");
+									case 'freeplay':
+										LoadingState.loadAndSwitchState(new FreeplayState());
 
-								FlxTween.tween(stupid, {radius: 0}, 0.75, {ease: FlxEase.expoOut, onComplete: (ass) -> {
-									var daChoice:String = optionShit[curSelected];
+										trace("Freeplay Menu Selected");
 
-									switch (daChoice)
-									{
-										case 'story mode':
-											UIBaseState.switchState(StoryMenuState);
-											trace("Story Menu Selected");
-										case 'freeplay':
-											LoadingState.loadAndSwitchState(new FreeplayState());
-	
-											trace("Freeplay Menu Selected");
-	
-										case 'options':
-											FlxG.switchState(new OptionsState());
-									}
-								}});
-
-
+									case 'options':
+										FlxG.switchState(new OptionsState());
+								}
 							});
 						}
 					});

@@ -60,6 +60,8 @@ class PlankFPS extends Sprite
 			otext.defaultTextFormat = this.defaultTextFormat;
 			otext.textColor = outlineColor;
 			otext.width = baseText.width;
+			otext.selectable = false;
+			otext.mouseEnabled = false;
 			outlineTexts.push(otext);
 			addChild(otext);
 		}
@@ -89,7 +91,7 @@ class PlankFPS extends Sprite
 
 		text = 'FPS: ${currentFPS}\nMEM: ${FlxStringUtil.formatBytes(currentMemory)} / ${FlxStringUtil.formatBytes(maxMemory)}';
 
-		var mappedFPS = FlxMath.remapToRange(currentFPS, FlxG.drawFramerate, FlxG.drawFramerate / 2, 0, 1);
+		var mappedFPS = FlxMath.remapToRange(currentFPS, FlxG.drawFramerate, FlxG.drawFramerate, 0, 1);
 
 		baseText.textColor = FlxColor.interpolate(normalColor, maxColor, FlxEase.cubeIn(mappedFPS));
 	}

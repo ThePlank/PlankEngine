@@ -251,6 +251,11 @@ class Character extends FlxSprite
 		updateAnimationOffsets();
 	}
 
+	public static function getCharData(char:String) {
+		var charData:CharacterData = cast Json.parse(Paths.getTextFromFile('characters/$char/data.json'));
+		return charData;
+	}
+
 	/*
 	public function toCharacterData():CharacterData {
 		var realOffsets: Dynamic<Array<Int>> = {};

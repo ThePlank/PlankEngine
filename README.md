@@ -18,11 +18,12 @@ flixel-addons, USE NEWEST OR ILL EXPLODE YOY >:(
 flixel-ui
 markdown
 actuate
-away3d
+format
 ```
 ### Gits
 There are some haxelibs that yoy can only get using git, the base command is `haxelib git <HAXELIB NAME> <GIT URL>`
-- flixel3D https://github.com/ThePlank/3D-HaxeFlixel.git
+
+> there was one but not anymore, but expect some to pop up later.
 
 ### Videos
 videos are really crappy right now, if you wanna use them, then [git and build this](https://github.com/HeapsIO/hlvideo)

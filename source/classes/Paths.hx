@@ -306,10 +306,10 @@ class Paths
 		return returnGraphic(key, library);
 
 	static public function inst(song:String, ?stream:Bool, forceNoStream:Bool = false):Sound
-		return returnSound('songs', '${formatToSongPath(song)}/Inst', !forceNoStream && (stream || streamMusic));
+		return returnSound('data', '${formatToSongPath(song)}/Inst', !forceNoStream && (stream || streamMusic));
 
 	static public function voices(song:String, ?stream:Bool, forceNoStream:Bool = false):Sound
-		return returnSound('songs', '${formatToSongPath(song)}/Voices', !forceNoStream && (stream || streamMusic));
+		return returnSound('data', '${formatToSongPath(song)}/Voices', !forceNoStream && (stream || streamMusic));
 
 	static public function getTextFromFile(key:String, ?ignoreMods:Bool = false):String
 	{

@@ -97,7 +97,6 @@
 	<assets path='mod_template' embed='true' />
 	<assets path='art/readme.txt' rename='please DO readme.txt' />
 	<assets path='changelog.md' rename='CHANGELOG.md' embed='true' />
-	<!-- <template path='mods' /> -->
 
 	<assets path="CHANGELOG.md" rename='changelog.txt' />
 
@@ -157,7 +156,6 @@
 	<haxelib name="hscript" />
 	<haxelib name="actuate" />
 	<haxelib name="away3d" />
-	<haxelib name="flixel3D" />
 	<haxelib name="markdown" />
 	<haxelib name="format" />
 
@@ -180,7 +178,6 @@
 
 
 	<!-- <haxedef name="SKIP_TO_PLAYSTATE" if="debug" /> -->
-	<haxedef name="NG_LOGIN" if="newgrounds" />
 
 	<!-- Enable this if you want traces on startup -->
 	<haxedef name="HL_CONSOLE" if="debug" />

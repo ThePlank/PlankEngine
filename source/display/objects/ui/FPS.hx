@@ -31,7 +31,7 @@ class PlankFPS extends Sprite
 	private var outlineQuality:Int = 8;
 	var defaultTextFormat:TextFormat;
 
-	public var text(default, set):String; 
+	public var text(get, set):String; 
 
 
 	public function new(x:Float = 10, y:Float = 10)
@@ -77,19 +77,19 @@ class PlankFPS extends Sprite
 	{
 		currentFPS = Math.floor(Math.max(1 / (deltaTime / 1000), 0)); // clamp the value so it doesent go to -2147483647 FPS
 
-
-		#if (gl_stats && !disable_cffi && (!html5 || !canvas))
-		text += "\ntotalDC: " + Context3DStats.totalDrawCalls();
-		text += "\nstageDC: " + Context3DStats.contextDrawCalls(DrawCallContext.STAGE);
-		text += "\nstage3DDC: " + Context3DStats.contextDrawCalls(DrawCallContext.STAGE3D);
-		#end
-
 		var stats:{currentMemory:Float, totalAllocated:Float, allocationCount:Float} = hl.Gc.stats();
 		currentMemory = stats.currentMemory;
 		if (currentMemory > maxMemory)
 			maxMemory = currentMemory;
 
-		text = 'FPS: ${currentFPS}\nMEM: ${FlxStringUtil.formatBytes(currentMemory)} / ${FlxStringUtil.formatBytes(maxMemory)}';
+		text = 'FPS: ${currentFPS}\n';
+		text += 'MEM: ${FlxStringUtil.formatBytes(currentMemory)} / ${FlxStringUtil.formatBytes(maxMemory)}';
+
+		#if (gl_stats && !disable_cffi && (!html5 || !canvas))
+		text += "\ntotalDC: " + openfl.display._internal.stats.Context3DStats.totalDrawCalls();
+		text += "\nstageDC: " + openfl.display._internal.stats.Context3DStats.contextDrawCalls(openfl.display._internal.stats.DrawCallContext.STAGE);
+		text += "\nstage3DDC: " + openfl.display._internal.stats.Context3DStats.contextDrawCalls(openfl.display._internal.stats.DrawCallContext.STAGE3D);
+		#end
 
 		var mappedFPS = FlxMath.remapToRange(currentFPS, FlxG.drawFramerate, FlxG.drawFramerate, 0, 1);
 
@@ -103,4 +103,7 @@ class PlankFPS extends Sprite
 		}
 		return value;
 	}
+
+	private function get_text():String 
+		return baseText.text;
 }

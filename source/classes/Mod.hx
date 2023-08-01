@@ -118,7 +118,7 @@ class Mod
 
 	public function getPath(path:String):String
 	{
-		path.replace('/', '\\');
+		path = path.replace('/', '\\');
 		return '${System.documentsDirectory}$MOD_PATH\\$modPath\\$path';
 	}
 

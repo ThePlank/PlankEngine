@@ -134,7 +134,7 @@ class Main extends Sprite
 		#end
 	}
 
-	static var consoleClasses:Array<Class<Dynamic>> = [Options, System, Lib, Main, CoolUtil, ZipTools, PlayerSettings, Conductor, Paths #if hl , hl.Gc #end];
+	static var consoleClasses:Array<Class<Dynamic>> = [Options, System, Lib, Main, CoolUtil, ZipTools, PlayerSettings, Conductor, Paths #if hl , hl.Gc #end, BitmapData];
 	static var consoleEnums:Array<Enum<Dynamic>> = [Player];
 
 	function registerClasses()
@@ -146,7 +146,7 @@ class Main extends Sprite
 		FlxG.console.registerFunction('openModMenu', () -> {
 			FlxG.state.openSubState(new states.substates.ui.ModSelectionSubstate());
 		});
-	}
+	}	
 
 	public static var crashPath = "\\crashes";
 	public static var crashName = "\\PLECrashlog";
@@ -208,6 +208,7 @@ class Main extends Sprite
 			settings.gameWidth = Math.ceil(stageWidth / settings.zoom);
 			settings.gameHeight = Math.ceil(stageHeight / settings.zoom);
 		}
+
 		stage.window.frameRate = settings.framerate;
 
 		#if (debug)
@@ -216,6 +217,11 @@ class Main extends Sprite
 
 		game = new FlxGame(settings.gameWidth, settings.gameHeight, settings.initialState, #if (flixel < "5.0.0") settings.zoom, #end settings.framerate, settings.framerate, settings.skipSplash, settings.startFullscreen);
 		addChild(game);
+
+		#if (flixel-studio)
+		flixel.addons.studio.FlxStudio.create();
+		#end
+
 		// stage.addEventListener(Event.ENTER_FRAME, update);
 		registerClasses();
 		classes.Mod.init();

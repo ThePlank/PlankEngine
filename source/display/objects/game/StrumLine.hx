@@ -37,6 +37,7 @@ typedef HitData = {
 	var note:Note;
 	var rating:String;
 	var score:Int;
+	var combo:Int;
 	var noteDiff:Float;
 }
 
@@ -45,6 +46,7 @@ class StrumLine extends FlxTypedSpriteGroup<FlxSprite>
 {
 	public var strumLine:FlxSprite;
 	public var noteHit:FlxTypedSignal<HitData->Void>;
+	public var onMiss:FlxTypedSignal<Int->Void>;
 	public var strumLineNotes:FlxSpriteGroup;
 	public var noteSplashes:FlxTypedSpriteGroup<NoteSplash>;
 	public var notes:FlxTypedSpriteGroup<Note>;
@@ -83,6 +85,7 @@ class StrumLine extends FlxTypedSpriteGroup<FlxSprite>
 		add(notes);
 
 		noteHit = new FlxTypedSignal<HitData->Void>();
+		onMiss = new FlxTypedSignal<Int->Void>();
 	}
 
 	private function generateStaticArrows(?tweenStrums:Bool = true):FlxSpriteGroup
@@ -277,13 +280,8 @@ class StrumLine extends FlxTypedSpriteGroup<FlxSprite>
 
 	function noteMiss(direction:Int = 1):Void
 	{
-		health -= 0.04;
 		combo = 0;
 
-		// if (!practiceMode)
-		//	songScore -= 10;
-
-		// vocals.volume = 0;
 		FlxG.sound.play(Paths.soundRandom('missnote', 1, 3), FlxG.random.float(0.1, 0.2));
 
 		switch (direction)
@@ -297,6 +295,8 @@ class StrumLine extends FlxTypedSpriteGroup<FlxSprite>
 			case 3:
 				charPlayAnim('singRIGHTmiss', true);
 		}
+		
+		onMiss.dispatch(direction);
 	}
 
 	function goodNoteHit(note:Note):Void
@@ -376,7 +376,7 @@ class StrumLine extends FlxTypedSpriteGroup<FlxSprite>
 		});
 	}
 
-	public function generatePopup(data:HitData) {
+	static public function generatePopup(data:HitData):FlxSpriteGroup {
 		var group:FlxSpriteGroup = new FlxSpriteGroup();
 
 		var rating:FlxSprite = new FlxSprite(-40, -60, Paths.image(data.rating));
@@ -399,9 +399,9 @@ class StrumLine extends FlxTypedSpriteGroup<FlxSprite>
 
 		var seperatedScore:Array<Int> = [];
 
-		seperatedScore.push(Math.floor(combo / 100));
-		seperatedScore.push(Math.floor((combo - (seperatedScore[0] * 100)) / 10));
-		seperatedScore.push(combo % 10);
+		seperatedScore.push(Math.floor(data.combo / 100));
+		seperatedScore.push(Math.floor((data.combo - (seperatedScore[0] * 100)) / 10));
+		seperatedScore.push(data.combo % 10);
 
 		var daLoop:Int = 0;
 		for (i in seperatedScore)
@@ -417,7 +417,7 @@ class StrumLine extends FlxTypedSpriteGroup<FlxSprite>
 			numScore.velocity.y -= FlxG.random.int(140, 160);
 			numScore.velocity.x = FlxG.random.float(-5, 5);
 
-			if (combo >= 10 || combo == 0)
+			if (data.combo >= 10 || data.combo == 0)
 				group.add(numScore);
 
 			FlxTween.tween(numScore, {alpha: 0}, 0.2, {
@@ -447,6 +447,8 @@ class StrumLine extends FlxTypedSpriteGroup<FlxSprite>
 			},
 			startDelay: Conductor.crochet * 0.001
 		});
+
+		return group;
 	}
 
 	private function popUpScore(note:Note, ?strumTime:Float):Void
@@ -485,6 +487,7 @@ class StrumLine extends FlxTypedSpriteGroup<FlxSprite>
 			note: note,
 			rating: daRating,
 			score: score,
+			combo: combo,
 			noteDiff: note.strumTime - Conductor.songPosition,
 		});
 	}

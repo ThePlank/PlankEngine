@@ -218,9 +218,7 @@ class Main extends Sprite
 		game = new FlxGame(settings.gameWidth, settings.gameHeight, settings.initialState, #if (flixel < "5.0.0") settings.zoom, #end settings.framerate, settings.framerate, settings.skipSplash, settings.startFullscreen);
 		addChild(game);
 
-		#if flixel-studio
-		flixel.addons.studio.FlxStudio.create();
-		#end
+		// flixel.addons.studio.FlxStudio.create();
 
 		// stage.addEventListener(Event.ENTER_FRAME, update);
 		registerClasses();

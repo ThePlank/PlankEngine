@@ -1,3 +1,24 @@
 {
-    "bpm": 102
+    "bpm": 102,
+    "rgbEnabled": true,
+    "bgImage": "",
+    "backdrop": {
+        "enabled": true,
+        "axes": [true, false],
+        "velocity": [-100, 0],
+        "image": "halftonedots",
+        "alpha": 0.25
+    },
+    "gf": {
+        "position": [512, 50],
+        "antialiasing": true
+    },
+    "logo": {
+        "position": [-150, -100],
+        "antialiasing": true
+    },
+    "titleText": {
+        "position": [100, 576],
+        "antialiasing": true
+    }
 }

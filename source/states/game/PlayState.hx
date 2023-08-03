@@ -16,9 +16,6 @@ import display.objects.game.Character;
 import util.CoolUtil;
 import display.objects.BackgroundGirls;
 import display.objects.BackgroundDancer;
-#if (discord_rpc || hldiscord)
-import classes.Discord.DiscordClient;
-#end
 import classes.Section.SwagSection;
 import classes.Song.SwagSong;
 import display.shaders.WiggleEffect;
@@ -211,7 +208,6 @@ class PlayState extends states.abstr.MusicBeatState
 				dialogue = CoolUtil.coolTextFile(Paths.txt('thorns/thornsDialogue'));
 		}
 
-		#if (discord_rpc || hldiscord)
 		// Making difficulty text for Discord Rich Presence.
 		switch (storyDifficulty)
 		{
@@ -251,7 +247,6 @@ class PlayState extends states.abstr.MusicBeatState
 
 		// Updating Discord Rich Presence.
 		DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ")", iconRPC);
-		#end
 
 		switch (SONG.song.toLowerCase())
 		{
@@ -343,12 +338,9 @@ class PlayState extends states.abstr.MusicBeatState
 					var overlayShit:FlxSprite = new FlxSprite(-500, -600).loadGraphic(Paths.image('limo/limoOverlay'));
 					overlayShit.alpha = 0.5;
 					// add(overlayShit);
-
-					// var shaderBullshit = new BlendModeEffect(new OverlayShader(), FlxColor.RED);
-
+					// var shaderBullshit = new display.shaders.BlendModeEffect(new display.shaders.OverlayShader(), FlxColor.RED);
 					// FlxG.camera.setFilters([new ShaderFilter(cast shaderBullshit.shader)]);
-
-					// overlayShit.shader = shaderBullshit;
+					// overlayShit.shader = cast shaderBullshit.shader;
 
 					var limoTex = Paths.getSparrowAtlas('limo/limoDrive');
 
@@ -359,7 +351,6 @@ class PlayState extends states.abstr.MusicBeatState
 					limo.antialiasing = true;
 
 					fastCar = new FlxSprite(-300, 160).loadGraphic(Paths.image('limo/fastCarLol'));
-					// add(limo);
 				}
 			case 'cocoa' | 'eggnog':
 				{
@@ -496,9 +487,7 @@ class PlayState extends states.abstr.MusicBeatState
 					bgGirls.scrollFactor.set(0.9, 0.9);
 
 					if (SONG.song.toLowerCase() == 'roses')
-					{
 						bgGirls.getScared();
-					}
 
 					bgGirls.setGraphicSize(Std.int(bgGirls.width * daPixelZoom));
 					bgGirls.updateHitbox();
@@ -615,7 +604,6 @@ class PlayState extends states.abstr.MusicBeatState
 		gf = new Character(400, 130, gfVersion);
 		gf.scrollFactor.set(0.95, 0.95);
 		
-
 		dad = new Character(100, 100, SONG.player2);
 
 		var camPos:FlxPoint = new FlxPoint(dad.getGraphicMidpoint().x, dad.getGraphicMidpoint().y);
@@ -630,20 +618,10 @@ class PlayState extends states.abstr.MusicBeatState
 					camPos.x += 600;
 					tweenCamIn();
 				}
-
-			case "spooky":
-				dad.y += 200;
-			case "monster":
-				dad.y += 100;
-			case 'monster-christmas':
-				dad.y += 130;
 			case 'dad':
 				camPos.x += 400;
 			case 'pico':
 				camPos.x += 600;
-				dad.y += 300;
-			case 'parents-christmas':
-				dad.x -= 500;
 			case 'senpai':
 				dad.x += 150;
 				dad.y += 360;
@@ -706,23 +684,11 @@ class PlayState extends states.abstr.MusicBeatState
 		add(boyfriend);
 
 		var doof:DialogueBox = new DialogueBox(false, dialogue);
-		// doof.x += 70;
-		// doof.y = FlxG.height * 0.5;
 		doof.scrollFactor.set();
 		doof.finishThing = startCountdown;
 
 		Conductor.songPosition = -5000;
 
-		// strumLine = new FlxSprite(0, 50).makeGraphic(FlxG.width, 10);
-		// strumLine.scrollFactor.set();
-
-		// if (FlxG.save.data.downscroll)
-			// strumLine.y = FlxG.height - 165;
-
-		// strumLineNotes = new FlxTypedGroup<FlxSprite>();
-		// add(strumLineNotes);
-
-		// playerStrums = new FlxTypedGroup<FlxSprite>();
 		playerStrums = new StrumLine(0, 50, PLAYER1, boyfriend);
 		playerStrums.x += 50;
 		playerStrums.x += (FlxG.width) / 2;
@@ -733,14 +699,11 @@ class PlayState extends states.abstr.MusicBeatState
 
 		dadStrums = new StrumLine(0, 50, CPU, dad);
 		dadStrums.x += 50;
+		dadStrums.noteHit.add(data -> vocals.volume = 1);
 		dadStrums.scrollSpeed = SONG.speed;
 		add(dadStrums);
 
-		// startCountdown();
-
 		generateSong(SONG.song);
-
-		// add(strumLine);
 
 		camFollow = new FlxObject(0, 0, 1, 1);
 
@@ -764,8 +727,6 @@ class PlayState extends states.abstr.MusicBeatState
 		FlxG.fixedTimestep = false;
 
 		healthBarBG = new FlxSprite(0, FlxG.height * 0.9).loadGraphic(Paths.image('healthBar'));
-		if (FlxG.save.data.downscroll)
-			healthBarBG.y = 50;
 		healthBarBG.screenCenter(X);
 		healthBarBG.scrollFactor.set();
 		add(healthBarBG);
@@ -1068,13 +1029,11 @@ class PlayState extends states.abstr.MusicBeatState
 		FlxG.sound.music.onComplete = endSong;
 		vocals.play();
 
-		#if (discord_rpc || hldiscord)
 		// Song duration in a float, useful for the time left feature
 		songLength = FlxG.sound.music.length;
 
 		// Updating Discord Rich Presence (with Time Left)
 		DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ")", iconRPC, true, songLength);
-		#end
 	}
 
 	var debugNum:Int = 0;
@@ -1193,16 +1152,10 @@ class PlayState extends states.abstr.MusicBeatState
 				startTimer.active = true;
 			paused = false;
 
-			#if (discord_rpc || hldiscord)
 			if (startTimer.finished)
-			{
 				DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ")", iconRPC, true, songLength - Conductor.songPosition);
-			}
 			else
-			{
 				DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ")", iconRPC);
-			}
-			#end
 		}
 
 		super.closeSubState();
@@ -1210,31 +1163,21 @@ class PlayState extends states.abstr.MusicBeatState
 
 	override public function onFocus():Void
 	{
-		#if (discord_rpc || hldiscord)
 		if (health > 0 && !paused)
 		{
 			if (Conductor.songPosition > 0.0)
-			{
 				DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ")", iconRPC, true, songLength - Conductor.songPosition);
-			}
 			else
-			{
 				DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ")", iconRPC);
-			}
 		}
-		#end
 
 		super.onFocus();
 	}
 
 	override public function onFocusLost():Void
 	{
-		#if (discord_rpc || hldiscord)
 		if (health > 0 && !paused)
-		{
 			DiscordClient.changePresence(detailsPausedText, SONG.song + " (" + storyDifficultyText + ")", iconRPC);
-		}
-		#end
 
 		super.onFocusLost();
 	}
@@ -1305,25 +1248,18 @@ class PlayState extends states.abstr.MusicBeatState
 			// else
 				openSubState(new PauseSubState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
 
-			#if (discord_rpc || hldiscord)
 			DiscordClient.changePresence(detailsPausedText, SONG.song + " (" + storyDifficultyText + ")", iconRPC);
-			#end
 		}
 
 		if (FlxG.keys.justPressed.SEVEN)
 		{
 			UIBaseState.switchState(ChartingState);
 
-			#if (discord_rpc || hldiscord)
 			DiscordClient.changePresence("Chart Editor", null, null, true);
-			#end
 		}
 
 		// FlxG.watch.addQuick('VOL', vocals.amplitudeLeft);
 		// FlxG.watch.addQuick('VOLRight', vocals.amplitudeRight);
-
-		// iconP1.origin.set(0.5, 1);
-		// iconP2.origin.set(0.5, 1);
 
 		var funnyBeat = (Conductor.songPosition / 1000) * (Conductor.bpm / 60);
 
@@ -1338,15 +1274,8 @@ class PlayState extends states.abstr.MusicBeatState
 		if (health > 2)
 			health = 2;
 
-		if (healthBar.percent < 20)
-			iconP1.animation.curAnim.curFrame = 1;
-		else
-			iconP1.animation.curAnim.curFrame = 0;
-
-		if (healthBar.percent > 80)
-			iconP2.animation.curAnim.curFrame = 1;
-		else
-			iconP2.animation.curAnim.curFrame = 0;
+		iconP1.animation.play(healthBar.percent > 20 ? 'normal' : 'losing');
+		iconP2.animation.play(healthBar.percent < 80 ? 'normal' : 'losing');
 
 		/* if (FlxG.keys.justPressed.NINE)
 			FlxG.switchState(new Charting()); */
@@ -1366,39 +1295,13 @@ class PlayState extends states.abstr.MusicBeatState
 			}
 		}
 		else
-		{
-			// Conductor.songPosition = FlxG.sound.music.time;
 			Conductor.songPosition += (FlxG.elapsed * 1000) * FlxG.sound.music.pitch;
-
-			/*if (!paused) useless
-			{
-				songTime += FlxG.game.ticks - previousFrameTime;
-				previousFrameTime = FlxG.game.ticks;
-
-				// Interpolation type beat
-				if (Conductor.lastSongPos != Conductor.songPosition)
-				{
-					songTime = (songTime + Conductor.songPosition) / 2;
-					Conductor.lastSongPos = Conductor.songPosition;
-					// Conductor.songPosition += FlxG.elapsed * 1000;
-					// trace('MISSED FRAME');
-				}
-			}*/
-
-			// Conductor.lastSongPos = FlxG.sound.music.time;
-		}
 
 		if (generatedMusic && PlayState.SONG.notes[Std.int(curStep / 16)] != null)
 		{
-			if (curBeat % 4 == 0)
-			{
-				// trace(PlayState.SONG.notes[Std.int(curStep / 16)].mustHitSection);
-			}
-
-			if (camFollow.x != dad.getMidpoint().x + 150 && !PlayState.SONG.notes[Std.int(curStep / 16)].mustHitSection)
+			if (!PlayState.SONG.notes[Std.int(curStep / 16)].mustHitSection)
 			{
 				camFollow.setPosition(dad.getMidpoint().x + 150, dad.getMidpoint().y - 100);
-				// camFollow.setPosition(lucky.getMidpoint().x - 120, lucky.getMidpoint().y + 210);
 
 				switch (dad.curCharacter)
 				{
@@ -1412,17 +1315,12 @@ class PlayState extends states.abstr.MusicBeatState
 						camFollow.x = dad.getMidpoint().x - 100;
 				}
 
-				if (dad.curCharacter == 'mom')
-					vocals.volume = 1;
+				// if (dad.curCharacter == 'mom')
+				// 	vocals.volume = 1;
 
 				if (SONG.song.toLowerCase() == 'tutorial')
-				{
 					tweenCamIn();
-				}
-			}
-
-			if (PlayState.SONG.notes[Std.int(curStep / 16)].mustHitSection && camFollow.x != boyfriend.getMidpoint().x - 100)
-			{
+			} else {
 				camFollow.setPosition(boyfriend.getMidpoint().x - 100, boyfriend.getMidpoint().y - 100);
 
 				switch (curStage)
@@ -1440,9 +1338,7 @@ class PlayState extends states.abstr.MusicBeatState
 				}
 
 				if (SONG.song.toLowerCase() == 'tutorial')
-				{
 					FlxTween.tween(FlxG.camera, {zoom: 1}, (Conductor.stepCrochet * 4 / 1000), {ease: FlxEase.elasticInOut});
-				}
 			}
 		}
 
@@ -1468,22 +1364,9 @@ class PlayState extends states.abstr.MusicBeatState
 			}
 		}
 
-		// better streaming of shit
-
 		// RESET = Quick Game Over Screen
 		if (controls.RESET)
-		{
 			health = 0;
-			trace("RESET = True");
-		}
-
-		// CHEAT = brandon's a pussy
-		// uhm... why was this even in the game?
-		// if (controls.CHEAT)
-		// {
-		// 	health += 1;
-		// 	trace("User is cheating!");
-		// }
 
 		if (health <= 0)
 		{
@@ -1498,10 +1381,8 @@ class PlayState extends states.abstr.MusicBeatState
 
 			// FlxG.switchState(new GameOverState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
 
-			#if (discord_rpc || hldiscord)
 			// Game Over doesn't get his own variable because it's only used here
 			DiscordClient.changePresence("Game Over - " + detailsText, SONG.song + " (" + storyDifficultyText + ")", iconRPC);
-			#end
 		}
 
 		if (unspawnNotes[0] != null)
@@ -1531,12 +1412,9 @@ class PlayState extends states.abstr.MusicBeatState
 		canPause = false;
 		FlxG.sound.music.volume = 0;
 		vocals.volume = 0;
-		if (SONG.validScore)
-		{
-			#if !switch
-			Highscore.saveScore(SONG.song, songScore, storyDifficulty);
-			#end
-		}
+		#if !switch
+		Highscore.saveScore(SONG.song, songScore, storyDifficulty);
+		#end
 
 		if (isStoryMode)
 		{
@@ -1546,15 +1424,13 @@ class PlayState extends states.abstr.MusicBeatState
 
 			if (storyPlaylist.length <= 0)
 			{
-				FlxG.sound.playMusic(Paths.music('freakyMenu'));
-
 				transIn = FlxTransitionableState.defaultTransIn;
 				transOut = FlxTransitionableState.defaultTransOut;
 
 				UIBaseState.switchState(StoryMenuState);
 
 				// if ()
-				StoryMenuState.weekUnlocked[Std.int(Math.min(storyWeek + 1, StoryMenuState.weekUnlocked.length - 1))] = true;
+				// StoryMenuState.weekUnlocked[Std.int(Math.min(storyWeek + 1, StoryMenuState.weekUnlocked.length - 1))] = true;
 
 				if (SONG.validScore)
 				{
@@ -1618,8 +1494,6 @@ class PlayState extends states.abstr.MusicBeatState
 	{
 		health += 0.023;
 		songScore += data.score;
-		if (data.combo % 10 == 0)
-			gf.playAnim('cheer', true);
 
 		FlxG.sound.play(Paths.sound('hitsound'), 1);
 		add(StrumLine.generatePopup(data).screenCenter());

@@ -17,8 +17,8 @@ import flixel.util.FlxColor;
 
 typedef UIBackgroudSettings =
 {
-	var enabled:Bool;
-	var bgColor:FlxColor;
+	@:optional var enabled:Bool;
+	@:optional var bgColor:FlxColor;
 	@:optional var imageFile:String;
 	@:optional var scrollFactor:Array<Float>;
 	@:optional var bgColorGradient:Array<FlxColor>;
@@ -41,8 +41,6 @@ class UIBaseState extends MusicBeatState
 	var canOpenModMenu:Bool = true;
 	var bg:FlxSprite;
 
-    public static var menus:Map<String, FlxState> = [];
-
 	private function createBackground(settings:UIBackgroudSettings):FlxSprite
 	{
 		var createdBG:FlxSprite;
@@ -51,14 +49,14 @@ class UIBaseState extends MusicBeatState
 			createdBG.color = settings.bgColor;
 		} else {
 			createdBG = new FlxSprite(0, 0);
-			createdBG.makeGraphic(FlxG.width, FlxG.height, settings.bgColor);
+			createdBG.makeGraphic(FlxG.width, FlxG.height, settings.bgColor ?? 0xFF000000);
 		}
 
 		if (settings.scrollFactor != null)
 			createdBG.scrollFactor.set(settings.scrollFactor[0], settings.scrollFactor[1]);
 
 		if (settings.sizeMultiplier != null)
-            createdBG.setGraphicSize(Std.int(createdBG.width * settings.sizeMultiplier));
+            createdBG.scale.set(settings.sizeMultiplier, settings.sizeMultiplier);
 
         createdBG.updateHitbox();
 		createdBG.screenCenter();
@@ -80,29 +78,17 @@ class UIBaseState extends MusicBeatState
 		return createdBG;
 	}
 
-	public static function switchState(state:Class<FlxState>, ?args:Array<Dynamic>, ?forceNew:Bool = false) {
+	public static function switchState(state:Class<FlxState>, ?args:Array<Dynamic>) {
 		if (args == null) args = [];
-
 		var name = Type.getClassName(state);
-
-		// if (menus.exists(name) && !forceNew) {
-		// 	FlxG.switchState(menus.get(name));
-		// 	return;
-		// }
-
 		var newState = Type.createInstance(state, args);
-		menus.set(name, newState);
 		FlxG.switchState(newState);
-
 	}
 
-	private function showNotification(notif:Notification) {
+	private function showNotification(notif:Notification)
 		add(notif);
 
-	}
-
-	override public function create()
-	{
+	override public function create() {
 		Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
 

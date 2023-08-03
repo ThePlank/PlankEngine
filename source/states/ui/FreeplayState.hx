@@ -11,9 +11,6 @@ import states.abstr.UIBaseState;
 import classes.Song;
 import util.CoolUtil;
 import display.objects.ui.HealthIcon;
-#if (discord_rpc || hldiscord)
-import classes.Discord.DiscordClient;
-#end
 import flash.text.TextField;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -72,10 +69,8 @@ class FreeplayState extends UIBaseState
 			songs.push(new SongMetadata(initSonglist[i], 1, 'gf'));
 		}
 
-		#if (discord_rpc || hldiscord)
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("In the Menus", null);
-		#end
 
 		if (StoryMenuState.weekUnlocked[2] || isDebug)
 			addWeek(['Bopeebo', 'Fresh', 'Dadbattle'], 1, ['dad']);

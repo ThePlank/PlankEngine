@@ -220,11 +220,9 @@ class Main extends Sprite
 
 		// flixel.addons.studio.FlxStudio.create();
 
-		// stage.addEventListener(Event.ENTER_FRAME, update);
 		registerClasses();
 		classes.Mod.init();
 		PlayerSettings.init();
-		// classes.Discord.DiscordClient.initialize();
 
 		var sucess:Bool = FlxG.save.bind("PlankEngine", "PlankDev");
 

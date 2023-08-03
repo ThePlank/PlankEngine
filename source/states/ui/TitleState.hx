@@ -25,10 +25,7 @@ import classes.Conductor;
 import classes.Highscore;
 import classes.PlayerSettings;
 import display.objects.ui.Alphabet;
-#if (discord_rpc || hldiscord)
-import classes.Discord.DiscordClient;
 import sys.thread.Thread;
-#end
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
@@ -53,6 +50,7 @@ import lime.app.Application;
 import openfl.Assets;
 import states.abstr.MusicBeatState;
 import display.objects.ui.AtlasText;
+import flixel.util.FlxAxes;
 
 using StringTools;
 
@@ -62,22 +60,21 @@ class TitleState extends UIBaseState
 
 	var blackScreen:FlxSprite;
 	var credGroup:FlxGroup;
-	var credTextShit:Alphabet;
 	var textGroup:FlxGroup;
 	var ngSpr:FlxSprite;
+
+	var settings:{bpm:Int, rgbEnabled:Bool, bgImage:String,
+	backdrop:{enabled:Bool, axes:Array<Bool>, velocity:Array<Int>, image:String, alpha:Float},
+	gf:{position:Array<Int>, antialiasing:Bool},
+	logo:{position:Array<Int>, antialiasing:Bool},
+	titleText:{position:Array<Int>, antialiasing:Bool}} = Json.parse(Paths.getTextFromFile("data/freakyMenu.json"));
 
 	var curWacky:Array<String> = [];
 
 	override public function create():Void
 	{
 		backgroundSettings = {
-			enabled: true,
-			bgColor: 0xFF000000,
-			imageFile: "",
-			scrollFactor: [0, 0],
-			bgColorGradient: [0xFF3B0651, 0xFF110810],
-			gradientMix: 1,
-			gradientAngle: -90
+			imageFile: settings.bgImage
 		}
 
 		curWacky = FlxG.random.getObject(getIntroTextShit());
@@ -109,14 +106,12 @@ class TitleState extends UIBaseState
 		startIntro();
 		#end
 
-		#if (discord_rpc || hldiscord)
 		DiscordClient.initialize();
 
 		Application.current.onExit.add(function(exitCode)
 		{
 			DiscordClient.shutdown();
 		});
-		#end
 	}
 
 	var logo:FlxSprite;
@@ -149,48 +144,44 @@ class TitleState extends UIBaseState
 			// transOut = FlxTransitionableState.defaultTransOut;
 		}
 
-		var settings = Json.parse(Paths.getTextFromFile("data/freakyMenu.json"));
 		Conductor.bpm = settings.bpm;
 
 		persistentUpdate = true;
 
-		var grid:FlxGraphic = classes.Paths.image('halftonedots');
+		if (settings.backdrop.enabled) {
+			var grid:FlxGraphic = Paths.image(settings.backdrop.image);
+			var axes:FlxAxes = FlxAxes.fromBools(settings.backdrop.axes[0], settings.backdrop.axes[1]);
+			backdrop = new FlxBackdrop(grid, axes);
+			if (axes == X) backdrop.y = FlxG.height - backdrop.height;
+			backdrop.alpha = settings.backdrop.alpha;
+			backdrop.velocity.set(settings.backdrop.velocity[0], settings.backdrop.velocity[1]);
+			add(backdrop);
+		}
 
-		backdrop = new FlxBackdrop(grid, X);
-		backdrop.y = FlxG.height - backdrop.height;
-		backdrop.blend = SCREEN;
-		backdrop.alpha = 0.25;
-		backdrop.velocity.x = -100;
-		add(backdrop);
-
-		logo = new FlxSprite(-150, -100);
+		logo = new FlxSprite(settings.logo.position[0], settings.logo.position[1]);
 		logo.frames = Paths.getSparrowAtlas('logoBumpin');
-		logo.antialiasing = true;
 		logo.animation.addByPrefix('bump', 'logo bumpin', 24);
 		logo.animation.play('bump');
-		//logo.useFramePixels = true;
-		logo.updateHitbox();
+		logo.antialiasing = settings.logo.antialiasing;
 		add(logo);
 
-		gfDance = new FlxSprite(FlxG.width * 0.4, FlxG.height * 0.07);
+		gfDance = new FlxSprite(settings.gf.position[0], settings.gf.position[1]);
 		gfDance.frames = Paths.getSparrowAtlas('gfDanceTitle');
 		gfDance.animation.addByIndices('danceLeft', 'gfDance', [30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], "", 24, false);
 		gfDance.animation.addByIndices('danceRight', 'gfDance', [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], "", 24, false);
-		gfDance.antialiasing = true;
-		//gfDance.useFramePixels = true;
+		gfDance.antialiasing = settings.gf.antialiasing;
 		add(gfDance);
 		
 		stupid = new ColorSwap();
 		var filter:ShaderFilter = new ShaderFilter(stupid.shader);
-		FlxG.camera.setFilters([filter]);
+		if (settings.rgbEnabled) FlxG.camera.setFilters([filter]);
 
-		titleText = new FlxSprite(100, FlxG.height * 0.8);
+		titleText = new FlxSprite(settings.titleText.position[0], settings.titleText.position[1]);
 		titleText.frames = Paths.getSparrowAtlas('titleEnter');
 		titleText.animation.addByPrefix('idle', "Press Enter to Begin", 24);
 		titleText.animation.addByPrefix('press', "ENTER PRESSED", 24);
-		titleText.antialiasing = true;
 		titleText.animation.play('idle');
-		titleText.updateHitbox();
+		titleText.antialiasing = settings.titleText.antialiasing;
 		add(titleText);
 
 		credGroup = new FlxGroup();
@@ -200,13 +191,6 @@ class TitleState extends UIBaseState
 		blackScreen = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		credGroup.add(blackScreen);
 
-		credTextShit = new Alphabet(0, 0, "ninjamuffin99\nPhantomArcade\nkawaisprite\nevilsk8er", true);
-		credTextShit.screenCenter();
-
-		// credTextShit.alignment = CENTER;
-
-		credTextShit.visible = false;
-
 		ngSpr = new FlxSprite(0, FlxG.height * 0.52).loadGraphic(Paths.image('newgrounds_logo'));
 		add(ngSpr);
 		ngSpr.visible = false;
@@ -214,13 +198,6 @@ class TitleState extends UIBaseState
 		ngSpr.updateHitbox();
 		ngSpr.screenCenter(X);
 		ngSpr.antialiasing = true;
-
-		FlxTween.tween(credTextShit, {y: credTextShit.y + 20}, 2.9, {ease: FlxEase.quadInOut, type: PINGPONG});
-
-		thingy = FlxGradient.createGradientFlxSprite(Std.int(bg.width), Std.int(bg.height), [0xFFFFFFFF, 0x00FFFFFF], 0, 90, true);
-		// thingy.blend = OVERLAY;
-		// thingy.alpha = 0.75;
-		add(thingy);
 
 		FlxG.mouse.visible = true;
 

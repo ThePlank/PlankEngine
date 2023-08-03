@@ -19,7 +19,7 @@ typedef CharacterData = {
 	var animationNames:Dynamic<AnimationData>;
 	var swapLR:Bool;
 	var charPosition:Array<Int>;
-	var scale:Array<Int>;
+	var scale:Array<Float>;
 	var antialias:Bool;
 	var singTimer:Float;
 	var flipX:Bool;
@@ -62,6 +62,7 @@ class Character extends FlxSprite
 		try {
 			loadChar();
 		} catch(err) {
+			trace(err);
 			curCharacter = DEF_CHAR;
 			loadChar();
 		}
@@ -114,6 +115,9 @@ class Character extends FlxSprite
 		antialiasing = data.antialias;
 
 		singTime = data.singTimer;
+
+		x += data.charPosition[0];
+		y += data.charPosition[1];
 
 		doGFDanceShit = (animation._animations.exists('danceLeft') && animation._animations.exists('danceRight'));
 

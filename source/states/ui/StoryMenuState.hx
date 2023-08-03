@@ -6,9 +6,6 @@ import classes.Highscore;
 import classes.Song;
 import display.objects.ui.MenuCharacter;
 import states.abstr.MusicBeatState;
-#if (discord_rpc || hldiscord)
-import classes.Discord.DiscordClient;
-#end
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.addons.transition.FlxTransitionableState;
@@ -123,10 +120,8 @@ class StoryMenuState extends UIBaseState
 
 		trace("Line 70");
 		
-		#if (discord_rpc || hldiscord)
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("In the Menus", null);
-		#end
 
 		for (i in 0...weekData.length)
 		{

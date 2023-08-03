@@ -5,9 +5,7 @@ import display.shaders.ShutterEffect;
 import states.ui.options.OptionsState;
 import classes.Mod;
 import states.abstr.UIBaseState;
-#if (discord_rpc || hldiscord)
 import classes.Discord.DiscordClient;
-#end
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
@@ -41,10 +39,8 @@ class MainMenuState extends UIBaseState
 
 	override function create()
 	{
-		#if (discord_rpc || hldiscord)
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("In the Menus", null);
-		#end
 
 		transIn = FlxTransitionableState.defaultTransIn;
 		transOut = FlxTransitionableState.defaultTransOut;

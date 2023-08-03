@@ -19,7 +19,7 @@ class ModSelectionSubstate extends MusicBeatSubstate
 	private var buttonMeta:Array<{name:String, clickCallback:Void->Void}> = [];
 
 	var buttonGroup:flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup<flixel.ui.FlxButton>;
-	var alphabetGroup:FlxTypedGroup<Alphabet>;
+	var alphabetGroup:MenuList;
 	var curSelected:Int = 0;
 	var selected:Bool = false;
 
@@ -44,12 +44,29 @@ class ModSelectionSubstate extends MusicBeatSubstate
 	{
 		super.create();
 
-		var LBar:FlxSprite = new FlxSprite();
-		LBar.makeGraphic(250, FlxG.height, 0x79000000);
-		add(LBar);
+		alphabetGroup = new MenuList(50, 0, VERTICAL(true));
+		alphabetGroup.scrollFactor.set();
+		alphabetGroup.focused = true;
+		alphabetGroup.padding = 100;
+		alphabetGroup.moveWithCurSelection = true;
+		alphabetGroup.screenCenter(Y);
+		alphabetGroup.onSelect.add((sel) -> {
+			selected = true;
+            FlxG.camera.fade(FlxColor.BLACK, 0.4);
+            FlxG.sound.music.fadeOut(0.4, 0, (bween) -> {
+				if (mods[curSelected] == null) {
+					Mod.selectedMod = null;
+					Mod.reset();
+					FlxG.resetState();
+					return;
+				}
+                Mod.selectedMod = mods[sel];
+                Mod.selectedMod.initMod();
+                FlxG.resetState();
+            });
+		});
 
-        alphabetGroup = new FlxTypedGroup<Alphabet>();
-        add(alphabetGroup);
+		add(alphabetGroup);
 
         buttonGroup = new FlxTypedSpriteGroup<flixel.ui.FlxButton>();
         add(buttonGroup);
@@ -67,15 +84,9 @@ class ModSelectionSubstate extends MusicBeatSubstate
         i = 0;
 		for (mod in mods)
 		{
-			var modText:Alphabet = new Alphabet(0, (70 * i) + 30, (mod != null ? mod.modName : "No Mod"), true, false);
-			modText.isMenuItem = true;
-			modText.targetY = i++;
-            modText.scrollFactor.set();
+			var modText:AtlasText = new AtlasText(0, (70 * i) + 30, (mod != null ? mod.modName : "No Mod"), AtlasFont.Bold);
             alphabetGroup.add(modText);
 		}
-		
-		add(new ReferenceObject().loadGraphic(Paths.image("menuReferences/Untitled36_20230310154123")));
-		changeSelection();
 	}
 
 	override function update(delta:Float)
@@ -89,61 +100,13 @@ class ModSelectionSubstate extends MusicBeatSubstate
 
         if (selected) return;
 
-		if (upP)
-			changeSelection(-1);
-
-		if (downP)
-			changeSelection(1);
-
 		if (FlxG.keys.justPressed.T)
 			openSubState(new PopupSubState(Ok, Regular, Text("This is a substate of a substate!")));
 
 		if (FlxG.keys.justPressed.Y)
 			openSubState(new PopupSubState(Ok, Error, Text("Whoops! You have to put your CD in your computer")));
 
-		if (accepted) {
-            selected = true;
-            FlxG.camera.fade(FlxColor.BLACK, 0.4);
-            FlxG.sound.music.fadeOut(0.4, 0, (bween) -> {
-				if (mods[curSelected] == null) {
-					Mod.selectedMod = null;
-					Mod.reset();
-					FlxG.resetState();
-					return;
-				}
-
-                Mod.selectedMod = mods[curSelected];
-                Mod.selectedMod.initMod();
-                FlxG.resetState();
-            });
-        }
-
         if (back)
             close();
-	}
-
-	function changeSelection(change:Int = 0):Void
-	{
-		curSelected += change;
-
-		if (curSelected < 0)
-			curSelected = alphabetGroup.length - 1;
-		if (curSelected >= alphabetGroup.length)
-			curSelected = 0;
-
-		var bullShit:Int = 0;
-
-		for (item in alphabetGroup.members)
-		{
-			item.targetY = bullShit - curSelected;
-			bullShit++;
-
-			item.alpha = 0.6;
-
-			if (item.targetY == 0)
-			{
-				item.alpha = 1;
-			}
-		}
 	}
 }

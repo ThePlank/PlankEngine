@@ -29,6 +29,7 @@ import hl.Gc;
 #elseif neko
 import neko.vm.Gc;
 #end
+import util.Console;
 
 using StringTools;
 
@@ -401,7 +402,7 @@ class Paths
 			return graph;
 		}
 
-		Console.log('fuck $path doesent exist');
+		Console.log('fuck $path doesent exist', ERROR);
 		return null;
 	}
 

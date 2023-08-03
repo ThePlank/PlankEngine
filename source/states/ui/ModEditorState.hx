@@ -19,7 +19,7 @@ class ModEditorState extends UIBaseState {
 	var state:ModEditorStateState;
 	var mod:Mod;
 
-	var alphabetGroup:FlxTypedGroup<Alphabet>;
+	var alphabetGroup:MenuList;
 	var curSelected:Int = 0;
 
 	private static var editors:Array<{name:String, ?state:flixel.FlxState}> = [
@@ -102,12 +102,15 @@ class ModEditorState extends UIBaseState {
 		openLocationButton.x = FlxG.width - openLocationButton.width - 25;
 		add(openLocationButton);
 
-		alphabetGroup = new FlxTypedGroup<Alphabet>();
+		alphabetGroup = new MenuList(50, 0, VERTICAL(true));
+		alphabetGroup.focused = true;
+		alphabetGroup.padding = 100;
+		alphabetGroup.moveWithCurSelection = true;
+		alphabetGroup.screenCenter(Y);
 		add(alphabetGroup);
+
 		for (editor in editors) {
-			var modText:Alphabet = new Alphabet(0, ((70 * alphabetGroup.length) + 30), editor.name, true, false);
-			modText.isMenuItem = true;
-			modText.targetY = alphabetGroup.length;
+			var modText:AtlasText = new AtlasText(0, ((70 * alphabetGroup.length) + 30), editor.name, AtlasFont.Bold);
             modText.scrollFactor.set();
             alphabetGroup.add(modText);
 		}
@@ -165,42 +168,5 @@ class ModEditorState extends UIBaseState {
 
 		if (back && state != CREATING)
 			UIBaseState.switchState(TitleState);
-
-		if (mod == null) return;
-
-		var upP = controls.UP_P;
-		var downP = controls.DOWN_P;
-		var accepted = controls.ACCEPT;
-
-		if (upP)
-			changeSelection(-1);
-
-		if (downP)
-			changeSelection(1);
-	}
-
-	function changeSelection(change:Int = 0):Void
-	{
-		curSelected += change;
-
-		if (curSelected < 0)
-			curSelected = alphabetGroup.length - 1;
-		if (curSelected >= alphabetGroup.length)
-			curSelected = 0;
-
-		var bullShit:Int = 0;
-
-		for (item in alphabetGroup.members)
-		{
-			item.targetY = bullShit - curSelected;
-			bullShit++;
-
-			item.alpha = 0.6;
-
-			if (item.targetY == 0)
-			{
-				item.alpha = 1;
-			}
-		}
 	}
 }

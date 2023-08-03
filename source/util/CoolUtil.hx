@@ -34,10 +34,6 @@ class CoolUtil
 	{
 		return FlxG.stage.window;
 	}
-
-	// copied code from old plank engine (i think literally the only good code i have made there)
-	// i dont know for where i got this from
-	// pretty sure i made this myself
 	
 	public static function DynamicToIntArrayMap(dynamicObject:Dynamic)
 	{

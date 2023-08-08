@@ -31,5 +31,5 @@ videos are really crappy right now, if you wanna use them, then [git and build t
 ## Credits that i'm obligated to add
 - The Funkin' team
 
-- Nikerlo - Note Splash animator
+- NickNGC - Note Splash animator
 - Raltyro - ZCameraFix n' garbage collection

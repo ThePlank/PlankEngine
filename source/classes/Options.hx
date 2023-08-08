@@ -93,7 +93,7 @@ class Options
 
 	public static function initOptions() {
 		optionData['gameplay'] = [
-			new OptionEntry('downscroll', 'Downscroll', 'Makes the notes scroll idk', Std.Bool)),
+			new OptionEntry('downscroll', 'Downscroll', 'Makes the notes scroll idk', Std.Bool),
 			new OptionEntry('flashingMenu', 'Flashing Lights', 'uhhh', Std.Bool),
 			new OptionEntry('camZoom', 'cumpenis', 'uhhh', Std.Bool),
 		];

@@ -26,7 +26,7 @@ class OptionEntry {
 	}
 }
 
-// lol image psych engine saving system
+// lol imagine psych engine saving system
 
 class Options
 {
@@ -93,9 +93,9 @@ class Options
 
 	public static function initOptions() {
 		optionData['gameplay'] = [
-			new OptionEntry('downscroll', 'Downscroll', 'Makes the notes scroll idk', Type.getClass(Bool)),
-			new OptionEntry('flashingMenu', 'Flashing Lights', 'uhhh', Type.getClass(Bool)),
-			new OptionEntry('camZoom', 'cumpenis', 'uhhh', Type.getClass(Bool)),
+			new OptionEntry('downscroll', 'Downscroll', 'Makes the notes scroll idk', Std.Bool)),
+			new OptionEntry('flashingMenu', 'Flashing Lights', 'uhhh', Std.Bool),
+			new OptionEntry('camZoom', 'cumpenis', 'uhhh', Std.Bool),
 		];
 	}
 }

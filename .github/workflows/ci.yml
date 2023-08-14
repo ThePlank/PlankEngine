@@ -29,7 +29,7 @@ jobs:
             ~/.haxelib
           key: ${{ matrix.name }}-cache-${{ hashFiles('./Project.xml') }}
       - name: Install & Setup Haxe
-        uses: krdlab/setup-haxe@main
+        uses: krdlab/setup-haxe@master
         with:
           haxe-version: 4.3.0
       - name: Install Haxe Extensions

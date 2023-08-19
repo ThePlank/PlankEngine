@@ -1651,14 +1651,12 @@ class PlayState extends states.abstr.MusicBeatState
 			camHUD.zoom += 0.03;
 		}
 
-		iconP1.scale.x = 1.3;
-		iconP1.scale.y = 0.75;
-		iconP2.scale.x = 1.3;
-		iconP2.scale.y = 0.75;
-		FlxTween.cancelTweensOf(iconP1);
-		FlxTween.cancelTweensOf(iconP2);
-		FlxTween.tween(iconP1, {"scale.x": 1, "scale.y": 1}, Conductor.crochet / 1000, {ease: FlxEase.backOut});
-		FlxTween.tween(iconP2, {"scale.x": 1, "scale.y": 1}, Conductor.crochet / 1000, {ease: FlxEase.backOut});
+		for (icon in [iconP1, iconP2]) {
+			icon.scale.set(1.3, 0.75);
+			FlxTween.cancelTweensOf(icon);
+			FlxTween.tween(icon, {"scale.x": 1, "scale.y": 1}, Conductor.crochet / 1000, {ease: FlxEase.backOut});
+		}
+		
 		if (curBeat % 4 == 0) {
 			iconP1.offset.x = 10;
 			iconP2.offset.x = -10;

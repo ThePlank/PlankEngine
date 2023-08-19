@@ -32,7 +32,7 @@ class Note extends FlxSprite
 	public var isSustainNote:Bool;
 	public var noteData:Int;
 
-	public static var swagWidth:Float = 160 * 0.7;
+	public static var swagWidth:Float = 112;
 
 	public static var __pool:FlxPool<Note>;
 
@@ -80,20 +80,13 @@ class Note extends FlxSprite
 				antialiasing = true;
 		}
 
+		x += swagWidth * noteData;
 		switch (noteData)
 		{
-			case 0:
-				x += swagWidth * 0;
-				animation.play('purpleScroll');
-			case 1:
-				x += swagWidth * 1;
-				animation.play('blueScroll');
-			case 2:
-				x += swagWidth * 2;
-				animation.play('greenScroll');
-			case 3:
-				x += swagWidth * 3;
-				animation.play('redScroll');
+			case 0: animation.play('purpleScroll');
+			case 1: animation.play('blueScroll');
+			case 2: animation.play('greenScroll');
+			case 3: animation.play('redScroll');
 		}
 	}
 

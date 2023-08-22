@@ -26,6 +26,7 @@ import flixel.util.FlxSpriteUtil;
 import openfl.display.BlendMode;
 import openfl.filters.BitmapFilter;
 import openfl.Vector;
+import flixel.FlxG;
 
 using flixel.util.FlxColorTransformUtil;
 
@@ -43,7 +44,10 @@ private typedef FlxDrawItem = #if FLX_DRAW_QUADS flixel.graphics.tile.FlxDrawQua
  *                                    Everything is rendered on buffer in blit render mode)
  *         |-> `canvas:Sprite`        (its graphics is used for rendering objects in tile render mode)
  *         |-> `debugLayer:Sprite`    (this sprite is used in tile render mode for rendering debug info, like bounding boxes)
+ * 
+ * thank you raltyro for zcamerafix and ne_eo for the coordinate fix for shaders
  */
+@:access(openfl.display.Sprite)
 class FlxCamera extends FlxBasic
 {
 	/**
@@ -1315,8 +1319,8 @@ class FlxCamera extends FlxBasic
 			}
 			else
 			{
-				scroll.x += (_scrollTarget.x - scroll.x) * followLerp * FlxG.updateFramerate / 60;
-				scroll.y += (_scrollTarget.y - scroll.y) * followLerp * FlxG.updateFramerate / 60;
+				scroll.x += (_scrollTarget.x - scroll.x) * followLerp * (FlxG.updateFramerate / 60) * FlxG.timeScale;
+				scroll.y += (_scrollTarget.y - scroll.y) * followLerp * (FlxG.updateFramerate / 60) * FlxG.timeScale;
 			}
 		}
 
@@ -1899,6 +1903,12 @@ class FlxCamera extends FlxBasic
 	{
 		updateFlashOffset();
 		setScale(scaleX, scaleY);
+		if (_filters != null && _filters.length > 0) clearFlashBitmapCache();
+	}
+
+	public function clearFlashBitmapCache() {
+		flashSprite.__cacheBitmap = null;
+		flashSprite.__cacheBitmapData = null;
 	}
 
 	/**

@@ -50,8 +50,8 @@
 	<define name="PRELOAD_ALL" unless="web" />
 	<define name="NO_PRELOAD_ALL" unless="PRELOAD_ALL" />
 
+	<library name="characters" preload="true" />
 	<section if="PRELOAD_ALL">
-		<library name="songs" preload="true" />
 		<library name="shared" preload="true" />
 		<library name="tutorial" preload="true" />
 		<library name="week1" preload="true" />
@@ -63,7 +63,6 @@
 	</section>
 
 	<section if="NO_PRELOAD_ALL">
-		<library name="songs" preload="false" />
 		<library name="shared" preload="false" />
 		<library name="tutorial" preload="false" />
 		<library name="week1" preload="false" />
@@ -74,9 +73,11 @@
 		<library name="week6" preload="false" />
 	</section>
 
-	<assets path="assets/songs" library="songs" exclude="*.ogg" if="web" />
-	<assets path="assets/songs" library="songs" exclude="*.mp3" unless="web" />
+	<assets path="assets/data" exclude="*.ogg" if="web" />
+	<assets path="assets/data" exclude="*.mp3" unless="web" />
+	<assets path="assets/characters" library="characters"/>
 	<assets path="assets/shared" library="shared" exclude="*.ogg" if="web" />
+
 	<assets path="assets/shared" library="shared" exclude="*.mp3" unless="web" />
 	<assets path="assets/tutorial" library="tutorial" exclude="*.ogg" if="web" />
 	<assets path="assets/tutorial" library="tutorial" exclude="*.mp3" unless="web" />
@@ -100,13 +101,7 @@
 
 	<assets path="CHANGELOG.md" rename='changelog.txt' />
 
-	<!-- NOTE FOR FUTURE SELF SINCE FONTS ARE ALWAYS FUCKY 
-		TO FIX ONE OF THEM, I CONVERTED IT TO OTF. DUNNO IF YOU NEED TO
-		THEN UHHH I USED THE NAME OF THE FONT WITH SETFORMAT() ON THE TEXT!!!
-		NOT USING A DIRECT THING TO THE ASSET!!!
-	-->
-	<assets path="assets/fonts" embed='true' />
-	<assets path="assets/characters"/>
+	<assets path="assets/fonts" />
 
 	<!-- ______________________________ Haxedefines _____________________________ -->
 
@@ -161,8 +156,7 @@
 	<haxelib name="markdown" />
 	<haxelib name="format" />
 
-	<!-- CPP stuff -->
-	<haxelib name="discord_rpc" if="cpp" />
+	<!-- Extern shit -->
 	<!-- <haxelib name="hldiscord" if="hl"/> -->
 	<!-- <haxelib name="hxcpp-debug-server" if="desktop"/> -->
 
@@ -183,6 +177,8 @@
 
 	<!-- Enable this if you want traces on startup -->
 	<haxedef name="HL_CONSOLE" if="debug" />
+	
+	<haxedef name="INGAME_CRASH" if="release" />
 
 	<echo value="You are currently not building with hashlink. Building has not been verified, proceed with caution." unless="hl"/>
 

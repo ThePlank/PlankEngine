@@ -63,7 +63,7 @@ class TitleState extends UIBaseState
 	var textGroup:FlxGroup;
 	var ngSpr:FlxSprite;
 
-	var settings:{bpm:Int, rgbEnabled:Bool, bgImage:String,
+	var settings:{bpm:Float, rgbEnabled:Bool, bgImage:String,
 	backdrop:{enabled:Bool, axes:Array<Bool>, velocity:Array<Int>, image:String, alpha:Float},
 	gf:{position:Array<Int>, antialiasing:Bool},
 	logo:{position:Array<Int>, antialiasing:Bool},
@@ -187,14 +187,13 @@ class TitleState extends UIBaseState
 		credGroup = new FlxGroup();
 		add(credGroup);
 		textGroup = new FlxGroup();
+		createCoolText(['ninjamuffin99', 'phantomArcade', 'kawaisprite', 'evilsk8er']);
 
 		blackScreen = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		credGroup.add(blackScreen);
 
-		ngSpr = new FlxSprite(0, FlxG.height * 0.52).loadGraphic(Paths.image('newgrounds_logo'));
-		add(ngSpr);
-		ngSpr.visible = false;
-		ngSpr.setGraphicSize(Std.int(ngSpr.width * 0.8));
+		ngSpr = new FlxSprite(0, FlxG.height * 0.55).loadGraphic(Paths.image('newgrounds_logo'));
+		ngSpr.scale.set(0.8, 0.8);
 		ngSpr.updateHitbox();
 		ngSpr.screenCenter(X);
 		ngSpr.antialiasing = true;
@@ -235,7 +234,7 @@ class TitleState extends UIBaseState
 
 	override function update(delta:Float)
 	{
-		if (!initialized)
+		if (!FlxG.sound?.music.playing)
 			return;
 
 		if (FlxG.keys.pressed.LEFT)
@@ -294,9 +293,12 @@ class TitleState extends UIBaseState
 		{
 			var money:AtlasText = new AtlasText(0, 0, textArray[i], AtlasFont.Bold);
 			money.screenCenter(X);
-			money.y += (i * 60) + 200;
+			money.y = (i * 60) + 200;
 			credGroup.add(money);
 			textGroup.add(money);
+			money.y += 100;
+			money.alpha = 0;
+			FlxTween.tween(money, {y: (i * 60) + 200, alpha: 1}, Conductor.crochet / 1000, {ease: FlxEase.expoOut});
 		}
 	}
 
@@ -304,7 +306,10 @@ class TitleState extends UIBaseState
 	{
 		var coolText:AtlasText = new AtlasText(0, 0, text, AtlasFont.Bold);
 		coolText.screenCenter(X);
-		coolText.y += (textGroup.length * 60) + 200;
+		coolText.y = (textGroup.length * 60) + 200;
+		coolText.y += 100;
+		coolText.alpha = 0;
+		FlxTween.tween(coolText, {y: (textGroup.length * 60) + 200, alpha: 1}, Conductor.crochet / 1000, {ease: FlxEase.expoOut});
 		credGroup.add(coolText);
 		textGroup.add(coolText);
 	}
@@ -318,6 +323,7 @@ class TitleState extends UIBaseState
 		}
 	}
 
+	var gay:Int = 0;
 	override function beatHit()
 	{
 		super.beatHit();
@@ -326,10 +332,9 @@ class TitleState extends UIBaseState
 		logo?.animation.play('bump');
 		gfDance?.animation.play((danceLeft ? 'danceLeft' : 'danceRight'));
 
-		switch (curBeat)
+		gay++;
+		switch (gay)
 		{
-			case 1:
-				createCoolText(['ninjamuffin99', 'phantomArcade', 'kawaisprite', 'evilsk8er']);
 			case 3:
 				addMoreText('present');
 			case 4:
@@ -367,6 +372,8 @@ class TitleState extends UIBaseState
 		{
 			FlxG.camera.flash(FlxColor.WHITE, 4);
 			remove(credGroup);
+			remove(ngSpr);
+			ngSpr.visible = false;
 			skippedIntro = true;
 		}
 	}

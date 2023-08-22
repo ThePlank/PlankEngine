@@ -50,12 +50,8 @@ class CoolUtil
 class FPSLerp
 {
 	public static function lerpValue(ratio:Float):Float
-	{
-		return FlxG.elapsed / (1 / 60) * ratio;
-	}
+		return (FlxG.elapsed / (1 / 60) * (ratio / FlxG.timeScale));
 
 	public static function lerp(a:Float, b:Float, ratio:Float)
-	{
 		return a + lerpValue(ratio) * (b - a);
-	}
 }

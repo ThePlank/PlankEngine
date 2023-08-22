@@ -1,11 +1,11 @@
 package classes;
 
-import haxe.DynamicAccess;
 import flixel.util.FlxSave;
 import sys.thread.Thread;
 import flixel.FlxG;
 import flixel.util.typeLimit.OneOfTwo;
 import flixel.group.FlxSpriteGroup;
+import Type.ValueType;
 
 // i whould do OptionEntry<T> but idek ho to get the Class<Dynamic> of it
 class OptionEntry {
@@ -38,6 +38,8 @@ class Options
 		"camZoom" => true,
 		"autoPause" => false,
 		"ghostTapping" => true,
+		"testInt" => 0,
+		"testFloat" => 0,
 	];
 
 	public static var saveData:FlxSave = new FlxSave();
@@ -46,42 +48,36 @@ class Options
 		saveData.bind("PlankEngineSettings", "PlankDev");
 		if (getValue("Yes") == null)
 			initSettings();
+
+		for (entry => value in Options.deafultData.keyValueIterator())
+			Options.resetSetting(entry);
 		
 		return saveData;
 	}
 
 	#if (flixel < "5.0.0") 
-	public static function save(?minFileSize:Null<Int> = 0, ?onComplete:Bool -> Void):Bool {
+	public static function save(?minFileSize:Null<Int> = 0, ?onComplete:Bool -> Void):Bool
 		return saveData.flush(minFileSize, onComplete);
-	}
-
-	public static function destroy(?minFileSize:Null<Int> = 0, ?onComplete:Bool -> Void):Bool {
+	public static function destroy(?minFileSize:Null<Int> = 0, ?onComplete:Bool -> Void):Bool
 		return saveData.close(minFileSize, onComplete);
-	}
 	#else
-	public static function save(?minFileSize:Null<Int> = 0):Bool {
+	public static function save(?minFileSize:Null<Int> = 0):Bool
 		return saveData.flush(minFileSize);
-	}
 
-	public static function destroy(?minFileSize:Null<Int> = 0):Bool {
+	public static function destroy(?minFileSize:Null<Int> = 0):Bool
 		return saveData.close(minFileSize);
-	}
 	#end
 
-	public static function setValue(key:String, value:Dynamic) {
-		Reflect.setField(saveData.data, key, value);
-	}
+	public static function setValue(key:String, value:Dynamic)
+		return Reflect.setField(saveData.data, key, value);
 
 
-	public static function getValue(key:String):Dynamic {
+	public static function getValue(key:String):Dynamic
 		return Reflect.field(saveData.data, key);
-	}
 
-	public static function initSettings():Void {
-		for (entry => value in deafultData.keyValueIterator()) {
+	public static function initSettings():Void
+		for (entry => value in deafultData.keyValueIterator())
 			setValue(entry, value);
-		}
-	}
 
 	public static function resetSetting(key:String):Bool {
 		if (getValue(key) == null && deafultData.exists(key)) {
@@ -93,9 +89,11 @@ class Options
 
 	public static function initOptions() {
 		optionData['gameplay'] = [
-			new OptionEntry('downscroll', 'Downscroll', 'Makes the notes scroll idk', Std.Bool),
-			new OptionEntry('flashingMenu', 'Flashing Lights', 'uhhh', Std.Bool),
-			new OptionEntry('camZoom', 'cumpenis', 'uhhh', Std.Bool),
+			new OptionEntry('downscroll', 'Downscroll', 'Makes the notes scroll idk', Type.getClass(Bool)),
+			new OptionEntry('flashingMenu', 'Flashing Lights', 'uhhh', Type.getClass(Bool)),
+			new OptionEntry('camZoom', 'cumpenis', 'uhhh', Type.getClass(Bool)),
+			new OptionEntry('testInt', 'balls', 'balls', Type.getClass(Int), null, {min: 0, max: 420, incrementValue: 10}), // my balls itch
+			new OptionEntry('testFloat', 'die', 'amen break', Type.getClass(Float), null, {min: 0, max: 1, incrementValue: 0.1}), // my balls itch
 		];
 	}
 }

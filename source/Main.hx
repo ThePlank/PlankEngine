@@ -67,8 +67,8 @@ class Main extends Sprite
 
 	// maybe add a .json file for this?///?//
 	public static var settings:GameSettings = {
-		gameWidth: 1280, // Width of the game in pixels (might be less / more in actual pixels depending on your zoom).
-		gameHeight: 720, // Height of the game in pixels (might be less / more in actual pixels depending on your zoom).
+		gameWidth: 0, // Width of the game in pixels (might be less / more in actual pixels depending on your zoom).
+		gameHeight: 0, // Height of the game in pixels (might be less / more in actual pixels depending on your zoom).
 		initialState: TitleState, // The FlxState the game starts with.
 		zoom: 1.0, // If -1, zoom is automatically calculated to fit the window dimensions.
 		framerate: 60, // How many frames per second the game should run at.
@@ -121,17 +121,20 @@ class Main extends Sprite
 		Highscore.load();
 		Console.init();
 
+		#if INGAME_CRASH
 		stage.rethowErrors = false;
 		stage.onError.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, (e:UncaughtErrorEvent) -> {
 			FlxG.game._requestedState = new UnexpectedCrashState(e.error, CallStack.exceptionStack(true));
 			FlxG.game.switchState();
 			stage.__rendering = false; // make it render again
 		});
-		setupGame();
-
-		#if hl
-		hl.Api.setErrorHandler(Main.onError);
 		#end
+
+		// #if hl
+		// hl.Api.setErrorHandler(Main.onError);
+		// #end
+		
+		setupGame();
 	}
 
 	static var consoleClasses:Array<Class<Dynamic>> = [Options, System, Lib, Main, CoolUtil, ZipTools, PlayerSettings, Conductor, Paths #if hl , hl.Gc #end, BitmapData];
@@ -143,14 +146,16 @@ class Main extends Sprite
 			FlxG.console.registerClass(unregisteredClass);
 		for (unregisteredEnum in consoleEnums)
 			FlxG.console.registerEnum(unregisteredEnum);
-		FlxG.console.registerFunction('openModMenu', () -> {
-			FlxG.state.openSubState(new states.substates.ui.ModSelectionSubstate());
+		FlxG.console.registerFunction('openModMenu', () -> FlxG.state.openSubState(new states.substates.ui.ModSelectionSubstate()));
+		FlxG.console.registerFunction('__import', (ass:String) ->  {
+			if (Type.resolveClass(ass) != null) FlxG.console.registerClass(Type.resolveClass(ass));
+			else if (Type.resolveEnum(ass) != null) FlxG.console.registerEnum(Type.resolveEnum(ass));
+			else FlxG.log.error('Type not found: $ass');
 		});
 	}	
 
 	public static var crashPath = "\\crashes";
 	public static var crashName = "\\PLECrashlog";
-	static var skipErrors = false;
 
 	// todo: truncate the callstack for da popup because it can cause
 	// l
@@ -160,9 +165,6 @@ class Main extends Sprite
 	// messagebox (windows doesent like that)
 	#if hl
 	public static function onError(error:Dynamic) {
-		if (skipErrors)
-			return;
-
 		var stack:CallStack = CallStack.exceptionStack(true);
 		var callstack:String = try Std.string(error) catch(_:Exception) "Unknown";
 		callstack += '\n';
@@ -221,6 +223,7 @@ class Main extends Sprite
 		// flixel.addons.studio.FlxStudio.create();
 
 		registerClasses();
+		FlxG.console.autoPause = false;
 		classes.Mod.init();
 		PlayerSettings.init();
 
@@ -243,11 +246,8 @@ class Main extends Sprite
 		Paths.gc(true, 15);
 	}
 
-	function update(event:Event) {
-		#if hl
-		hl.Api.checkReload();
-		#end
-	}
+	function update(event:Event)
+		#if hl hl.Api.checkReload(); #end
 
 	public static function get():Main
 	{

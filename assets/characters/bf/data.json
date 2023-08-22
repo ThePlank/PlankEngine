@@ -35,6 +35,7 @@
     "swapLR": false,
     "antialias": true,
     "charPosition": [0, 0],
+    "cameraOffset": [0, 0],
     "scale": [1, 1],
     "flipX": true,
     "flipY": false,

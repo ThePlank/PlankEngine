@@ -20,6 +20,7 @@ typedef CharacterData = {
 	var swapLR:Bool;
 	var charPosition:Array<Int>;
 	var scale:Array<Float>;
+	var cameraOffset:Array<Int>;
 	var antialias:Bool;
 	var singTimer:Float;
 	var flipX:Bool;

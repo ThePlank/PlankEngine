@@ -39,7 +39,7 @@ class GameOverState extends FlxTransitionableState
 		FlxG.camera.follow(bf, LOCKON, 0.001);
 		/* 
 			var restart:FlxSprite = new FlxSprite(500, 50).loadGraphic(AssetPaths.restart.png);
-			restart.setGraphicSize(Std.int(restart.width * 0.6));
+			restart.scale.set(0.6, 0.6);
 			restart.updateHitbox();
 			restart.alpha = 0;
 			restart.antialiasing = true;

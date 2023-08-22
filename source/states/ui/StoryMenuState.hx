@@ -83,12 +83,6 @@ class StoryMenuState extends UIBaseState
 		transIn = FlxTransitionableState.defaultTransIn;
 		transOut = FlxTransitionableState.defaultTransOut;
 
-		if (FlxG.sound.music != null)
-		{
-			if (!FlxG.sound.music.playing)
-				FlxG.sound.playMusic(Paths.music('freakyMenu'));
-		}
-
 		persistentUpdate = persistentDraw = true;
 
 		scoreText = new FlxText(10, 10, 0, "SCORE: 49324858", 36);
@@ -104,7 +98,7 @@ class StoryMenuState extends UIBaseState
 		rankText.size = scoreText.size;
 		rankText.screenCenter(X);
 
-		var ui_tex = Paths.getSparrowAtlas('campaign_menu_UI_assets');
+		var ui_tex = Paths.getSparrowAtlas('storymenu/campaign_menu_UI_assets');
 		var yellowBG:FlxSprite = new FlxSprite(0, 56).makeGraphic(FlxG.width, 400, 0xFFF9CF51);
 
 		grpWeekText = new FlxTypedGroup<MenuItem>();
@@ -157,20 +151,19 @@ class StoryMenuState extends UIBaseState
 			switch (weekCharacterThing.character)
 			{
 				case 'dad':
-					weekCharacterThing.setGraphicSize(Std.int(weekCharacterThing.width * 0.5));
+					weekCharacterThing.scale.set(0.5, 0.5);
 					weekCharacterThing.updateHitbox();
-
 				case 'bf':
-					weekCharacterThing.setGraphicSize(Std.int(weekCharacterThing.width * 0.9));
+					weekCharacterThing.scale.set(0.9, 0.9);
 					weekCharacterThing.updateHitbox();
 					weekCharacterThing.x -= 80;
 				case 'gf':
-					weekCharacterThing.setGraphicSize(Std.int(weekCharacterThing.width * 0.5));
+					weekCharacterThing.scale.set(0.5, 0.5);
 					weekCharacterThing.updateHitbox();
 				case 'pico':
 					weekCharacterThing.flipX = true;
 				case 'parents-christmas':
-					weekCharacterThing.setGraphicSize(Std.int(weekCharacterThing.width * 0.9));
+					weekCharacterThing.scale.set(0.9, 0.9);
 					weekCharacterThing.updateHitbox();
 			}
 

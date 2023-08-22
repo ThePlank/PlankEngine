@@ -5,7 +5,7 @@ typedef SwagSection =
 	var sectionNotes:Array<Dynamic>;
 	var lengthInSteps:Int;
 	var mustHitSection:Bool;
-	@:optional var bpm:Int;
+	@:optional var bpm:Float;
 	var changeBPM:Bool;
 	var altAnim:Bool;
 }

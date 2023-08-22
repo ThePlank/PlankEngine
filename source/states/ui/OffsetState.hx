@@ -12,7 +12,7 @@ class OffsetState extends MusicBeatState {
 	public var otherBackdrop:FlxBackdrop;
 	public var milisecondText:FlxText;
 	public var started:Bool = false;
-	public var chart:{bpm:Int, speed:Float, notes:Array<Array<Float>>};
+	public var chart:{bpm:Float, speed:Float, notes:Array<Array<Float>>};
 	public var offset:Float = 0;
 	public var noteHits:Array<Float> = [];
 

@@ -45,6 +45,13 @@ class MusicBeatState extends FlxUIState
 	{
 		if (transIn != null)
 			trace('reg ' + transIn.region);
+
+		FlxG.watch.add(this, 'curBeat', 'Current beat');
+		FlxG.watch.add(this, 'curStep', 'Current step');
+		FlxG.watch.add(Conductor, 'bpm', 'BPM');
+		FlxG.watch.add(Conductor, 'songPosition', 'Song position');
+		FlxG.watch.add(Conductor, 'crochet', 'Crochet');
+		FlxG.watch.add(Conductor, 'offset', 'Offset');
 		super.create();
 	}
 
@@ -63,8 +70,7 @@ class MusicBeatState extends FlxUIState
 		super.update(delta);
 	}
 
-	private function updateBeat():Void
-	{
+	private function updateBeat():Void {
 		curBeat = Math.floor(curStep / 4);
 	}
 

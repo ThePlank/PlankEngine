@@ -32,6 +32,8 @@ class Note extends FlxSprite
 	public var isSustainNote:Bool;
 	public var noteData:Int;
 
+	public var sustain:display.objects.game.Sustain;
+
 	public static var swagWidth:Float = 160 * 0.7;
 
 	public static var __pool:FlxPool<Note>;
@@ -68,33 +70,17 @@ class Note extends FlxSprite
 				updateHitbox();
 
 			default:
-				frames = Paths.getSparrowAtlas('NOTE_assets');
+				frames = Paths.getSparrowAtlas('notes/notes');
+				for (color in colorMap)
+					animation.addByPrefix('${color}Scroll', '${color}0');
 
-				animation.addByPrefix('greenScroll', 'green0');
-				animation.addByPrefix('redScroll', 'red0');
-				animation.addByPrefix('blueScroll', 'blue0');
-				animation.addByPrefix('purpleScroll', 'purple0');
-
-				setGraphicSize(Std.int(width * 0.7));
+				scale.set(0.7, 0.7);
 				updateHitbox();
 				antialiasing = true;
 		}
 
-		switch (noteData)
-		{
-			case 0:
-				x += swagWidth * 0;
-				animation.play('purpleScroll');
-			case 1:
-				x += swagWidth * 1;
-				animation.play('blueScroll');
-			case 2:
-				x += swagWidth * 2;
-				animation.play('greenScroll');
-			case 3:
-				x += swagWidth * 3;
-				animation.play('redScroll');
-		}
+		x += swagWidth * noteData;
+		animation.play('${getColorFromDirection(noteData)}Scroll');
 	}
 
 	public function reload(noteData:NoteData) {

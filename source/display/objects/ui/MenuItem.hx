@@ -24,9 +24,7 @@ class MenuItem extends FlxSpriteGroup
 	private var isFlashing:Bool = false;
 
 	public function startFlashing():Void
-	{
 		isFlashing = true;
-	}
 
 	// if it runs at 60fps, fake framerate will be 6
 	// if it runs at 144 fps, fake framerate will be like 14, and will update the graphic every 0.016666 * 3 seconds still???

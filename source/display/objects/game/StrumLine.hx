@@ -23,6 +23,7 @@ import flixel.tweens.FlxTween;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
+import display.objects.game.Sustain;
 
 using StringTools;
 
@@ -44,29 +45,32 @@ typedef HitData = {
 @:access(Note)
 class StrumLine extends FlxTypedSpriteGroup<FlxSprite>
 {
-	public var strumLine:FlxSprite;
 	public var noteHit:FlxTypedSignal<HitData->Void>;
 	public var onMiss:FlxTypedSignal<Int->Void>;
+
 	public var strumLineNotes:FlxSpriteGroup;
-	public var noteSplashes:FlxTypedSpriteGroup<NoteSplash>;
 	public var notes:FlxTypedSpriteGroup<Note>;
+	public var sustains:FlxTypedSpriteGroup<Sustain>;
+
+	public var noteSplashes:FlxTypedSpriteGroup<NoteSplash>;
+	public var noteSplashesEnabled:Bool;
+
 	public var scrollSpeed:Float = 1;
 	public var score:Int = 0;
 	public var combo:Int = 0;
+
 	public var char:Null<Character>;
 	public var player:Player;
 
 	static var strumHeight:Int = FlxG.height;
 
-	public function new(x:Int, y:Int, player:Player = NONE, ?char:Character, ?tweenStrums:Bool = true)
+	public function new(x:Int, y:Int, player:Player = NONE, ?char:Character, ?tweenStrums:Bool = false)
 	{
-		super(0, 0);
+		super(x, y);
 		this.char = char;
 		this.player = player;
 
-		strumLine = new FlxSprite(x, y);
-		strumLine.alpha = 0.5;
-		// add(strumLine);
+		this.noteSplashesEnabled = player == PLAYER1;
 
 		strumLineNotes = generateStaticArrows(tweenStrums);
 		add(strumLineNotes);
@@ -79,10 +83,11 @@ class StrumLine extends FlxTypedSpriteGroup<FlxSprite>
 
 		add(noteSplashes);
 
-		strumLine.makeGraphic(Std.int(strumLineNotes.width), 10);
+		sustains = new FlxTypedSpriteGroup<Sustain>();
 
 		notes = new FlxTypedSpriteGroup<Note>();
 		add(notes);
+		// add(sustains);
 
 		noteHit = new FlxTypedSignal<HitData->Void>();
 		onMiss = new FlxTypedSignal<Int->Void>();
@@ -94,18 +99,18 @@ class StrumLine extends FlxTypedSpriteGroup<FlxSprite>
 
 		for (i in 0...4)
 		{
-			var babyArrow:FlxSprite = new FlxSprite(0, strumLine.y);
+			var babyArrow:FlxSprite = new FlxSprite(0, 0);
 
-			babyArrow.frames = Paths.getSparrowAtlas('NOTE_assets');
+			babyArrow.frames = Paths.getSparrowAtlas('notes/strums');
 
 			babyArrow.antialiasing = true;
-			babyArrow.setGraphicSize(Std.int(babyArrow.width * 0.7));
+			babyArrow.scale.set(0.7, 0.7);
 
 			babyArrow.x += Note.swagWidth * i;
-			var dir:String = Note.getNameFromDirection(i);
-			babyArrow.animation.addByPrefix('static', 'arrow${dir.toUpperCase()}');
-			babyArrow.animation.addByPrefix('pressed', '${dir} press', 24, false);
-			babyArrow.animation.addByPrefix('confirm', '${dir} confirm', 24, false);
+			var anim:String = 'arrow${Note.getNameFromDirection(i).toUpperCase()}';
+			babyArrow.animation.addByPrefix('static', '${anim}0', 24, true);
+			babyArrow.animation.addByPrefix('pressed', '${anim}press', 24, false);
+			babyArrow.animation.addByPrefix('confirm', '${anim}confirm', 24, false);
 
 			babyArrow.updateHitbox();
 			babyArrow.scrollFactor.set();
@@ -142,9 +147,12 @@ class StrumLine extends FlxTypedSpriteGroup<FlxSprite>
 		}
 	}
 
-	public function addNote(note:Note)
-	{
-		notes.add(note);
+	public function addNote(note:flixel.util.typeLimit.OneOfTwo<Note, Sustain>) {
+		if (note is Note)
+			notes.add(note);
+		else if (note is Sustain)
+			sustains.add(note);
+		else throw 'what?';
 	}
 
 	private function keyShit():Void
@@ -170,14 +178,15 @@ class StrumLine extends FlxTypedSpriteGroup<FlxSprite>
 		];
 
 		// HOLDS, check for sustain notes
-		if (holdArray.contains(true) /*!boyfriend.stunned && */)
+		/*
+		if (holdArray.contains(true))
 		{
-			notes.forEachAlive(function(daNote:Note)
+			sustains.forEachAlive(function(daNote:Sustain)
 			{
-				if (daNote.isSustainNote && daNote.canBeHit && holdArray[daNote.noteData])
+				if (daNote.canBeHit && holdArray[daNote.noteData])
 					goodNoteHit(daNote);
 			});
-		}
+		}*/
 
 		// PRESSES, check for note hits
 		if (pressArray.contains(true) /*!boyfriend.stunned && */)
@@ -318,16 +327,10 @@ class StrumLine extends FlxTypedSpriteGroup<FlxSprite>
 					charPlayAnim('singRIGHT', true);
 			}
 
-			strumLineNotes.forEach(function(spr:FlxSprite)
-			{
-				if (Math.abs(note.noteData) == spr.ID)
-				{
-					spr.animation.play('confirm', true);
-				}
-			});
+			strumLineNotes.members[Std.int(Math.abs(note.noteData))].animation.play('confirm', true);
+			updateNoteAnimationOffsets();
 
 			note.wasGoodHit = true;
-			// vocals.volume = 1;
 
 			if (!note.isSustainNote)
 			{
@@ -338,25 +341,32 @@ class StrumLine extends FlxTypedSpriteGroup<FlxSprite>
 		}
 	}
 
+	private function getStrumFromData(noteData:Int)
+		return strumLineNotes.members[noteData];
+
 	private function handleNotes()
 	{
 		notes.forEachAlive((note:Note) ->
 		{
 			note.distance = ((Conductor.songPosition - note.strumTime) * (0.45 * FlxMath.roundDecimal(scrollSpeed, 2)));
-			var strum:FlxSprite = strumLineNotes.members[Std.int(Math.abs(note.noteData))];
+			var strum:FlxSprite = getStrumFromData(Std.int(Math.abs(note.noteData)));
 			// var direction:Float = strum.angle * Math.PI / 180;
 			// note.x = strum.x + Math.cos(direction);
 			// note.y = strum.y + Math.sin(strum.angle * Math.PI / 180) * note.distance;
 			// note.angle = strum.angle;
 			note.x = strum.x;
 			note.y = strum.y - note.distance;
+			if (note.sustain != null) {
+				note.sustain.y = note.y;
+				note.sustain.x = (note.x / 2 - note.sustain.width / 2);
+			}
 
 			// i am so fucking sorry for this if condition
 			if (note.isSustainNote
-				&& note.y + note.offset.y <= strumLine.y + Note.swagWidth / 2
+				&& note.y + note.offset.y <= strum.y + Note.swagWidth / 2
 				&& ((note.wasGoodHit || (note.prevNote.wasGoodHit && !note.canBeHit))))
 			{
-				var swagRect = new FlxRect(0, strumLine.y + Note.swagWidth / 2 - note.y, note.width * 2, note.height * 2);
+				var swagRect = new FlxRect(0, strum.y + Note.swagWidth / 2 - note.y, note.width * 2, note.height * 2);
 				swagRect.y /= note.scale.y;
 				swagRect.height -= swagRect.y;
 
@@ -374,25 +384,39 @@ class StrumLine extends FlxTypedSpriteGroup<FlxSprite>
 				note.destroy();
 			}
 		});
+
+		sustains.forEachAlive((note:Sustain) -> {
+			if (note.parent.strumTime + note.length < Conductor.songPosition) {
+				note.active = false;
+				note.visible = false;
+
+				note.kill();
+				sustains.remove(note, true);
+				note.destroy();
+			}
+		});
+
 	}
 
 	static public function generatePopup(data:HitData):FlxSpriteGroup {
 		var group:FlxSpriteGroup = new FlxSpriteGroup();
 
-		var rating:FlxSprite = new FlxSprite(-40, -60, Paths.image(data.rating));
+		var rating:FlxSprite = new FlxSprite(-40, -60, Paths.image('ratings/${data.rating}'));
 		rating.acceleration.y = 550;
 		rating.velocity.y -= FlxG.random.int(140, 175);
 		rating.velocity.x -= FlxG.random.int(0, 10);
 		rating.angularAcceleration = FlxG.random.int(-45, 45);
 
-		var comboSpr:FlxSprite = new FlxSprite(0, 0, Paths.image('combo'));
+		var comboSpr:FlxSprite = new FlxSprite(0, 0, Paths.image('ratings/combo'));
 		comboSpr.acceleration.y = 600;
 		comboSpr.velocity.y -= 150;
 		comboSpr.angularAcceleration = FlxG.random.int(-45, 45);
 		comboSpr.velocity.x += FlxG.random.int(1, 10);
-		rating.setGraphicSize(Std.int(rating.width * 0.7));
+
+		rating.scale.set(0.7, 0.7);
 		rating.antialiasing = true;
-		comboSpr.setGraphicSize(Std.int(comboSpr.width * 0.7));
+
+		comboSpr.scale.set(0.7, 0.7);
 		comboSpr.antialiasing = true;
 		comboSpr.updateHitbox();
 		rating.updateHitbox();
@@ -406,10 +430,10 @@ class StrumLine extends FlxTypedSpriteGroup<FlxSprite>
 		var daLoop:Int = 0;
 		for (i in seperatedScore)
 		{
-			var numScore:FlxSprite = new FlxSprite((43 * daLoop) - 90, 80, Paths.image('num' + Std.int(i)));
+			var numScore:FlxSprite = new FlxSprite((43 * daLoop) - 90, 80, Paths.image('ratings/num${Std.int(i)}'));
 
 			numScore.antialiasing = true;
-			numScore.setGraphicSize(Std.int(numScore.width * 0.5));
+			numScore.scale.set(0.5, 0.5);
 			numScore.updateHitbox();
 
 			numScore.acceleration.y = FlxG.random.int(200, 300);
@@ -475,9 +499,9 @@ class StrumLine extends FlxTypedSpriteGroup<FlxSprite>
 			score = 200;
 		}
 
-		if (daRating == 'sick') {
+		if (daRating == 'sick' && noteSplashesEnabled) {
 			var noteSplash:NoteSplash = noteSplashes.recycle(NoteSplash);
-			noteSplash.setupNoteSplash(Note.swagWidth  * note.noteData , strumLine.y, note.noteData);
+			noteSplash.setupNoteSplash(note.x - x, note.y - y, note.noteData); // die
 			noteSplashes.add(noteSplash);
 		}
 
@@ -495,12 +519,7 @@ class StrumLine extends FlxTypedSpriteGroup<FlxSprite>
 	public function checkNoteHit()
 	{
 		strumLineNotes.forEach(function(spr:FlxSprite) {
-			spr.centerOffsets();
-			if (spr.animation.curAnim.name == 'confirm')
-			{
-				spr.offset.x -= 13;
-				spr.offset.y -= 13;
-			}
+			updateNoteAnimationOffsets();
 			spr.animation.finishCallback = (name) -> {if (name == 'confirm') spr.animation.play('static');}
 		});
 
@@ -521,6 +540,17 @@ class StrumLine extends FlxTypedSpriteGroup<FlxSprite>
 				goodNoteHit(note);
 				if (char != null) char.holdTimer = 0;
 			}
+		});
+	}
+
+	private function updateNoteAnimationOffsets() {
+		strumLineNotes.forEach(function(spr:FlxSprite) {
+			spr.centerOffsets();
+			if (spr.animation.curAnim.name == 'confirm') {
+				spr.offset.x -= 13;
+				spr.offset.y -= 13;
+			}
+			// possibly make player a setter for this? :3 spr.animation.finishCallback = (name) -> {if (name == 'confirm') spr.animation.play('static');}
 		});
 	}
 

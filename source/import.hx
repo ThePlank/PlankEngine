@@ -22,5 +22,6 @@ import flixel.math.FlxMath;
 import classes.Conductor;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
+import flixel.text.FlxText;
 
 #end

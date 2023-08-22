@@ -5,7 +5,7 @@
         "singUP": [-47, 24],
         "singRIGHT": [-1, -23],
         "singLEFT": [-30, 16],
-        "singDOWN",: [31, -29],
+        "singDOWN": [31, -29],
         "singUP-alt": [-47, 24],
         "singRIGHT-alt": [-1, -24],
         "singLEFT-alt": [-30, 15],
@@ -25,6 +25,7 @@
     "swapLR": false,
     "antialias": true,
     "charPosition": [-500, 0],
+    "cameraOffset": [0, 0],
     "scale": [1, 1],
     "singTimer": 4
 }

@@ -30,7 +30,7 @@ class ModSelectionSubstate extends MusicBeatSubstate
 
 		buttonMeta.push({name: "import", clickCallback: () -> {}});
 		buttonMeta.push({name: "edit", clickCallback: () -> {
-			UIBaseState.switchState(ModEditorState, [EDITING(mods[curSelected])]);
+			UIBaseState.switchState(ModEditorState, [EDITING(mods[alphabetGroup.curSelection])]);
 		}});
 		buttonMeta.push({name: "delete", clickCallback: () -> {}});
 		buttonMeta.push({name: "add", clickCallback: () -> {
@@ -54,7 +54,9 @@ class ModSelectionSubstate extends MusicBeatSubstate
 			selected = true;
             FlxG.camera.fade(FlxColor.BLACK, 0.4);
             FlxG.sound.music.fadeOut(0.4, 0, (bween) -> {
-				if (mods[curSelected] == null) {
+            	FlxG.sound.music.stop();
+            	FlxG.sound.music.destroy();
+				if (mods[sel] == null) {
 					Mod.selectedMod = null;
 					Mod.reset();
 					FlxG.resetState();
@@ -82,8 +84,7 @@ class ModSelectionSubstate extends MusicBeatSubstate
         	i++;
         }
         i = 0;
-		for (mod in mods)
-		{
+		for (mod in mods) {
 			var modText:AtlasText = new AtlasText(0, (70 * i) + 30, (mod != null ? mod.modName : "No Mod"), AtlasFont.Bold);
             alphabetGroup.add(modText);
 		}

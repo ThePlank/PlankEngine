@@ -16,7 +16,7 @@ class GitarooPauseSubstate extends states.substates.abstr.MusicBeatSubstate
 
 	var replaySelect:Bool = false;
 	var pauseMusic:FlxSound;
-	var oldSongBpm:Int;
+	var oldSongBpm:Float;
 	var oldSongPosition:Float;
 	var bf:FlxSprite;
 

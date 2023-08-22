@@ -19,6 +19,7 @@
     "swapLR": true,
     "antialias": true,
     "charPosition": [0, 200],
+    "cameraOffset": [0, 0],
     "scale": [1, 1],
     "singTimer": 4
 }

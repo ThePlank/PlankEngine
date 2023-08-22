@@ -20,15 +20,11 @@ class HealthIcon extends FlxSprite
 		super();
 		character = char;
 		this.isPlayer = isPlayer;
-		try {
-			doStuff();
-		} catch(ex:Exception) {
-			character = 'bf';
-			doStuff();
-		}
+		try loadIcon() catch(ex:Exception) loadIcon('bf');
 	}
 
-	function doStuff() {
+	public function loadIcon(?icon:String) {
+		if (icon != null) character = icon;
 		var image = Paths.image(Paths.getPath('characters/$character/icon.png'));
 		if (image == null) throw 'Missing icon';
 		loadGraphic(image, true, 150, 150);

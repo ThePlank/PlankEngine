@@ -3,13 +3,15 @@ package display.objects.ui.options;
 import flixel.math.FlxRect;
 import flixel.math.FlxPoint;
 import flixel.FlxSprite;
+import classes.Options;
 
 
 class Checkbox extends FlxSprite {
     public var daValue(default, set):Bool = false;
+    public var param:String;
     public var mainRect:FlxRect;
 
-    public function new(x:Int = 0, y:Int = 0, enabled:Bool = false) {
+    public function new(x:Int = 0, y:Int = 0, param:String) {
         super(x, y);
         frames = Paths.getSparrowAtlas("checkbox");
         animation.addByPrefix("uncheck", "Check Box unselected", 24, true);
@@ -22,7 +24,8 @@ class Checkbox extends FlxSprite {
         mainRect = FlxRect.get();
         mainRect.width = frame.frame.width;
         mainRect.height = frame.frame.height;
-        daValue = enabled;
+        daValue = Options.getValue(param);
+        this.param = param;
         animation.finishCallback = (name:String) -> {
             if (name == "select")
                 animation.play("selectStatic", true);
@@ -33,6 +36,8 @@ class Checkbox extends FlxSprite {
         super.update(delta);
         offset.x = frame.frame.width - mainRect.width;
         offset.y = frame.frame.height - mainRect.height;
+        if (daValue != Options.getValue(param))
+            daValue = Options.getValue(param);
     }
 
     function set_daValue(val:Bool) {
@@ -41,7 +46,7 @@ class Checkbox extends FlxSprite {
         else {
             animation.play("uncheck");
         }
-        return val;
+        return daValue = val;
     }
 
 }

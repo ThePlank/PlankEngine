@@ -15,6 +15,7 @@
     "swapLR": false,
     "antialias": false,
     "charPosition": [0, 0],
+    "cameraOffset": [0, 0],
     "scale": [6, 6],
     "flipX": true,
     "flipY": false,

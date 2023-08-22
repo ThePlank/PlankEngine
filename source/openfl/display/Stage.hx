@@ -2014,7 +2014,7 @@ class Stage extends DisplayObjectContainer #if lime implements IModule #end
 
 	@:noCompletion private function __onLimeRender(context:RenderContext):Void
 	{
-		try {
+		#if INGAME_CRASH try { #end
 		if (__rendering) return;
 		__rendering = true;
 
@@ -2148,8 +2148,9 @@ class Stage extends DisplayObjectContainer #if lime implements IModule #end
 		#end
 
 		__rendering = false;
-		} catch(e:haxe.Exception)
+		#if INGAME_CRASH } catch(e:haxe.Exception) {
 			onError.dispatchEvent(new UncaughtErrorEvent(UncaughtErrorEvent.UNCAUGHT_ERROR, true, false, e));
+		} #end
 	}
 
 	@:noCompletion private function __onLimeRenderContextLost():Void

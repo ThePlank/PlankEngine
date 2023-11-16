@@ -1,3 +1,9 @@
+# ok this engine is cancelled
+i kinda hate this codebase now
+
+btw i have a new engine called funkin' rehashed thats going to be way better than this
+
+thats all for now
 <div align="center">
 
 ![logo](logoAnimated.gif)
